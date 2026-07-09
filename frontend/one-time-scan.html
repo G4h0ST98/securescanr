@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Redeem your one-time SecureScanr scan — full Pro-level security report, no subscription.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://securescanr.com/one-time-scan.html">
+  <title>One-Time Scan — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; font-size: 15px; min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ──────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Main layout ──────────────────────────────────────────────────────── */
+    .main { flex: 1; max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; width: 100%; }
+
+    /* ── States ───────────────────────────────────────────────────────────── */
+    .state { display: none; }
+    .state.active { display: block; }
+
+    /* ── Spinner ──────────────────────────────────────────────────────────── */
+    .spinner-wrap { text-align: center; padding: 60px 0; }
+    .spinner {
+      width: 40px; height: 40px; margin: 0 auto 20px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-label { font-size: 15px; color: var(--muted); }
+
+    /* ── Error state ──────────────────────────────────────────────────────── */
+    .error-box {
+      background: rgba(255,71,87,.07);
+      border: 1px solid rgba(255,71,87,.25);
+      border-left: 3px solid var(--danger);
+      border-radius: 0 8px 8px 0;
+      padding: 18px 20px; margin: 40px 0;
+    }
+    .error-box h2 { font-size: 16px; color: var(--danger); margin-bottom: 6px; }
+    .error-box p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .error-box a { color: var(--accent); }
+
+    /* ── Scan form ────────────────────────────────────────────────────────── */
+    .scan-header { margin-bottom: 32px; }
+    .scan-header .eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
+    }
+    .scan-header h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 700; letter-spacing: -.5px; }
+    .scan-header p { font-size: 14px; color: var(--muted); margin-top: 8px; }
+    .token-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,212,170,.08); border: 1px solid rgba(0,212,170,.2);
+      border-radius: 6px; padding: 6px 12px;
+      font-size: 12px; color: var(--accent); margin-top: 14px;
+    }
+    .token-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .url-form { margin-top: 28px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .url-input {
+      flex: 1; min-width: 240px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+      font-size: 15px; color: var(--text); font-family: inherit;
+      outline: none; transition: border-color .15s;
+    }
+    .url-input:focus { border-color: var(--accent); }
+    .url-input::placeholder { color: var(--muted); }
+    .scan-btn {
+      background: var(--accent); color: #0a0b0d;
+      font-size: 14px; font-weight: 700;
+      padding: 12px 28px; border-radius: 8px;
+      border: none; cursor: pointer; font-family: inherit;
+      transition: opacity .15s; white-space: nowrap;
+    }
+    .scan-btn:hover { opacity: .88; }
+    .scan-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .scan-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+    /* ── Results ──────────────────────────────────────────────────────────── */
+    .result-header { margin-bottom: 32px; }
+    .grade-row { display: flex; align-items: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+    .grade-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 52px; font-weight: 700; line-height: 1;
+      width: 90px; height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px; border: 2px solid;
+      flex-shrink: 0;
+    }
+    .grade-A-plus { color: #2ed573; border-color: rgba(46,213,115,.3); background: rgba(46,213,115,.06); }
+    .grade-A      { color: #2ed573; border-color: rgba(46,213,115,.3); background: rgba(46,213,115,.06); }
+    .grade-B      { color: #00d4aa; border-color: rgba(0,212,170,.3);  background: rgba(0,212,170,.06);  }
+    .grade-C      { color: #ffa502; border-color: rgba(255,165,2,.3);  background: rgba(255,165,2,.06);  }
+    .grade-D      { color: #ff6b35; border-color: rgba(255,107,53,.3); background: rgba(255,107,53,.06); }
+    .grade-F      { color: #ff4757; border-color: rgba(255,71,87,.3);  background: rgba(255,71,87,.06);  }
+    .grade-info h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .grade-info .score-line { font-size: 14px; color: var(--muted); }
+    .grade-info .score-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 16px; font-weight: 700; color: var(--text);
+    }
+    .result-url { font-size: 13px; color: var(--muted); margin-bottom: 20px; word-break: break-all; }
+    .result-url a { color: var(--accent); }
+    .one-time-note {
+      background: rgba(0,212,170,.04); border: 1px solid rgba(0,212,170,.15);
+      border-radius: 8px; padding: 12px 16px;
+      font-size: 13px; color: var(--muted); margin-bottom: 28px;
+    }
+
+    /* ── Section ──────────────────────────────────────────────────────────── */
+    .section {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; margin-bottom: 16px; overflow: hidden;
+    }
+    .section-hdr {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 20px; cursor: pointer;
+      transition: background .12s; user-select: none;
+    }
+    .section-hdr:hover { background: rgba(255,255,255,.02); }
+    .section-icon { font-size: 18px; flex-shrink: 0; }
+    .section-title { font-size: 15px; font-weight: 700; flex: 1; }
+    .section-meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .section-meta.bad { color: var(--danger); }
+    .section-meta.warn { color: var(--warning); }
+    .section-meta.good { color: var(--success); }
+    .section-arrow { font-size: 12px; color: var(--muted); transition: transform .2s; }
+    .section.open .section-arrow { transform: rotate(180deg); }
+    .section-body { display: none; padding: 0 20px 20px; overflow-x: auto; }
+    .section.open .section-body { display: block; }
+
+    /* ── Finding table ────────────────────────────────────────────────────── */
+    .finding-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .finding-table th {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted);
+      padding: 8px 10px; text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+    .finding-table td {
+      padding: 10px 10px; border-bottom: 1px solid rgba(255,255,255,.04);
+      vertical-align: top;
+    }
+    .finding-table tr:last-child td { border-bottom: none; }
+    .finding-name { color: var(--text); font-weight: 600; margin-bottom: 3px; }
+    .finding-note { font-size: 12px; color: var(--muted); }
+    .finding-fix {
+      font-size: 11.5px; font-family: 'Space Mono', monospace;
+      background: rgba(0,212,170,.06); border: 1px solid rgba(0,212,170,.12);
+      border-radius: 4px; padding: 6px 8px; margin-top: 6px;
+      color: var(--accent); white-space: pre-wrap; word-break: break-all;
+    }
+    .sev {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .4px;
+      padding: 2px 6px; border-radius: 3px; white-space: nowrap;
+    }
+    .sev-critical  { background: rgba(255,71,87,.15);  color: #ff4757; }
+    .sev-important { background: rgba(255,165,2,.15);  color: #ffa502; }
+    .sev-minor     { background: rgba(0,212,170,.12);  color: #00d4aa; }
+    .sev-good      { background: rgba(46,213,115,.12); color: #2ed573; }
+    .ded { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
+    .ded-bad  { color: #ff4757; }
+    .ded-warn { color: #ffa502; }
+    .ded-good { color: #2ed573; }
+    .kv-list { display: flex; flex-direction: column; gap: 8px; }
+    .kv-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+    .kv-key { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); width: 120px; flex-shrink: 0; padding-top: 1px; }
+    .kv-val { font-size: 13px; color: var(--text); flex: 1; }
+    .kv-val.mono { font-family: 'Space Mono', monospace; font-size: 12px; }
+    .cookie-card {
+      background: rgba(255,255,255,.02); border: 1px solid var(--border);
+      border-radius: 6px; padding: 12px 14px; margin-bottom: 8px;
+    }
+    .cookie-name { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text); margin-bottom: 6px; }
+    .cookie-flags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .flag {
+      font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      font-weight: 600;
+    }
+    .flag-ok   { background: rgba(46,213,115,.12); color: #2ed573; }
+    .flag-miss { background: rgba(255,71,87,.12);  color: #ff4757; }
+    .flag-warn { background: rgba(255,165,2,.12);  color: #ffa502; }
+    .no-issues {
+      font-size: 13px; color: var(--success);
+      padding: 12px 0; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318; border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: .4; }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ───────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Main ──────────────────────────────────────────────────────────────────── -->
+<div class="main">
+
+  <!-- Verifying payment -->
+  <div class="state" id="state-verifying">
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+      <p class="spinner-label">Verifying your payment…</p>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="state" id="state-error">
+    <div class="error-box">
+      <h2>Something went wrong</h2>
+      <p id="error-msg">Could not verify your payment.</p>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:16px">
+      Need help? Email <a href="mailto:hello@securescanr.com">hello@securescanr.com</a> with your payment reference.
+      Or <a href="plans.html">go back to plans</a>.
+    </p>
+  </div>
+
+  <!-- Scan form -->
+  <div class="state" id="state-scan">
+    <div class="scan-header">
+      <p class="eyebrow">One-Time Scan</p>
+      <h1>Enter the URL to scan</h1>
+      <p>Payment verified. You have one full Pro-level scan — all checks, all fixes, no gating.</p>
+      <div class="token-badge">
+        <span class="dot"></span>
+        <span>Scan credit active · expires in 24 hours</span>
+      </div>
+    </div>
+    <form class="url-form" onsubmit="startScan(event)">
+      <input
+        type="url" id="url-input" class="url-input"
+        placeholder="https://yourclient.com"
+        required autocomplete="off" spellcheck="false"
+      >
+      <button type="submit" class="scan-btn" id="scan-btn">Scan →</button>
+    </form>
+    <p class="scan-note">This will consume your one-time scan credit.</p>
+  </div>
+
+  <!-- Scanning -->
+  <div class="state" id="state-scanning">
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+      <p class="spinner-label">Running full security scan…</p>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="state" id="state-results">
+    <div class="result-header">
+      <div class="grade-row">
+        <div class="grade-badge" id="res-grade-badge">—</div>
+        <div class="grade-info">
+          <h2 id="res-headline">Security Report</h2>
+          <div class="score-line">Score: <span class="score-num" id="res-score">—</span> / 100</div>
+        </div>
+      </div>
+      <p class="result-url">Scanned: <a id="res-url-link" href="#" target="_blank" rel="noopener noreferrer"></a></p>
+      <div class="one-time-note">
+        This was a one-time paid scan. To run more scans, <a href="plans.html">upgrade to Pro</a> — PDF exports, API access, and 50 scans/month.
+      </div>
+    </div>
+
+    <div id="results-container"></div>
+  </div>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+  let _scanToken = null;
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
+  function showState(id) {
+    document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function showError(msg) {
+    document.getElementById('error-msg').textContent = msg;
+    showState('state-error');
+  }
+
+  function gradeClass(grade) {
+    const map = { 'A+': 'A-plus', 'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D', 'F': 'F' };
+    return 'grade-' + (map[grade] || 'F');
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function sevChip(sev) {
+    const map = { critical: 'sev-critical', important: 'sev-important', minor: 'sev-minor', good: 'sev-good' };
+    return `<span class="sev ${map[sev] || 'sev-minor'}">${esc(sev)}</span>`;
+  }
+
+  function dedSpan(pts) {
+    if (!pts) return `<span class="ded ded-good">0</span>`;
+    const cls = pts >= 15 ? 'ded-bad' : pts >= 5 ? 'ded-warn' : 'ded-bad';
+    return `<span class="ded ${cls}">−${pts}</span>`;
+  }
+
+  function toggleSection(el) {
+    el.closest('.section').classList.toggle('open');
+  }
+
+  // ── Verify payment on load ────────────────────────────────────────────────────
+
+  async function verifyPayment() {
+    const params = new URLSearchParams(window.location.search);
+
+    // LemonSqueezy flow: token already created and emailed, arrives via ?token=
+    const directToken = params.get('token');
+    if (directToken) {
+      _scanToken = directToken;
+      showState('state-scan');
+      return;
+    }
+
+    // Razorpay flow: verify payment ID and exchange for a token
+    const paymentId = params.get('razorpay_payment_id') || params.get('ref');
+    if (!paymentId) {
+      showError('No scan token or payment reference found in the URL. If you paid via LemonSqueezy, check your email for your scan link. If you paid via Razorpay, wait a moment and refresh. Contact hello@securescanr.com if the issue persists.');
+      return;
+    }
+
+    showState('state-verifying');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/verify-one-time`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ razorpay_payment_id: paymentId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showError(data.error || 'Payment verification failed. Please contact hello@securescanr.com.');
+        return;
+      }
+      _scanToken = data.token;
+      showState('state-scan');
+    } catch (err) {
+      showError('Could not reach the verification server. Please try refreshing the page.');
+    }
+  }
+
+  // ── Scan ─────────────────────────────────────────────────────────────────────
+
+  async function startScan(e) {
+    e.preventDefault();
+    if (!_scanToken) { showError('Scan token missing. Please refresh.'); return; }
+
+    let url = document.getElementById('url-input').value.trim();
+    if (!url.includes('://')) url = 'https://' + url;
+
+    document.getElementById('scan-btn').disabled = true;
+    showState('state-scanning');
+
+    try {
+      const res = await fetch(`${API_BASE}/api/scan`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, one_time_token: _scanToken }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showState('state-scan');
+        document.getElementById('scan-btn').disabled = false;
+        alert(data.error || 'Scan failed. Please try again.');
+        return;
+      }
+      _scanToken = null; // consumed
+      renderResults(data);
+    } catch (err) {
+      showState('state-scan');
+      document.getElementById('scan-btn').disabled = false;
+      alert('Could not reach the scan server. Please try again.');
+    }
+  }
+
+  // ── Render results ────────────────────────────────────────────────────────────
+
+  function renderResults(d) {
+    const gradeBadge = document.getElementById('res-grade-badge');
+    gradeBadge.textContent = d.grade;
+    gradeBadge.className = 'grade-badge ' + gradeClass(d.grade);
+    document.getElementById('res-headline').textContent = d.grade + ' — ' + (
+      d.score >= 90 ? 'Excellent' : d.score >= 80 ? 'Good' : d.score >= 70 ? 'Fair' :
+      d.score >= 60 ? 'Needs work' : d.score >= 50 ? 'Poor' : 'Critical'
+    );
+    document.getElementById('res-score').textContent = d.score;
+    const urlLink = document.getElementById('res-url-link');
+    urlLink.href = d.final_url;
+    urlLink.textContent = d.final_url;
+
+    const container = document.getElementById('results-container');
+    container.innerHTML = '';
+
+    container.appendChild(buildHeadersSection(d.headers));
+    container.appendChild(buildTlsSection(d.tls));
+    container.appendChild(buildDnsSection(d.dns));
+    if (d.cookies) container.appendChild(buildCookiesSection(d.cookies));
+    if (d.cross_origin) container.appendChild(buildCrossOriginSection(d.cross_origin));
+    if (d.page_analysis) container.appendChild(buildPageSection(d.page_analysis));
+
+    showState('state-results');
+  }
+
+  function makeSection(icon, title, metaText, metaClass, openByDefault) {
+    const sec = document.createElement('div');
+    sec.className = 'section' + (openByDefault ? ' open' : '');
+    sec.innerHTML = `
+      <div class="section-hdr" onclick="toggleSection(this)">
+        <span class="section-icon">${icon}</span>
+        <span class="section-title">${esc(title)}</span>
+        <span class="section-meta ${metaClass || ''}">${esc(metaText)}</span>
+        <span class="section-arrow">▾</span>
+      </div>
+      <div class="section-body"></div>
+    `;
+    return sec;
+  }
+
+  function buildHeadersSection(headers) {
+    if (!headers) return document.createDocumentFragment();
+    const entries = Object.entries(headers);
+    const issues  = entries.filter(([, v]) => v.status !== 'good').length;
+    const metaCls = issues > 0 ? (issues >= 3 ? 'bad' : 'warn') : 'good';
+    const metaTxt = issues === 0 ? 'All headers present' : `${issues} issue${issues !== 1 ? 's' : ''}`;
+    const sec = makeSection('🔒', 'HTTP Security Headers', metaTxt, metaCls, true);
+    const body = sec.querySelector('.section-body');
+
+    let rows = '';
+    for (const [name, info] of entries) {
+      const good = info.status === 'good';
+      const sev  = good ? 'good' : (info.severity || 'minor');
+      const fixHtml = (!good && info.fix)
+        ? `<div class="finding-fix">${esc(info.fix)}</div>` : '';
+      const noteHtml = info.explanation
+        ? `<div class="finding-note">${esc(info.explanation)}</div>` : '';
+      rows += `<tr>
+        <td>
+          <div class="finding-name">${esc(name)}</div>
+          ${noteHtml}
+          ${fixHtml}
+        </td>
+        <td>${sevChip(sev)}</td>
+        <td>${good ? '<span class="ded ded-good">✓</span>' : dedSpan(info.deduction)}</td>
+      </tr>`;
+    }
+    body.innerHTML = `<table class="finding-table">
+      <thead><tr><th style="width:60%">Header</th><th style="width:20%">Status</th><th>Deduction</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+    return sec;
+  }
+
+  function buildTlsSection(tls) {
+    if (!tls) return document.createDocumentFragment();
+    const ded     = tls.total_deduction || 0;
+    const metaCls = ded > 0 ? (ded >= 15 ? 'bad' : 'warn') : 'good';
+    const metaTxt = ded === 0 ? 'No issues' : `−${ded} pts`;
+    const sec     = makeSection('🛡', 'TLS / SSL Certificate', metaTxt, metaCls, ded > 0);
+    const body    = sec.querySelector('.section-body');
+
+    if (!tls.supported) {
+      body.innerHTML = `<p style="font-size:13px;color:var(--muted);padding:8px 0">${esc(tls.summary || 'TLS not available.')}</p>`;
+      return sec;
+    }
+
+    const cert = tls.certificate || {};
+    const conn = tls.connection  || {};
+    const deductions = (tls.deductions || []).map(d =>
+      `<div style="font-size:12px;color:var(--warning);margin-bottom:4px">⚠ ${esc(d.reason)} (−${d.points} pts)</div>`
+    ).join('');
+
+    body.innerHTML = `<div class="kv-list" style="margin-bottom:${deductions ? '16px' : '0'}">
+      <div class="kv-row"><span class="kv-key">Subject</span><span class="kv-val">${esc(cert.subject || '—')}</span></div>
+      <div class="kv-row"><span class="kv-key">Issuer</span><span class="kv-val">${esc(cert.issuer || '—')}</span></div>
+      <div class="kv-row"><span class="kv-key">Expires</span><span class="kv-val">${
+        cert.is_expired ? '<span style="color:var(--danger)">EXPIRED</span>' :
+        cert.days_remaining != null ? `${esc(cert.days_remaining)} days remaining` : '—'
+      }</span></div>
+      <div class="kv-row"><span class="kv-key">Self-signed</span><span class="kv-val">${cert.is_self_signed ? '<span style="color:var(--danger)">Yes</span>' : 'No'}</span></div>
+      <div class="kv-row"><span class="kv-key">Protocol</span><span class="kv-val mono">${esc(conn.protocol || '—')}</span></div>
+      <div class="kv-row"><span class="kv-key">Cipher</span><span class="kv-val mono">${esc(conn.cipher || '—')}</span></div>
+    </div>
+    ${deductions}`;
+    return sec;
+  }
+
+  function buildDnsSection(dns) {
+    if (!dns) return document.createDocumentFragment();
+    const ded     = dns.total_deduction || 0;
+    const metaCls = ded > 0 ? (ded >= 8 ? 'bad' : 'warn') : 'good';
+    const metaTxt = ded === 0 ? 'No issues' : `−${ded} pts`;
+    const sec     = makeSection('📡', 'DNS Email Security', metaTxt, metaCls, ded > 0);
+    const body    = sec.querySelector('.section-body');
+
+    const records = ['spf', 'dmarc', 'dkim', 'caa', 'dnssec'];
+    let rows = '';
+    for (const key of records) {
+      const rec = dns[key];
+      if (!rec) continue;
+      const good   = rec.status === 'good';
+      const sev    = good ? 'good' : (rec.deduction >= 5 ? 'important' : 'minor');
+      const fixHtml = (!good && rec.fix) ? `<div class="finding-fix">${esc(rec.fix)}</div>` : '';
+      rows += `<tr>
+        <td>
+          <div class="finding-name">${esc(key.toUpperCase())}</div>
+          <div class="finding-note">${esc(rec.explanation || '')}</div>
+          ${fixHtml}
+        </td>
+        <td>${sevChip(sev)}</td>
+        <td>${good ? '<span class="ded ded-good">✓</span>' : dedSpan(rec.deduction)}</td>
+      </tr>`;
+    }
+    body.innerHTML = `<table class="finding-table">
+      <thead><tr><th style="width:60%">Record</th><th style="width:20%">Status</th><th>Deduction</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="3" style="color:var(--muted);font-size:13px;padding:12px 0">No DNS data available.</td></tr>'}</tbody>
+    </table>`;
+    return sec;
+  }
+
+  function buildCookiesSection(cookies) {
+    const ded     = cookies.total_deduction || 0;
+    const n       = cookies.count || 0;
+    const metaCls = ded > 0 ? 'warn' : 'good';
+    const metaTxt = n === 0 ? 'No cookies' : (ded === 0 ? `${n} cookie${n !== 1 ? 's' : ''} — all secure` : `−${ded} pts`);
+    const sec     = makeSection('🍪', 'Cookie Security', metaTxt, metaCls, ded > 0);
+    const body    = sec.querySelector('.section-body');
+
+    if (n === 0) {
+      body.innerHTML = `<div class="no-issues">✓ No cookies set by this page.</div>`;
+      return sec;
+    }
+
+    let html = '';
+    for (const c of (cookies.cookies || [])) {
+      const secureFlag   = c.secure   ? '<span class="flag flag-ok">Secure</span>'   : '<span class="flag flag-miss">No Secure</span>';
+      const httpOnlyFlag = c.httponly ? '<span class="flag flag-ok">HttpOnly</span>' : '<span class="flag flag-miss">No HttpOnly</span>';
+      const sameSite = c.samesite
+        ? (['strict','lax'].includes(c.samesite.toLowerCase())
+            ? `<span class="flag flag-ok">SameSite=${esc(c.samesite)}</span>`
+            : `<span class="flag flag-warn">SameSite=${esc(c.samesite)}</span>`)
+        : '<span class="flag flag-warn">No SameSite</span>';
+      html += `<div class="cookie-card">
+        <div class="cookie-name">${esc(c.name)}</div>
+        <div class="cookie-flags">${secureFlag}${httpOnlyFlag}${sameSite}</div>
+        ${c.deduction ? `<div style="font-size:12px;color:var(--warning);margin-top:6px">−${c.deduction} pts</div>` : ''}
+      </div>`;
+    }
+    body.innerHTML = html;
+    return sec;
+  }
+
+  function buildCrossOriginSection(co) {
+    const ded     = co.total_deduction || 0;
+    const metaCls = ded > 0 ? 'warn' : 'good';
+    const metaTxt = ded === 0 ? 'No issues' : `−${ded} pts`;
+    const sec     = makeSection('🔗', 'Cross-Origin Isolation', metaTxt, metaCls, false);
+    const body    = sec.querySelector('.section-body');
+
+    const headers = co.headers || {};
+    let rows = '';
+    for (const [, info] of Object.entries(headers)) {
+      const good = info.status === 'good' || info.status === 'present';
+      rows += `<tr>
+        <td>
+          <div class="finding-name">${esc(info.name || '')}</div>
+          <div class="finding-note">${esc(info.explanation || '')}</div>
+        </td>
+        <td>${sevChip(good ? 'good' : 'minor')}</td>
+        <td>${good ? '<span class="ded ded-good">✓</span>' : dedSpan(info.deduction)}</td>
+      </tr>`;
+    }
+    body.innerHTML = `<table class="finding-table">
+      <thead><tr><th style="width:60%">Header</th><th style="width:20%">Status</th><th>Deduction</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+    return sec;
+  }
+
+  function buildPageSection(page) {
+    const ded     = page.total_deduction || 0;
+    const metaCls = ded > 0 ? 'warn' : 'good';
+    const metaTxt = ded === 0 ? 'No issues' : `−${ded} pts`;
+    const sec     = makeSection('📄', 'Page Analysis', metaTxt, metaCls, false);
+    const body    = sec.querySelector('.section-body');
+
+    const checks = [
+      { key: 'mixed_content', label: 'Mixed Content' },
+      { key: 'sri',           label: 'Subresource Integrity' },
+      { key: 'base_tag',      label: 'Base Tag' },
+    ];
+    let rows = '';
+    for (const { key, label } of checks) {
+      const item = page[key];
+      if (!item) continue;
+      const good = item.status === 'good';
+      rows += `<tr>
+        <td>
+          <div class="finding-name">${esc(label)}</div>
+          <div class="finding-note">${esc(item.explanation || '')}</div>
+        </td>
+        <td>${sevChip(good ? 'good' : 'minor')}</td>
+        <td>${good ? '<span class="ded ded-good">✓</span>' : dedSpan(item.deduction)}</td>
+      </tr>`;
+    }
+    body.innerHTML = `<table class="finding-table">
+      <thead><tr><th style="width:60%">Check</th><th style="width:20%">Status</th><th>Deduction</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="3" style="color:var(--muted);font-size:13px;padding:12px 0">No page analysis data.</td></tr>'}</tbody>
+    </table>`;
+    return sec;
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  verifyPayment();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

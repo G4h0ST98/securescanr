@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live security grades for the top 100 global websites. Updated weekly. See how Cloudflare, Google, GitHub and others score on HTTP headers, TLS and DNS.">
+  <meta property="og:title" content="World Security Index — Top 100 Website Security Rankings | SecureScanr">
+  <meta property="og:description" content="Live security grades for the top 100 global websites. Updated weekly. See how Cloudflare, Google, GitHub and others score on HTTP headers, TLS and DNS.">
+  <meta property="og:url" content="https://securescanr.com/world-security-index.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/world-security-index.html">
+  <title>World Security Index — Top 100 Website Security Rankings | SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-links > a.active-link { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* Page header */
+    .page-header {
+      padding: 64px 24px 40px;
+      text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0,212,170,.1) 0%, transparent 70%);
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px;
+      color: var(--text); margin-bottom: 12px;
+    }
+    .page-sub {
+      font-size: 15px; color: var(--muted); max-width: 560px; margin: 0 auto 24px;
+    }
+    .meta-row {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .meta-badge {
+      font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(0,212,170,.1); color: var(--accent);
+      border: 1px solid rgba(0,212,170,.25);
+    }
+    .meta-date {
+      font-size: 13px; color: var(--muted);
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      max-width: 900px; margin: 0 auto 40px;
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      padding: 0 24px;
+    }
+    .stat-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid var(--border);
+      font-size: 13px; cursor: pointer;
+      transition: border-color .15s, background .15s;
+      background: var(--surface);
+    }
+    .stat-chip:hover { border-color: var(--accent); }
+    .stat-chip.active { border-color: var(--accent); background: rgba(0,212,170,.08); }
+    .stat-count { font-weight: 700; }
+    .grade-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-aplus  { background: #2ed573; }
+    .dot-a      { background: #2ed573; }
+    .dot-b      { background: #3b82f6; }
+    .dot-c      { background: #ffa502; }
+    .dot-d      { background: #ff6b35; }
+    .dot-f      { background: #ff4757; }
+
+    /* Controls */
+    .controls {
+      max-width: 900px; margin: 0 auto 24px;
+      padding: 0 24px;
+      display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    }
+    .search-wrap {
+      flex: 1; min-width: 200px; position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 14px 9px 36px;
+      font-size: 14px; color: var(--text);
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 14px; pointer-events: none;
+    }
+    .results-count {
+      font-size: 13px; color: var(--muted); white-space: nowrap;
+    }
+
+    /* Table */
+    .table-wrap {
+      max-width: 900px; margin: 0 auto 80px;
+      padding: 0 24px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+    thead th:hover { color: var(--text); }
+    thead th.sort-asc::after { content: ' ↑'; color: var(--accent); }
+    thead th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .1s;
+    }
+    tbody tr:hover { background: rgba(255,255,255,.025); }
+    tbody td { padding: 12px 12px; vertical-align: middle; }
+    .td-rank {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; color: var(--muted);
+      width: 42px;
+    }
+    .td-domain {
+      font-weight: 600; color: var(--text);
+    }
+    .td-domain a {
+      color: var(--text); transition: color .15s;
+    }
+    .td-domain a:hover { color: var(--accent); }
+    .td-score {
+      font-family: 'Space Mono', monospace;
+      font-weight: 700; font-size: 14px;
+    }
+    .grade-badge {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      padding: 3px 9px; border-radius: 6px;
+      letter-spacing: .5px;
+    }
+    .grade-aplus { background: rgba(46,213,115,.15); color: #2ed573; border: 1px solid rgba(46,213,115,.3); }
+    .grade-a     { background: rgba(46,213,115,.12); color: #2ed573; border: 1px solid rgba(46,213,115,.25); }
+    .grade-b     { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+    .grade-c     { background: rgba(255,165,2,.13);  color: #ffa502; border: 1px solid rgba(255,165,2,.28); }
+    .grade-d     { background: rgba(255,107,53,.13); color: #ff8c5a; border: 1px solid rgba(255,107,53,.28); }
+    .grade-f     { background: rgba(255,71,87,.13);  color: #ff4757; border: 1px solid rgba(255,71,87,.28); }
+    .score-aplus { color: #2ed573; }
+    .score-a     { color: #2ed573; }
+    .score-b     { color: #60a5fa; }
+    .score-c     { color: #ffa502; }
+    .score-d     { color: #ff8c5a; }
+    .score-f     { color: #ff4757; }
+    .td-sub {
+      font-size: 12px; color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .td-date { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .flag { font-size: 16px; }
+
+    /* Mini score bar */
+    .mini-bar-wrap {
+      display: flex; align-items: center; gap: 6px;
+    }
+    .mini-bar-bg {
+      width: 48px; height: 4px; border-radius: 2px;
+      background: var(--border); flex-shrink: 0;
+    }
+    .mini-bar-fill { height: 100%; border-radius: 2px; }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center; padding: 48px 24px; color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 24px 20px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: start; gap: 32px; margin-bottom: 24px;
+    }
+    .footer-logo { font-size: 16px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .footer-nav {
+      display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: center;
+    }
+    .footer-nav a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footer-nav a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 16px;
+      font-size: 12px; color: var(--muted);
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+    @media (max-width: 640px) {
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-nav { flex-wrap: wrap; justify-content: center; }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .page-title { font-size: 26px; }
+      /* Show only Rank, Domain, Score, Grade, Country on mobile */
+      #index-table th:nth-child(5),
+      #index-table th:nth-child(6),
+      #index-table th:nth-child(7),
+      #index-table th:nth-child(9),
+      #index-table td:nth-child(5),
+      #index-table td:nth-child(6),
+      #index-table td:nth-child(7),
+      #index-table td:nth-child(9) { display: none; }
+    }
+    @media (max-width: 480px) {
+      .stat-chip { padding: 5px 10px; font-size: 12px; gap: 4px; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the World Security Index rank websites?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each site is scanned by SecureScanr's automated scanner, which checks HTTP security headers (CSP, HSTS, X-Frame-Options, etc.), TLS certificate validity, and DNS email security records (SPF, DMARC, DKIM, CAA, DNSSEC). A score from 0–100 is calculated by deducting points for missing or misconfigured controls, and a letter grade (A+ through F) is assigned. The index is refreshed weekly."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which websites are included in the top 100 index?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The World Security Index covers the top 100 globally trafficked websites including major platforms like Cloudflare, Google, GitHub, Microsoft, Amazon, and others. Sites are selected based on global traffic rankings and represent a broad cross-section of industries including technology, finance, e-commerce, and media."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often is the World Security Index updated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The index is updated weekly. Each site is re-scanned automatically, and grades reflect the most recent scan result. The last-scanned date for each entry is shown in the table so you can see exactly how fresh the data is."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I scan my own website and compare it to the index?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Use the free scanner at securescanr.com/scan.html to scan any URL instantly — no account required. Your results use the same scoring methodology as the World Security Index, so you can directly compare your site's grade against global benchmarks. The Versus mode at securescanr.com/versus.html lets you run a side-by-side comparison of two URLs."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html" class="active-link">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- Page header -->
+<div class="page-header">
+  <p class="page-eyebrow">Global Security Report</p>
+  <h1 class="page-title">World Security Index</h1>
+  <p class="page-sub">Security grades for the top 100 global websites. Scored on HTTP headers, TLS, and DNS configuration.</p>
+  <div class="meta-row">
+    <span class="meta-badge">Updated weekly</span>
+    <span class="meta-date" id="updated-date">Loading...</span>
+  </div>
+</div>
+
+<!-- Stats filter bar -->
+<div class="stats-bar" id="stats-bar">
+  <div class="stat-chip active" data-filter="all" onclick="setFilter('all',this)">
+    <span class="grade-dot dot-aplus" style="background:var(--accent)"></span>
+    <span>All</span>
+    <span class="stat-count" id="cnt-all">—</span>
+  </div>
+  <div class="stat-chip" data-filter="A+" onclick="setFilter('A+',this)">
+    <span class="grade-dot dot-aplus"></span>
+    <span>A+</span>
+    <span class="stat-count" id="cnt-aplus">—</span>
+  </div>
+  <div class="stat-chip" data-filter="A" onclick="setFilter('A',this)">
+    <span class="grade-dot dot-a"></span>
+    <span>A</span>
+    <span class="stat-count" id="cnt-a">—</span>
+  </div>
+  <div class="stat-chip" data-filter="B" onclick="setFilter('B',this)">
+    <span class="grade-dot dot-b"></span>
+    <span>B</span>
+    <span class="stat-count" id="cnt-b">—</span>
+  </div>
+  <div class="stat-chip" data-filter="C" onclick="setFilter('C',this)">
+    <span class="grade-dot dot-c"></span>
+    <span>C</span>
+    <span class="stat-count" id="cnt-c">—</span>
+  </div>
+  <div class="stat-chip" data-filter="D" onclick="setFilter('D',this)">
+    <span class="grade-dot dot-d"></span>
+    <span>D</span>
+    <span class="stat-count" id="cnt-d">—</span>
+  </div>
+  <div class="stat-chip" data-filter="F" onclick="setFilter('F',this)">
+    <span class="grade-dot dot-f"></span>
+    <span>F</span>
+    <span class="stat-count" id="cnt-f">—</span>
+  </div>
+</div>
+
+<!-- Search + count -->
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search domain…" oninput="applyFilters()">
+  </div>
+  <span class="results-count" id="results-count"></span>
+</div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table id="index-table">
+    <thead>
+      <tr>
+        <th onclick="sortBy('rank')">#</th>
+        <th onclick="sortBy('domain')">Domain</th>
+        <th onclick="sortBy('score')">Score</th>
+        <th onclick="sortBy('grade')">Grade</th>
+        <th onclick="sortBy('headers')">Headers</th>
+        <th onclick="sortBy('tls')">TLS</th>
+        <th onclick="sortBy('dns')">DNS</th>
+        <th onclick="sortBy('country')">Country</th>
+        <th>Last Scanned</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      <tr><td colspan="9" class="empty-state">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Web<span>Audit</span></div>
+      <div class="footer-tagline">Free web security scanner.</div>
+    </div>
+    <nav class="footer-nav">
+      <a href="scan.html">Scan</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  const FLAGS = {
+    US:'🇺🇸', IN:'🇮🇳', GB:'🇬🇧', CA:'🇨🇦', AU:'🇦🇺',
+    CN:'🇨🇳', NL:'🇳🇱', DE:'🇩🇪', JP:'🇯🇵', SG:'🇸🇬'
+  };
+
+  function gradeCls(g) {
+    if (g === 'A+') return 'aplus';
+    return g.toLowerCase();
+  }
+
+  function barColor(g) {
+    const m = { 'A+':'#2ed573','A':'#2ed573','B':'#3b82f6','C':'#ffa502','D':'#ff8c5a','F':'#ff4757' };
+    return m[g] || '#6b7280';
+  }
+
+  function miniBar(val, grade) {
+    const pct = Math.max(0, Math.min(100, val));
+    return `<div class="mini-bar-wrap">
+      <span class="td-sub">${val}</span>
+      <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${pct}%;background:${barColor(grade)}"></div></div>
+    </div>`;
+  }
+
+  let allSites = [];
+  let activeFilter = 'all';
+  let sortKey = 'rank';
+  let sortDir = 1;
+
+  function setFilter(grade, el) {
+    activeFilter = grade;
+    document.querySelectorAll('.stat-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    applyFilters();
+  }
+
+  function sortBy(key) {
+    const thead = document.querySelectorAll('thead th');
+    thead.forEach(th => th.classList.remove('sort-asc','sort-desc'));
+    if (sortKey === key) {
+      sortDir *= -1;
+    } else {
+      sortKey = key;
+      sortDir = key === 'rank' ? 1 : -1;
+    }
+    const idx = ['rank','domain','score','grade','headers','tls','dns','country'].indexOf(key);
+    if (idx >= 0) {
+      const cls = sortDir === 1 ? 'sort-asc' : 'sort-desc';
+      thead[idx].classList.add(cls);
+    }
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('search-input').value.trim().toLowerCase();
+    let filtered = allSites.filter(s => {
+      const gradeMatch = activeFilter === 'all' || s.grade === activeFilter;
+      const searchMatch = !q || s.domain.toLowerCase().includes(q) || s.country.toLowerCase().includes(q);
+      return gradeMatch && searchMatch;
+    });
+
+    filtered.sort((a, b) => {
+      let va = a[sortKey], vb = b[sortKey];
+      if (typeof va === 'string') va = va.toLowerCase();
+      if (typeof vb === 'string') vb = vb.toLowerCase();
+      if (va < vb) return -sortDir;
+      if (va > vb) return sortDir;
+      return 0;
+    });
+
+    document.getElementById('results-count').textContent =
+      filtered.length === allSites.length ? `${allSites.length} sites` : `${filtered.length} of ${allSites.length} sites`;
+
+    const tbody = document.getElementById('table-body');
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No sites match your filter.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(s => {
+      const gc = gradeCls(s.grade);
+      const flag = FLAGS[s.country] || s.country;
+      return `<tr>
+        <td class="td-rank">${s.rank}</td>
+        <td class="td-domain"><a href="scan.html?url=${encodeURIComponent(s.domain)}" title="Scan ${s.domain}">${s.domain}</a></td>
+        <td class="td-score score-${gc}">${s.score}</td>
+        <td><span class="grade-badge grade-${gc}">${s.grade}</span></td>
+        <td>${miniBar(s.headers, s.grade)}</td>
+        <td>${miniBar(s.tls, s.grade)}</td>
+        <td>${miniBar(s.dns, s.grade)}</td>
+        <td><span class="flag" title="${s.country}">${flag}</span></td>
+        <td class="td-date">${s.last_scanned}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function updateCounts(sites) {
+    const counts = { 'all': sites.length, 'A+': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0, 'F': 0 };
+    sites.forEach(s => { if (counts[s.grade] !== undefined) counts[s.grade]++; });
+    document.getElementById('cnt-all').textContent   = counts['all'];
+    document.getElementById('cnt-aplus').textContent = counts['A+'];
+    document.getElementById('cnt-a').textContent     = counts['A'];
+    document.getElementById('cnt-b').textContent     = counts['B'];
+    document.getElementById('cnt-c').textContent     = counts['C'];
+    document.getElementById('cnt-d').textContent     = counts['D'];
+    document.getElementById('cnt-f').textContent     = counts['F'];
+  }
+
+  fetch(`${API_BASE}/api/world-index?_=${Date.now()}`)
+    .then(r => r.json())
+    .then(data => {
+      allSites = data.sites;
+      document.getElementById('updated-date').textContent = 'Last updated: ' + data.updated;
+      updateCounts(allSites);
+      applyFilters();
+    })
+    .catch(() => {
+      document.getElementById('table-body').innerHTML =
+        `<tr><td colspan="9" class="empty-state">Failed to load data.</td></tr>`;
+    });
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

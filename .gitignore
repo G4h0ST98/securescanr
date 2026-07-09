@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*.db
+*.db-shm
+*.db-wal
+
+# Local analysis scripts / generated reports (may contain user IP data)
+scripts/
+*.pdf
+
+# Payment provider key export (never publish)
+rzp-key.csv
+*.csv

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecureScanr Terms of Service — usage policy, data privacy, disclaimer, and governing law.">
+  <meta property="og:title" content="Terms of Service — SecureScanr">
+  <meta property="og:url" content="https://securescanr.com/terms.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/terms.html">
+  <title>Terms of Service — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav.site-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+    .nav-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+    }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Content ─────────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 50px 24px 34px;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,212,170,.08) 0%, transparent 70%);
+    }
+    .page-inner { max-width: 720px; margin: 0 auto; }
+    .page-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px;
+    }
+    .page-sub {
+      margin-top: 8px; font-size: 15px; color: var(--muted);
+    }
+
+    .content-section {
+      max-width: 720px; margin: 0 auto;
+      padding: 39px 48px 56px;
+      text-align: left;
+    }
+    .content-section h2 {
+      font-size: 18px; font-weight: 700;
+      margin-top: 36px; margin-bottom: 10px;
+      letter-spacing: -.3px; color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .content-section h2:first-of-type { margin-top: 0; }
+    .content-section p {
+      font-size: 15px; color: var(--muted);
+      margin-bottom: 10px; line-height: 1.7;
+    }
+    .content-section p strong { color: var(--text); }
+    .content-section ul {
+      list-style: none; margin-bottom: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .content-section ul li {
+      font-size: 15px; color: var(--muted);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .content-section ul li::before {
+      content: '·'; color: var(--accent); font-weight: 700;
+      flex-shrink: 0; font-size: 18px; line-height: 1.4;
+    }
+    .updated-note {
+      display: inline-block; margin-bottom: 28px;
+      font-size: 12px; color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 24px 0;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 12px 0 16px;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <a href="plans.html">Plans</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="about.html">About</a>
+      <a href="security-txt.html">Security.txt</a>
+      <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="plans.html">Plans</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-inner">
+    <p class="page-label">Legal</p>
+    <h1 class="page-title">Terms of Service</h1>
+    <p class="page-sub">Please read before using SecureScanr.</p>
+  </div>
+</div>
+
+<!-- ── Content ───────────────────────────────────────────────────────────────── -->
+<div class="content-section">
+  <span class="updated-note">Last updated: May 2026</span>
+
+  <h2>1. Acceptance of Terms</h2>
+  <p>
+    By accessing or using SecureScanr ("the Service") at <strong>securescanr.com</strong>, you agree
+    to be bound by these Terms of Service. If you do not agree, you must not use the Service.
+    These Terms apply to all visitors, users, and anyone who accesses the Service.
+  </p>
+
+  <h2>2. Description of Service</h2>
+  <p>
+    SecureScanr is an automated web security analysis tool. It performs passive, read-only
+    inspection of publicly accessible HTTP headers, TLS/SSL certificates, DNS records, and
+    cookie attributes for a URL you supply. The Service does not perform active penetration
+    testing, exploit code, or any form of intrusive attack.
+  </p>
+
+  <h2>3. Permitted Use</h2>
+  <p>You may use SecureScanr only to scan websites that you own or have explicit written
+  authorisation to test. Permitted uses include:</p>
+  <ul>
+    <li>Security auditing of your own web properties</li>
+    <li>Authorised penetration testing engagements where you hold a signed scope of work</li>
+    <li>Internal security reviews by your own security team</li>
+    <li>Educational research on publicly available security configurations</li>
+  </ul>
+
+  <h2>4. Prohibited Use</h2>
+  <p>
+    You must not use SecureScanr to scan websites without authorisation, facilitate attacks,
+    harvest data, resell scan results without attribution, circumvent rate limits, or
+    use the Service for any unlawful purpose under applicable law. Violation of this clause
+    may result in immediate termination of access and legal action.
+  </p>
+
+  <h2>5. Data Privacy</h2>
+  <p>
+    SecureScanr is <strong>fully stateless</strong>. We do not collect, store, or log the URLs
+    you scan or the contents of scan results. Your IP address may be used transiently at the
+    time of payment routing to determine your region — it is never stored, logged, or shared
+    with third parties. PDF reports are generated on-demand and never retained server-side.
+    Please refer to our <a href="privacy.html">Privacy Policy</a> for the complete disclosure.
+  </p>
+
+  <h2>6. Disclaimer of Warranties</h2>
+  <p>
+    The Service is provided <strong>"as is" and "as available"</strong> without warranties of
+    any kind, express or implied. SecureScanr does not warrant that scan results are exhaustive,
+    error-free, or suitable for any particular purpose. Automated scans cannot substitute for
+    a full manual security assessment or penetration test conducted by a qualified professional.
+  </p>
+  <p>
+    A high score or passing grade on SecureScanr does not guarantee that a website is free from
+    vulnerabilities. Security is a continuous process, not a point-in-time measurement.
+  </p>
+
+  <h2>7. Limitation of Liability</h2>
+  <p>
+    To the maximum extent permitted by applicable law, SecureScanr and its operators shall not
+    be liable for any indirect, incidental, special, consequential, or punitive damages —
+    including loss of profits, data, or goodwill — arising out of or in connection with your
+    use of, or inability to use, the Service. Our total aggregate liability shall not exceed
+    the amount you paid to us in the three months preceding the claim.
+  </p>
+
+  <h2>8. Intellectual Property</h2>
+  <p>
+    All content, design, code, and branding on securescanr.com are the property of SecureScanr and
+    are protected under applicable intellectual property law. You may not reproduce, distribute,
+    or create derivative works from any part of the Service without prior written permission.
+    Scan results generated by the Service for a URL you own are yours to use freely.
+  </p>
+
+  <h2>9. Governing Law</h2>
+  <p>
+    These Terms are governed by and construed in accordance with the laws of <strong>India</strong>,
+    without regard to its conflict-of-law provisions. Any disputes arising under these Terms
+    shall be subject to the exclusive jurisdiction of the courts of <strong>India</strong>.
+  </p>
+  <p>
+    If any provision of these Terms is held invalid or unenforceable, the remaining provisions
+    shall continue in full force and effect.
+  </p>
+
+  <h2>10. Changes to Terms</h2>
+  <p>
+    We may update these Terms at any time. Continued use of the Service after changes are
+    posted constitutes acceptance of the revised Terms. We will update the "Last updated"
+    date at the top of this page to reflect changes.
+  </p>
+
+  <h2>11. Contact</h2>
+  <p>
+    Questions about these Terms?
+    Email <a href="mailto:hello@securescanr.com">hello@securescanr.com</a> — I read every message.
+  </p>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html" style="color:var(--accent)">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+  </div>
+</footer>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+</script>
+</body>
+</html>

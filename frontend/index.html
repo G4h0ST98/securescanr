@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="indexnow-key" content="a204882b3c65e7f5f1a7067007cb63f6">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Instant web security scan — check HTTP security headers, TLS certificate, DNS email security (SPF/DMARC) and cookies. Free, no login required.">
+  <meta property="og:title" content="SecureScanr — Free Website Security Scanner | Instant A-F Grade">
+  <meta property="og:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Trusted by security professionals worldwide.">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://securescanr.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free Website Security Scanner — Check HTTP Headers, TLS &amp; DNS | SecureScanr">
+  <meta name="twitter:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Trusted by security professionals worldwide.">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+  <meta name="twitter:site" content="@securescanr_in">
+  <link rel="canonical" href="https://securescanr.com/">
+  <meta name="google-site-verification" content="BWuKYjeqinBYyCRZJDLgJn43FRgTKd_S4NmscFIZRwU" />
+  <title>SecureScanr — Free Website Security Scanner | Instant A-F Grade</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 24px;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,212,170,.12) 0%, transparent 70%);
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      color: var(--text);
+      max-width: 700px;
+    }
+    .hero-sub {
+      margin-top: 20px;
+      font-size: clamp(13px, 1.8vw, 15px);
+      color: var(--muted);
+      max-width: 520px;
+    }
+    .hero-cta {
+      margin-top: 40px;
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--accent); color: #0a0b0d;
+      font-size: 16px; font-weight: 700;
+      padding: 14px 32px; border-radius: 8px;
+      transition: transform .18s, box-shadow .18s;
+    }
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,212,170,.3);
+      color: #0a0b0d;
+    }
+    .hero-proof {
+      margin-top: 20px;
+      font-size: 12px; color: var(--muted);
+    }
+    .hero-chips {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+      margin-top: 48px;
+    }
+    .hero-chip {
+      font-size: 12px; color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 5px 12px; border-radius: 20px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .hero-chip::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+    /* ── Section commons ─────────────────────────────────────────────────── */
+    section { padding: 96px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700; letter-spacing: -.5px;
+      color: var(--text); margin-bottom: 48px;
+    }
+
+    /* ── Free Tools ─────────────────────────────────────────────────────── */
+    #free-tools { background: var(--bg); padding: 72px 24px; border-top: 1px solid var(--border); }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+    .tool-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color .2s, transform .2s;
+    }
+    .tool-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      color: var(--text);
+    }
+    .tool-icon { font-size: 26px; margin-bottom: 12px; display: block; }
+    .tool-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
+    .tool-link {
+      font-size: 11px; font-weight: 700; color: var(--accent);
+      margin-top: 14px; letter-spacing: .3px;
+    }
+    @media (max-width: 768px) {
+      .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      #free-tools { padding: 56px 16px; }
+    }
+    @media (max-width: 480px) {
+      .tools-grid { grid-template-columns: 1fr; gap: 10px; }
+      .tool-card { padding: 18px 16px; flex-direction: row; align-items: flex-start; gap: 14px; }
+      .tool-icon { font-size: 22px; margin-bottom: 0; flex-shrink: 0; }
+      .tool-link { margin-top: 8px; }
+    }
+
+    /* ── How it works ────────────────────────────────────────────────────── */
+    #how { background: var(--bg); }
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr 40px 1fr 40px 1fr;
+      align-items: center;
+      gap: 16px;
+    }
+    .step {
+      text-align: center;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .step:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .step-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; font-weight: 700; color: var(--accent);
+      letter-spacing: 1px; margin-bottom: 16px;
+    }
+    .step-icon {
+      font-size: 36px; margin-bottom: 14px; display: block;
+    }
+    .step-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 6px;
+    }
+    .step-desc { font-size: 13px; color: var(--muted); }
+    .step-arrow {
+      text-align: center; color: var(--border);
+      font-size: 24px; font-weight: 700;
+    }
+    @media (max-width: 768px) {
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .step-arrow { display: none; }
+    }
+
+    /* ── What we check ───────────────────────────────────────────────────── */
+    #checks { background: var(--bg); }
+    .checks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .check-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .check-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .check-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+    .check-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .check-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; color: var(--accent);
+      font-weight: 700; margin-bottom: 10px;
+    }
+    .check-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    @media (max-width: 640px) {
+      .checks-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .checks-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Why SecureScanr ────────────────────────────────────────────────────── */
+    #why { background: var(--bg); }
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .why-col {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    .why-col:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .why-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+    .why-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .why-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    @media (max-width: 768px) {
+      .why-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ── CTA Banner ──────────────────────────────────────────────────────── */
+    #cta-banner {
+      background: var(--bg);
+      padding: 80px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .cta-title {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700; letter-spacing: -.5px;
+      margin-bottom: 14px;
+    }
+    .cta-sub { color: var(--muted); margin-bottom: 32px; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 24px 0;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: start; gap: 32px;
+      padding-bottom: 20px;
+    }
+    .footer-logo { font-size: 16px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .footer-nav {
+      display: flex; gap: 20px; justify-content: center; align-items: center;
+      position: static; background: none;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      border: none; z-index: auto;
+    }
+    .footer-nav a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footer-nav a:hover { color: var(--text); }
+    .footer-right { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+    .footer-right a { color: var(--muted); }
+    .footer-right a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 12px 0 16px;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+    @media (max-width: 640px) {
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-nav { flex-wrap: wrap; }
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+
+    /* ── Compliance bottom CTA ───────────────────────────────────────────────── */
+    #compliance-bottom {
+      padding: 56px 24px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SecureScanr",
+    "url": "https://securescanr.com",
+    "logo": "https://securescanr.com/newlogo.png",
+    "description": "Free website security scanner — check HTTP headers, TLS, DNS and cookies."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does SecureScanr check in a free website security scan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecureScanr checks HTTP security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy), TLS/SSL certificate validity and expiry, DNS email security records (SPF, DMARC, DKIM, CAA, DNSSEC), and cookie security attributes — all in a single free scan with no login required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is SecureScanr really free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The core scan — covering HTTP headers, TLS certificate, and DNS records — is completely free with no account required. Pro features like PDF report export, cookie analysis, cross-origin isolation checks, and API access are available from ₹499/month (India) or $7/month (international)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does SecureScanr calculate the security score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecureScanr starts at 100 and deducts points for missing or misconfigured security controls. Critical issues like a missing Content Security Policy or HSTS deduct 20 points each. Important headers like X-Frame-Options deduct 10 points. TLS certificate expiry, weak DNS records, insecure cookies, and server fingerprinting each carry their own deductions. The final score maps to grades A+ (90–100) through F (below 50)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SecureScanr to scan any website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You can scan any publicly accessible website — just paste the URL and hit Scan. SecureScanr fetches the site's HTTP response headers, resolves its DNS records, and validates its TLS certificate without installing anything. Scanning sites you do not own is permitted for security research and educational purposes."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <p class="hero-eyebrow">Web Security Scanner</p>
+  <h1 class="hero-title">Know Your Attack Surface.</h1>
+  <p class="hero-sub">Instant security audit — headers, TLS, DNS, cookies. Free scan, no login.</p>
+  <a href="scan.html" class="hero-cta">Scan a website →</a>
+  <p class="hero-proof">Trusted by security professionals worldwide.</p>
+  <div class="hero-chips">
+    <span class="hero-chip">HTTP Security Headers</span>
+    <span class="hero-chip">TLS / SSL Certificate</span>
+    <span class="hero-chip">DNS Security (SPF &amp; DMARC)</span>
+    <span class="hero-chip">Cookie Flags</span>
+  </div>
+</section>
+
+
+
+<!-- ── Free Tools ───────────────────────────────────────────────────────────── -->
+<section id="free-tools">
+  <div class="section-inner">
+    <p class="section-label">Free Tools</p>
+    <h2 class="section-title">Everything free, no login required</h2>
+    <div class="tools-grid">
+      <a href="versus.html" class="tool-card">
+        <span class="tool-icon">⚔️</span>
+        <span class="tool-name">Versus</span>
+        <span class="tool-desc">Compare two sites side by side — headers, TLS, DNS, score. See who wins instantly.</span>
+        <span class="tool-link">Compare sites →</span>
+      </a>
+      <a href="generators.html" class="tool-card">
+        <span class="tool-icon">🛠</span>
+        <span class="tool-name">Header Generators</span>
+        <span class="tool-desc">Build CSP, HSTS, Permissions-Policy and CORS headers visually. Validate your CSP.</span>
+        <span class="tool-link">Open generators →</span>
+      </a>
+      <a href="security-txt.html" class="tool-card">
+        <span class="tool-icon">📄</span>
+        <span class="tool-name">Security.txt</span>
+        <span class="tool-desc">Generate an RFC 9116 compliant security.txt file or validate an existing one.</span>
+        <span class="tool-link">Generate / validate →</span>
+      </a>
+      <a href="badge.html" class="tool-card">
+        <span class="tool-icon">🏅</span>
+        <span class="tool-name">Security Badge</span>
+        <span class="tool-desc">Embed a live security grade badge in your GitHub README, docs, or portfolio.</span>
+        <span class="tool-link">Get badge →</span>
+      </a>
+      <a href="learn.html" class="tool-card">
+        <span class="tool-icon">📚</span>
+        <span class="tool-name">Learning Center</span>
+        <span class="tool-desc">Guides on CSP, HSTS, TLS, SPF/DMARC, X-Frame-Options and security.txt.</span>
+        <span class="tool-link">Read guides →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ─────────────────────────────────────────────────────────── -->
+<section id="how">
+  <div class="section-inner">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Three steps to a full audit</h2>
+    <div class="steps">
+      <div class="step">
+        <p class="step-num">01</p>
+        <span class="step-icon">🔗</span>
+        <h3 class="step-title">Paste a URL</h3>
+        <p class="step-desc">Enter any website — no account, no setup, no API key needed for the free scan. Works on any publicly accessible URL including staging and production environments.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <p class="step-num">02</p>
+        <span class="step-icon">⚡</span>
+        <h3 class="step-title">We scan 20+ checks</h3>
+        <p class="step-desc">Headers, TLS certificate, DNS records, cookie security — all in parallel, in seconds. We use a real HTTP request with browser-like headers to get the same response your visitors see, not a cached snapshot.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <p class="step-num">03</p>
+        <span class="step-icon">📄</span>
+        <h3 class="step-title">Get instant results</h3>
+        <p class="step-desc">Letter grade, per-finding fixes, and an exportable PDF report (Pro) ready to hand to a client. Each finding includes the exact header value to add, so fixes take minutes rather than hours of research.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why Security Headers Matter ──────────────────────────────────────────── -->
+<section id="why-headers" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 24px;">
+  <div class="section-inner" style="max-width:760px;">
+    <p class="section-label">The case for checking</p>
+    <h2 class="section-title" style="margin-bottom:24px;">Why HTTP security headers matter</h2>
+    <p style="font-size:15px;color:var(--muted);line-height:1.8;">
+      HTTP security headers are the first line of defence browsers enforce before any code runs on your page. A properly configured Content Security Policy (CSP) blocks cross-site scripting (XSS) at the browser level. HSTS forces every connection to use HTTPS, eliminating protocol-downgrade attacks. X-Frame-Options stops your pages being embedded in phishing iframes. Despite being a few lines of server configuration, most websites are missing two or more of these controls. A free website security scan with SecureScanr tells you exactly which headers are absent and what to add.
+    </p>
+  </div>
+</section>
+
+<!-- ── What We Check ────────────────────────────────────────────────────────── -->
+<section id="checks">
+  <div class="section-inner">
+    <p class="section-label">What we check</p>
+    <h2 class="section-title">Full coverage. Zero noise.</h2>
+    <div class="checks-grid">
+      <div class="check-card">
+        <span class="check-icon">🔒</span>
+        <p class="check-count">8 CHECKS</p>
+        <h3 class="check-title">HTTP Security Headers</h3>
+        <p class="check-desc">CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, CORS policy, server fingerprinting. Each missing or misconfigured header is a potential attack vector. A missing Content Security Policy leaves your site open to cross-site scripting; missing HSTS lets attackers downgrade connections to plain HTTP and intercept sensitive data.</p>
+      </div>
+      <div class="check-card">
+        <span class="check-icon">🛡</span>
+        <p class="check-count">5 CHECKS</p>
+        <h3 class="check-title">TLS / SSL Certificate</h3>
+        <p class="check-desc">Certificate expiry, days remaining, cipher strength, protocol version (TLSv1.0 is deprecated), and self-signed detection. An expired certificate triggers browser warnings that drive visitors away instantly. Weak cipher suites or old protocol versions can expose encrypted traffic to well-known downgrade attacks.</p>
+      </div>
+      <div class="check-card">
+        <span class="check-icon">📡</span>
+        <p class="check-count">7 CHECKS</p>
+        <h3 class="check-title">DNS Security</h3>
+        <p class="check-desc">SPF, DMARC, DKIM detection, CAA records, DNSSEC, and security.txt — plus policy strength analysis. Without SPF and DMARC, anyone can send convincing phishing emails that appear to come from your domain. SecureScanr checks record values, not just presence — a DMARC "p=none" policy is flagged as weak.</p>
+      </div>
+      <div class="check-card">
+        <span class="check-icon">🍪</span>
+        <p class="check-count">3 FLAGS/COOKIE</p>
+        <h3 class="check-title">Cookie Security</h3>
+        <p class="check-desc">Secure flag, HttpOnly flag, SameSite attribute — checked on every cookie set by the page. A cookie without the Secure flag can be intercepted over plain HTTP; without HttpOnly, any XSS flaw gives attackers direct access to session tokens. SecureScanr reports each cookie by name so you know exactly which ones to fix.</p>
+      </div>
+      <div class="check-card">
+        <span class="check-icon">🔗</span>
+        <p class="check-count">3 CHECKS</p>
+        <h3 class="check-title">Cross-Origin Isolation</h3>
+        <p class="check-desc">COOP, COEP, CORP — modern headers that isolate your browsing context and prevent cross-origin data leaks and Spectre-style attacks. These headers are required to safely use high-resolution timers and SharedArrayBuffers. Many developers overlook them entirely; SecureScanr checks all three and explains the impact of each.</p>
+      </div>
+      <div class="check-card">
+        <span class="check-icon">🔍</span>
+        <p class="check-count">4 CHECKS</p>
+        <h3 class="check-title">Page Analysis</h3>
+        <p class="check-desc">Mixed content detection, Subresource Integrity (SRI) checks, base tag hijacking risk, external dependency audit. Mixed content means your HTTPS page loads resources over plain HTTP, silently breaking security guarantees. Missing SRI attributes allow CDN-served scripts to be replaced with malicious versions without detection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why SecureScanr ──────────────────────────────────────────────────────────── -->
+<section id="why">
+  <div class="section-inner">
+    <p class="section-label">Why SecureScanr</p>
+    <h2 class="section-title">Built for the way you actually work.</h2>
+    <div class="why-grid">
+      <div class="why-col">
+        <span class="why-icon">⚡</span>
+        <h3 class="why-title">100% free scan</h3>
+        <p class="why-desc">No account required. Paste a URL, get results instantly. SecurityHeaders.com shut down its API in April 2026 — SecureScanr stepped in with more checks, no login wall, and INR pricing for Indian developers.</p>
+      </div>
+      <div class="why-col">
+        <span class="why-icon">📄</span>
+        <h3 class="why-title">PDF report (Pro)</h3>
+        <p class="why-desc">Client-ready PDF export with executive summary, per-finding severity, and fix recommendations grouped by effort — something your client can actually read and act on. Pro plan includes 50 PDF exports per month.</p>
+      </div>
+      <div class="why-col">
+        <span class="why-icon">💳</span>
+        <h3 class="why-title">API access from ₹499/month</h3>
+        <p class="why-desc">INR pricing for India via Razorpay. International payments via LemonSqueezy at $7/month. Automate security checks in your CI pipeline or build your own reporting dashboard on top of the SecureScanr API.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Who is SecureScanr for ───────────────────────────────────────────────────── -->
+<section id="for-who" style="background:var(--bg);border-top:1px solid var(--border);padding:72px 24px;">
+  <div class="section-inner" style="max-width:760px;">
+    <p class="section-label">Who uses SecureScanr</p>
+    <h2 class="section-title" style="margin-bottom:24px;">Built for anyone responsible for a site's security</h2>
+    <p style="font-size:15px;color:var(--muted);line-height:1.8;">
+      Freelance pentesters use the PDF export to deliver professional client reports without building their own tooling. Developers run scans in CI to catch regressions before they ship. Digital agencies run scheduled scans across all their client domains. Site owners who are not security experts get plain-English explanations of every finding and exactly what needs to change — no background in security required to act on the results.
+    </p>
+  </div>
+</section>
+
+<!-- ── CTA Banner ────────────────────────────────────────────────────────────── -->
+<section id="cta-banner">
+  <h2 class="cta-title">What grade does your site get?</h2>
+  <p class="cta-sub">Most sites score D or F. Find out in 8 seconds.</p>
+  <a href="scan.html" class="hero-cta">Run a free scan →</a>
+</section>
+
+<!-- ── Compliance bottom CTA ─────────────────────────────────────────────────── -->
+<section id="compliance-bottom">
+  <div style="max-width:680px;margin:0 auto;">
+    <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Compliance</p>
+    <h2 style="font-size:clamp(20px,2.5vw,28px);font-weight:700;letter-spacing:-.4px;margin-bottom:10px;">Know your compliance posture.</h2>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.65;">OWASP Top 10 · PCI-DSS v4.0 · GDPR Article 32 · ISO 27001:2022 — all mapped automatically in one PDF report.</p>
+    <a href="compliance-report.html" style="display:inline-block;background:var(--accent);color:#0a0b0d;font-weight:700;font-size:14px;padding:11px 26px;border-radius:8px;text-decoration:none;transition:opacity .15s;" onmouseenter="this.style.opacity='.88'" onmouseleave="this.style.opacity='1'">Get report for ₹249 / $3 →</a>
+  </div>
+</section>
+
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Web<span>Audit</span></div>
+      <div class="footer-tagline">Free web security scanner.</div>
+    </div>
+    <nav class="footer-nav">
+      <a href="scan.html">Scan</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="about.html">About</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+    <span class="footer-sep">·</span>
+    <a href="https://postyourstartup.co/startup/securescanr?ref=badge" target="_blank" style="opacity:0.7;">
+      <img src="https://postyourstartup.co/api/badge/securescanr?theme=dark" alt="Featured on PostYourStartup" width="120" height="30" style="vertical-align:middle;" />
+    </a>
+  </div>
+</footer>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  // ── Particle network (constellation) ──────────────────────────────────────
+  (function() {
+    const N = 28, LINK = 120, ATTRACT = 150, LINK2 = LINK * LINK;
+    const cv = document.createElement('canvas');
+    cv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
+    document.body.insertBefore(cv, document.body.firstChild);
+    const ctx = cv.getContext('2d');
+    let W = cv.width = window.innerWidth, H = cv.height = window.innerHeight;
+    window.addEventListener('resize', () => { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; });
+    let mx = W / 2, my = H / 2;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+    }));
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        const cdx = mx - p.x, cdy = my - p.y;
+        const cd = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
+        if (cd < ATTRACT) {
+          const f = ((ATTRACT - cd) / ATTRACT) * 0.03;
+          p.vx += cdx / cd * f; p.vy += cdy / cd * f;
+        }
+        p.vx *= 0.98; p.vy *= 0.98;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
+        if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+      }
+      ctx.lineWidth = 1;
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < LINK2) {
+            const alpha = ((1 - Math.sqrt(d2) / LINK) * 0.12).toFixed(3);
+            ctx.strokeStyle = `rgba(0,212,170,${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.fillStyle = 'rgba(0,212,170,0.4)';
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5, 0, 6.283);
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

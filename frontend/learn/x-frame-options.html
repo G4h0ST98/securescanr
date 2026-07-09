@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Clickjacking explained — what X-Frame-Options does, DENY vs SAMEORIGIN, and when to use CSP frame-ancestors as the modern alternative.">
+  <meta property="og:title" content="Preventing Clickjacking with X-Frame-Options — SecureScanr">
+  <meta property="og:description" content="Clickjacking explained — what X-Frame-Options does, DENY vs SAMEORIGIN, and when to use CSP frame-ancestors as the modern alternative.">
+  <meta property="og:url" content="https://securescanr.com/learn/x-frame-options.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn/x-frame-options.html">
+  <title>Preventing Clickjacking with X-Frame-Options — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    :root { --bg:#0a0b0d; --surface:#111318; --border:#1e2128; --accent:#00d4aa; --danger:#ff4757; --warning:#ffa502; --success:#2ed573; --text:#e8eaf0; --muted:#6b7280; --radius:10px; }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; overflow-x: hidden; font-size:clamp(15px,1.1vw + 0.5rem,18px); }
+    body { overflow-x: hidden; }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; display:flex; flex-direction:column; min-height:100vh; }
+    a { color:var(--accent); text-decoration:none; }
+    nav { position:sticky; top:0; z-index:100; background:rgba(10,11,13,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; }
+    .nav-logo { font-size:18px; font-weight:700; color:var(--muted); letter-spacing:-.2px; }
+    .logo-accent { color:var(--accent); }
+    .nav-links { display:flex; align-items:center; gap:24px; margin-left:auto; }
+    .nav-links > a { font-size:13px; color:var(--muted); transition:color .15s; }
+    .nav-links > a:hover { color:var(--text); }
+    .nav-cta { background:var(--accent); color:#0a0b0d !important; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; transition:opacity .15s !important; }
+    .nav-cta:hover { opacity:.88; }
+    .nav-dropdown { position:relative; }
+    .nav-dropdown-btn { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; font-family:inherit; transition:color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color:var(--text); }
+    .nav-dropdown-btn::after { content:'▾'; font-size:10px; margin-left:2px; }
+    .nav-dropdown::after { content:''; position:absolute; bottom:-8px; left:0; width:100%; height:8px; }
+    .nav-dropdown-menu { display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); background:rgba(15,20,25,0.85); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:14px 6px 6px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.5); z-index:200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display:block; }
+    .nav-dropdown-menu a { display:block; padding:8px 12px; font-size:13px; color:var(--muted); border-radius:6px; text-decoration:none; transition:background .12s,color .12s; }
+    .nav-dropdown-menu a:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .nav-dropdown-menu a.active-link { color:var(--text); }
+    .nav-hamburger { display:none; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; margin-left:auto; }
+    .nav-mobile { display:none; flex-direction:column; border-top:1px solid var(--border); padding:12px 24px 16px; }
+    .nav-mobile a { font-size:14px; color:var(--muted); padding:9px 0; border-bottom:1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile.open { display:flex; }
+    @media (max-width:700px) { .nav-links { display:none; } .nav-hamburger { display:block; } }
+
+    .article-wrap { max-width:740px; margin:0 auto; padding:40px 24px 80px; flex:1; }
+    .breadcrumb { font-size:13px; color:var(--muted); margin-bottom:32px; display:flex; align-items:center; gap:6px; }
+    .breadcrumb a { color:var(--muted); }
+    .breadcrumb a:hover { color:var(--accent); text-decoration:none; }
+    .article-meta-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+    .sev-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 8px; border-radius:4px; }
+    .sev-important { background:rgba(255,165,2,.12); color:#ffa502; border:1px solid rgba(255,165,2,.25); }
+    .meta-tag { font-size:12px; color:var(--muted); background:var(--surface); border:1px solid var(--border); padding:2px 8px; border-radius:4px; }
+    h1 { font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:-.5px; line-height:1.2; margin-bottom:20px; }
+    .article-lead { font-size:16px; color:var(--muted); line-height:1.7; border-left:3px solid var(--accent); padding-left:16px; margin-bottom:40px; }
+    h2 { font-size:20px; font-weight:700; margin:36px 0 12px; color:var(--text); }
+    h3 { font-size:16px; font-weight:700; margin:24px 0 8px; color:var(--accent); }
+    p { margin-bottom:16px; }
+    ul,ol { margin:0 0 16px 20px; }
+    li { margin-bottom:6px; }
+    code { font-family:'Space Mono',monospace; font-size:12.5px; background:rgba(0,212,170,.07); color:var(--accent); padding:1px 5px; border-radius:3px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:6px; padding:16px 18px; overflow-x:auto; margin:0 0 20px; font-family:'Space Mono',monospace; font-size:12.5px; color:var(--accent); line-height:1.7; }
+    .callout { background:rgba(255,165,2,.07); border-left:3px solid var(--warning); border-radius:0 6px 6px 0; padding:14px 16px; margin:0 0 20px; font-size:14px; }
+    .callout-success { background:rgba(46,213,115,.07); border-left-color:var(--success); }
+    .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:0 0 24px; }
+    @media (max-width:540px) { .compare-grid { grid-template-columns:1fr; } }
+    .compare-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; }
+    .compare-card h4 { font-size:14px; font-weight:700; margin-bottom:8px; color:var(--text); }
+    .compare-card p { font-size:13px; color:var(--muted); margin-bottom:0; }
+    .article-cta { background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(0,212,170,.03) 100%); border:1px solid rgba(0,212,170,.2); border-radius:var(--radius); padding:28px 32px; text-align:center; margin-top:48px; }
+    .article-cta h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+    .article-cta p  { font-size:14px; color:var(--muted); margin-bottom:20px; }
+    .btn-accent { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0a0b0d; border-radius:8px; padding:12px 28px; font-size:15px; font-weight:700; text-decoration:none; transition:opacity .15s; }
+    .btn-accent:hover { opacity:.88; color:#0a0b0d; text-decoration:none; }
+    footer { background:var(--surface); border-top:1px solid var(--border); }
+    .footer-bottom { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px 16px; font-size:12px; color:var(--muted); }
+    .footer-bottom a { color:var(--muted); }
+    .footer-bottom a:hover { color:var(--text); }
+    .footer-sep { opacity:.4; }
+    footer a { color:var(--muted); }
+    footer a:hover { color:var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is clickjacking and how does X-Frame-Options prevent it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Clickjacking is an attack where an attacker embeds your site invisibly inside an iframe on their own page. When a victim interacts with what they think is the attacker's page, they are actually clicking buttons on your site — potentially triggering fund transfers, account changes, or other sensitive actions. X-Frame-Options prevents this by telling the browser to refuse to render the page inside an iframe on other origins."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between X-Frame-Options DENY and SAMEORIGIN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DENY blocks all iframe embedding, even from pages on the same domain. SAMEORIGIN allows embedding only from pages on exactly the same origin (same scheme, host, and port). Use DENY for pages that should never be framed (login pages, payment pages, account settings). Use SAMEORIGIN only if you have a legitimate need to embed the page within your own site."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Should I use X-Frame-Options or CSP frame-ancestors?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Prefer CSP frame-ancestors for modern browsers — it is more flexible, supports multiple allowed origins, and is the formally recommended replacement. X-Frame-Options is still worth keeping for older browser compatibility. SecureScanr treats CSP frame-ancestors as equivalent protection: if your CSP includes a frame-ancestors directive, no points are deducted for a missing X-Frame-Options header."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add X-Frame-Options to my website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add the header in your web server or application config. For Nginx: add_header X-Frame-Options 'DENY'; For Apache: Header always set X-Frame-Options 'DENY'. For Cloudflare Pages or Netlify, add it to the _headers file. After deploying, run a free scan at securescanr.com to confirm the header is being served correctly and check your updated security score."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="../scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="../versus.html">Versus</a>
+          <a href="../generators.html">Generators</a>
+          <a href="../security-txt.html">Security.txt</a>
+          <a href="../api-docs.html">API Docs</a>
+          <a href="../learn.html" class="active-link">Learn</a>
+          <a href="../badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="../plans.html">Plans</a>
+      <a href="../world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../about.html">About</a>
+          <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="../compliance-report.html">Compliance Report</a>
+          <a href="../status.html">Status</a>
+        </div>
+      </div>
+      <a href="../plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="../scan.html">Scan</a>
+    <a href="../versus.html">Versus</a>
+    <a href="../generators.html">Generators</a>
+    <a href="../security-txt.html">Security.txt</a>
+    <a href="../api-docs.html">API Docs</a>
+    <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+    <a href="../plans.html">Plans</a>
+    <a href="../world-security-index.html">World Index</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../about.html">About</a>
+    <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="../compliance-report.html">Compliance Report</a>
+    <a href="../status.html">Status</a>
+    <a href="../plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../learn.html">← Learning Center</a>
+    <span>/</span>
+    <span>X-Frame-Options Guide</span>
+  </div>
+
+  <div class="article-meta-row">
+    <span class="sev-badge sev-important">Important</span>
+    <span class="meta-tag">Headers</span>
+    <span class="meta-tag">5 min read</span>
+  </div>
+
+  <h1>Preventing Clickjacking with X-Frame-Options</h1>
+
+  <p class="article-lead">Clickjacking tricks users into clicking something they can't see — an invisible iframe layered over a button they think they're clicking. X-Frame-Options and its modern replacement CSP <code>frame-ancestors</code> prevent your pages from being embedded in another site's frame.</p>
+
+  <h2>What is Clickjacking?</h2>
+  <p>In a clickjacking attack, the attacker creates a web page with an invisible <code>&lt;iframe&gt;</code> loaded from your site, positioned precisely over something on their own page. When the victim thinks they're clicking "Win a prize" on the attacker's page, they're actually clicking "Confirm wire transfer" on your bank's invisible page beneath it.</p>
+  <p>The attack works because the browser allows any website to embed another website in an iframe — unless the target site explicitly prevents it. The victim is authenticated on your site (their cookie is sent with the iframe request), so their actions within the invisible iframe have real consequences: money transfers, account deletions, settings changes, social media posts.</p>
+  <p>Clickjacking affects any site where authenticated users take high-value actions via a single click: banking apps, email clients, social networks, admin panels, e-commerce checkout buttons.</p>
+
+  <h2>X-Frame-Options</h2>
+  <p>The <code>X-Frame-Options</code> header tells the browser whether your page is allowed to be loaded inside a frame, iframe, or object element. It has two useful values:</p>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <h4>DENY</h4>
+      <p>The page cannot be displayed in a frame under any circumstances, even on the same site. Best for pages that should never be embedded — login pages, checkout pages, admin interfaces.</p>
+    </div>
+    <div class="compare-card">
+      <h4>SAMEORIGIN</h4>
+      <p>The page can only be framed by pages from the same origin (same scheme, host, and port). Use this if you legitimately embed your own pages in iframes on your own site.</p>
+    </div>
+  </div>
+
+  <p>A third value, <code>ALLOW-FROM uri</code>, allowed specific third-party origins. It is obsolete — it was never supported in Chrome or Safari and is now removed from the spec. Use CSP <code>frame-ancestors</code> for that use case.</p>
+
+  <h3>How to set it</h3>
+
+  <pre># Nginx
+add_header X-Frame-Options "DENY" always;
+
+# Apache
+Header always set X-Frame-Options "DENY"</pre>
+
+  <h2>CSP frame-ancestors: The Modern Alternative</h2>
+  <p>CSP's <code>frame-ancestors</code> directive does everything <code>X-Frame-Options</code> does, plus more. It supports multiple allowed origins, wildcards for subdomains, and is the standard recommended by modern security guidance.</p>
+
+  <pre># No framing at all
+Content-Security-Policy: frame-ancestors 'none';
+
+# Only same origin
+Content-Security-Policy: frame-ancestors 'self';
+
+# Allow specific trusted third party
+Content-Security-Policy: frame-ancestors 'self' https://dashboard.partner.com;</pre>
+
+  <p>When both <code>X-Frame-Options</code> and CSP <code>frame-ancestors</code> are present, <code>frame-ancestors</code> takes precedence in browsers that support it. Older browsers that don't understand CSP will fall back to <code>X-Frame-Options</code>.</p>
+
+  <h2>Which One Should You Use?</h2>
+  <div class="callout callout-success">
+    <strong>Best practice:</strong> Set both headers for maximum compatibility. Use <code>Content-Security-Policy: frame-ancestors 'none'</code> as the primary control and <code>X-Frame-Options: DENY</code> as a fallback for legacy browsers.
+  </div>
+
+  <pre>X-Frame-Options: DENY
+Content-Security-Policy: frame-ancestors 'none';</pre>
+
+  <p>If you need to allow your own site to embed the page (for legitimate iframes), use:</p>
+  <pre>X-Frame-Options: SAMEORIGIN
+Content-Security-Policy: frame-ancestors 'self';</pre>
+
+  <h2>SecureScanr Scoring Note</h2>
+  <p>SecureScanr gives full credit (no deduction) if either <code>X-Frame-Options</code> is set correctly OR if CSP includes a <code>frame-ancestors</code> directive. You don't need both — they provide equivalent protection. Setting both is still recommended for defence in depth, but either one alone is sufficient to satisfy the check.</p>
+
+  <h2>Browser Support</h2>
+  <ul>
+    <li><strong>X-Frame-Options:</strong> Supported by all major browsers including very old versions of IE. Completely safe to deploy everywhere.</li>
+    <li><strong>CSP frame-ancestors:</strong> Supported by all modern browsers (Chrome, Firefox, Safari, Edge). Not supported by IE 11. If you need to support IE 11, include <code>X-Frame-Options</code> as a fallback.</li>
+  </ul>
+
+  <h2>Common Mistakes</h2>
+  <ul>
+    <li><strong>Setting the header only on login pages:</strong> Clickjacking targets action pages, not just login. Apply the header to any page where an authenticated user takes a consequential action.</li>
+    <li><strong>Using ALLOW-FROM:</strong> This value is obsolete and ignored by most modern browsers. Switch to CSP <code>frame-ancestors</code> with explicit allowed origins.</li>
+    <li><strong>Forgetting iframes you own:</strong> If you legitimately embed your own pages in iframes (for example, a payment widget), use <code>SAMEORIGIN</code> or CSP <code>frame-ancestors 'self'</code> rather than <code>DENY</code> to avoid breaking your own functionality.</li>
+  </ul>
+
+  <div class="article-cta">
+    <h3>Is your site protected from clickjacking?</h3>
+    <p>SecureScanr checks for X-Frame-Options and CSP frame-ancestors and flags pages that are vulnerable to embedding attacks.</p>
+    <a href="../scan.html" class="btn-accent">Check your site's security now →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="../methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="../privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="../terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="../status.html">Status</a>
+  </div>
+</footer>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

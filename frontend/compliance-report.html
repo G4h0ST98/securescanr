@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get a professional security compliance report for your website — OWASP Top 10, PCI-DSS, GDPR Article 32, ISO 27001. PDF delivered by email. ₹249 / $3.">
+  <meta property="og:title" content="Security Compliance Report — SecureScanr">
+  <meta property="og:description" content="Professional compliance PDF covering OWASP Top 10, PCI-DSS v4.0, GDPR Article 32, ISO 27001. One-time ₹249 / $3.">
+  <meta property="og:url" content="https://securescanr.com/compliance-report.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/compliance-report.html">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <title>Security Compliance Report — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    :root {
+      --bg:      #0a0b0d; --surface: #111318; --border: #1e2128;
+      --accent:  #00d4aa; --danger: #ff4757; --warning: #ffa502;
+      --success: #2ed573; --text: #e8eaf0; --muted: #6b7280;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+    a { color: var(--accent); text-decoration: none; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(10,11,13,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #0a0b0d !important; font-size: 12px; font-weight: 600; padding: 7px 16px; border-radius: 6px; transition: opacity .15s; }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn { background: none; border: none; cursor: pointer; font-size: 13px; color: var(--muted); font-family: inherit; padding: 0; transition: color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 8px); left: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; min-width: 200px; padding: 6px 0; z-index: 200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 16px; font-size: 13px; color: var(--muted); transition: background .1s, color .1s; }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 20px; cursor: pointer; margin-left: auto; }
+    .nav-mobile { display: none; flex-direction: column; padding: 12px 24px 16px; gap: 0; background: var(--surface); border-top: 1px solid var(--border); }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) { .nav-links { display: none; } .nav-hamburger { display: block; } }
+
+    .page-header { background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); padding: 56px 24px 48px; text-align: center; }
+    .page-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .page-title { font-size: clamp(28px, 4vw, 42px); font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 16px; }
+    .page-sub { font-size: 16px; color: var(--muted); max-width: 600px; margin: 0 auto 28px; line-height: 1.6; }
+    .price-badge { display: inline-flex; align-items: center; gap: 12px; background: rgba(0,212,170,.08); border: 1px solid rgba(0,212,170,.25); border-radius: 8px; padding: 10px 20px; margin-bottom: 28px; }
+    .price-main { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--accent); }
+    .price-sep { color: var(--border); }
+    .price-sub { font-size: 13px; color: var(--muted); }
+
+    .content-wrap { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+    .section-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .section-body { color: var(--muted); line-height: 1.7; font-size: 15px; margin-bottom: 32px; }
+
+    /* What's included */
+    .included-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .included-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .included-card .fw-icon { font-size: 22px; margin-bottom: 8px; }
+    .included-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .included-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .included-card a { font-size: 12px; color: var(--accent); display: inline-block; margin-top: 6px; }
+
+    /* Executive summary preview */
+    .exec-summary-wrap { background:#0d1117; border:1px solid #1e2d3d; border-radius:12px; overflow:hidden; margin-bottom:40px; }
+    .exec-summary-header { display:grid; grid-template-columns:2fr 2fr 1.2fr; padding:10px 24px; background:rgba(255,255,255,0.04); font-size:11px; letter-spacing:0.08em; color:#6b7280; text-transform:uppercase; }
+    .exec-summary-row { display:grid; grid-template-columns:2fr 2fr 1.2fr; padding:16px 24px; border-bottom:1px solid rgba(255,255,255,0.06); align-items:center; }
+    .exec-summary-row:nth-child(even) { background:rgba(255,255,255,0.02); }
+    .esf-name { color:#ffffff; font-weight:600; font-size:14px; }
+    .esf-checks { color:#6b7280; font-size:13px; }
+    .esf-status { font-size:11px; font-weight:700; letter-spacing:0.05em; padding:4px 10px; border-radius:4px; justify-self:end; white-space:nowrap; }
+    .esf-status.partial { background:rgba(245,158,11,0.15); color:#f59e0b; }
+    .esf-status.noncompliant { background:rgba(239,68,68,0.15); color:#ef4444; }
+    .exec-summary-footer { padding:16px 24px; color:#6b7280; font-size:13px; border-top:1px solid rgba(255,255,255,0.06); }
+
+    /* Generate form */
+    .generate-card { background: var(--surface); border: 1px solid var(--accent); border-radius: 12px; padding: 32px; max-width: 560px; margin: 0 auto 40px; }
+    .generate-card h2 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .generate-card p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; font-size: 14px; color: var(--text); font-family: inherit; transition: border-color .15s; }
+    .form-input:focus { outline: none; border-color: var(--accent); }
+    .btn-generate { width: 100%; background: var(--accent); color: #0a0b0d; border: none; border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: opacity .15s; margin-top: 6px; }
+    .btn-generate:hover { opacity: .9; }
+    .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
+    .price-note { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 14px; letter-spacing: .01em; }
+    .btn-ls { display: block; width: 100%; background: #1b2030; color: var(--accent) !important; border: 1px solid rgba(0,212,170,.35); border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .15s, border-color .15s; margin-top: 6px; text-align: center; text-decoration: none; }
+    .btn-ls:hover { background: rgba(0,212,170,.1); border-color: var(--accent); }
+    #form-msg { font-size: 13px; margin-top: 12px; padding: 10px 14px; border-radius: 6px; display: none; }
+    .msg-success { background: rgba(46,213,115,.1); color: #2ed573; border: 1px solid rgba(46,213,115,.2); }
+    .msg-error   { background: rgba(255,71,87,.1); color: #ff4757; border: 1px solid rgba(255,71,87,.2); }
+    .cta-loading { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,.3); border-top-color: #0a0b0d; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FAQ */
+    .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin-bottom: 10px; }
+    .faq-q { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .faq-a { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--accent); }
+    .footer-sep { margin: 0 8px; }
+
+    /* ── Page-specific responsive ────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .included-grid { grid-template-columns: repeat(2, 1fr); }
+      .price-badge { flex-wrap: wrap; gap: 8px; justify-content: center; }
+      .generate-card { padding: 22px 18px; max-width: 100%; }
+    }
+    @media (max-width: 600px) {
+      /* Exec-summary: hide Checks column, collapse to name + status */
+      .exec-summary-header { grid-template-columns: 1fr auto; padding-left: 16px; padding-right: 16px; }
+      .exec-summary-row    { grid-template-columns: 1fr auto; padding: 14px 16px; }
+      .exec-summary-header span:nth-child(2),
+      .exec-summary-row .esf-checks { display: none; }
+      .exec-summary-footer { padding: 12px 16px; }
+    }
+    @media (max-width: 480px) {
+      .included-grid { grid-template-columns: 1fr; }
+      .generate-card { padding: 18px 14px; }
+      .btn-generate, .btn-ls { font-size: 14px; padding: 13px; }
+      .page-sub { font-size: 14px; }
+      .cta-loading { width: 12px; height: 12px; }
+    }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+          <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance/index.html" class="active-link">Compliance</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="compliance/index.html">Compliance</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <p class="page-label">One-time report</p>
+  <h1 class="page-title">Security Compliance Assessment</h1>
+  <p class="page-sub">Professional PDF report mapping your site's security posture to four major compliance frameworks — OWASP, PCI-DSS, GDPR, and ISO 27001. Delivered to your inbox instantly.</p>
+  <div class="price-badge">
+    <span class="price-main" id="price-main">₹249</span>
+    <span class="price-sep">·</span>
+    <span class="price-sub">One-time · No subscription</span>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <!-- What's included -->
+  <h2 class="section-title">What's in the report</h2>
+  <div class="included-grid">
+    <div class="included-card">
+      <div class="fw-icon">🔐</div>
+      <h3>OWASP Top 10 2021</h3>
+      <p>Maps your headers, TLS, cookies, and SRI to the most relevant OWASP categories including A02 Cryptographic Failures and A03 Injection (XSS). Includes CWE weakness IDs and an Assessment Summary table.</p>
+      <a href="compliance/owasp.html">Learn more →</a>
+    </div>
+    <div class="included-card">
+      <div class="fw-icon">💳</div>
+      <h3>PCI-DSS v4.0</h3>
+      <p>Checks web-layer requirements for payment card security — TLS strength, CSP, script integrity, and cookie handling per PCI-DSS v4.0. Each failure mapped to a CWE ID in the Assessment Summary.</p>
+      <a href="compliance/pci-dss.html">Learn more →</a>
+    </div>
+    <div class="included-card">
+      <div class="fw-icon">🇪🇺</div>
+      <h3>GDPR Article 32</h3>
+      <p>Maps technical security measures to the four sub-clauses of Article 32 — encryption in transit, confidentiality, resilience, and regular testing. CWE references included for each gap found.</p>
+      <a href="compliance/gdpr.html">Learn more →</a>
+    </div>
+    <div class="included-card">
+      <div class="fw-icon">📋</div>
+      <h3>ISO 27001:2022</h3>
+      <p>Evaluates applicable Annex A controls: A.8.23 Web Filtering, A.8.24 Cryptography, A.8.25 Secure Dev, A.8.26 App Security, A.8.16 Monitoring. The Assessment Summary shows pass/fail with CWE codes.</p>
+      <a href="compliance/iso27001.html">Learn more →</a>
+    </div>
+  </div>
+
+  <!-- Sample preview -->
+  <h2 class="section-title">Sample — executive summary</h2>
+  <div class="exec-summary-wrap">
+    <div class="exec-summary-header">
+      <span>FRAMEWORK</span>
+      <span>CHECKS</span>
+      <span>STATUS</span>
+    </div>
+    <div class="exec-summary-row">
+      <span class="esf-name">OWASP Top 10 2021</span>
+      <span class="esf-checks">5 requirements checked</span>
+      <span class="esf-status partial">⚠ PARTIAL</span>
+    </div>
+    <div class="exec-summary-row">
+      <span class="esf-name">PCI-DSS v4.0</span>
+      <span class="esf-checks">5 requirements checked</span>
+      <span class="esf-status noncompliant">✗ NON-COMPLIANT</span>
+    </div>
+    <div class="exec-summary-row">
+      <span class="esf-name">GDPR Article 32</span>
+      <span class="esf-checks">4 requirements checked</span>
+      <span class="esf-status partial">⚠ PARTIAL</span>
+    </div>
+    <div class="exec-summary-row">
+      <span class="esf-name">ISO 27001:2022 Annex A</span>
+      <span class="esf-checks">6 requirements checked</span>
+      <span class="esf-status partial">⚠ PARTIAL</span>
+    </div>
+    <div class="exec-summary-footer">The full PDF contains per-requirement pass/fail tables, exact findings, and a prioritised remediation plan.</div>
+  </div>
+
+  <!-- Generate form -->
+  <div class="generate-card" id="generate-card">
+    <h2 id="card-title">Generate your report</h2>
+    <p id="card-sub">Enter your domain and email. We'll scan it and email the PDF within 60 seconds.</p>
+
+    <div class="form-group">
+      <label for="input-url">Website URL</label>
+      <input type="url" id="input-url" class="form-input" placeholder="https://example.com" autocomplete="off">
+    </div>
+    <div class="form-group" id="email-group">
+      <label for="input-email">Email address</label>
+      <input type="email" id="input-email" class="form-input" placeholder="you@example.com">
+    </div>
+
+    <!-- Always-visible pricing line -->
+    <p class="price-note" id="price-note">₹249 for India &nbsp;·&nbsp; $3 international</p>
+
+    <!-- India: Razorpay button -->
+    <button class="btn-generate" id="btn-generate" onclick="handleGenerate()">Pay ₹249 &amp; get report →</button>
+
+    <!-- International: LemonSqueezy button (shown by init() for non-India) -->
+    <a class="btn-ls" id="btn-ls" href="#" target="_blank" rel="noopener" style="display:none;">Pay $3 via LemonSqueezy →</a>
+
+    <div id="form-msg"></div>
+  </div>
+
+  <!-- FAQ -->
+  <h2 class="section-title">FAQ</h2>
+
+  <div class="faq-item">
+    <p class="faq-q">Is this an official compliance certification?</p>
+    <p class="faq-a">No. This is an automated technical assessment of observable security controls — HTTP headers, TLS configuration, DNS records, cookie flags, and page security. It identifies gaps but does not replace a formal audit by a QSA (PCI-DSS), DPO (GDPR), or accredited ISO 27001 auditor. Use this report to identify and fix technical gaps before engaging a formal auditor.</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">How is this different from the regular SecureScanr report?</p>
+    <p class="faq-a">The regular scan gives you a security grade and per-header findings. The compliance report maps those same findings to specific requirement IDs within OWASP, PCI-DSS, GDPR, and ISO 27001 — so you can present evidence of technical controls to a client, auditor, or internal security team.</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">How long does it take?</p>
+    <p class="faq-a">The scan typically completes in 10–30 seconds. PDF generation and email delivery add another 10–15 seconds. You should receive the report within 60 seconds of submitting your domain.</p>
+  </div>
+  <div class="faq-item">
+    <p class="faq-q">Can I get a refund?</p>
+    <p class="faq-a">Once the PDF has been generated and emailed, refunds are not available. If the scan failed or you did not receive the email, contact us at <a href="mailto:hello@securescanr.com">hello@securescanr.com</a> and we'll regenerate it or issue a refund.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <a href="index.html">Home</a>
+    <span class="footer-sep">·</span>
+    <a href="plans.html">Plans</a>
+    <span class="footer-sep">·</span>
+    <a href="compliance/index.html">Compliance</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+  <p style="margin-top:8px;">© 2026 SecureScanr. Made in India.</p>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+  const LS_COMPLIANCE_URL = 'https://webaudit-in.lemonsqueezy.com/checkout/buy/YOUR_COMPLIANCE_VARIANT_UUID';
+
+  // Detect token in URL (from LemonSqueezy flow)
+  const _params = new URLSearchParams(location.search);
+  const _preToken = _params.get('token') || '';
+
+  // IP-based routing
+  let _provider = 'razorpay';
+  let _rzpKey   = '';
+
+  async function _fetchRoute() {
+    try {
+      const r = await fetch(`${API_BASE}/api/get-payment-route`);
+      if (r.ok) {
+        const d = await r.json();
+        _provider = d.provider || 'razorpay';
+        _rzpKey   = d.key || '';
+      }
+    } catch {}
+  }
+
+  async function init() {
+    await _fetchRoute();
+
+    const priceEl    = document.getElementById('price-main');
+    const btnGenerate = document.getElementById('btn-generate');
+    const btnLs      = document.getElementById('btn-ls');
+    const priceNote  = document.getElementById('price-note');
+
+    if (_preToken) {
+      // ── Token flow: payment already done via LemonSqueezy ────────────────
+      // Show Razorpay generate button repurposed as "Generate report →"
+      // Hide LS button and price note
+      if (btnGenerate) { btnGenerate.style.display = 'block'; btnGenerate.textContent = 'Generate report →'; }
+      if (btnLs) btnLs.style.display = 'none';
+      if (priceNote) priceNote.style.display = 'none';
+      const emailGroup = document.getElementById('email-group');
+      if (emailGroup) emailGroup.style.display = 'none';
+      const cardSub = document.getElementById('card-sub');
+      if (cardSub) cardSub.textContent = 'Token redeemed from your email. Enter the domain to scan and generate your report.';
+    } else if (_provider !== 'razorpay') {
+      // ── International: show LS button, hide Razorpay button ─────────────
+      if (priceEl) priceEl.textContent = '$3';
+      if (btnGenerate) btnGenerate.style.display = 'none';
+      if (btnLs) {
+        btnLs.href = LS_COMPLIANCE_URL;
+        btnLs.style.display = 'block';
+      }
+    }
+    // India (_provider === 'razorpay'): defaults are correct — Razorpay button visible, LS hidden
+  }
+  init();
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.Razorpay) { resolve(); return; }
+      const s = document.createElement('script');
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('Failed to load ' + src));
+      s.src = src;
+      document.head.appendChild(s);
+    });
+  }
+
+  function showMsg(text, type) {
+    const el = document.getElementById('form-msg');
+    el.textContent = text;
+    el.className = type === 'success' ? 'msg-success' : 'msg-error';
+    el.style.display = 'block';
+  }
+
+  async function _submitGenerate(url, email, authPayload) {
+    const body = { url, email, ...authPayload };
+    const res = await fetch(`${API_BASE}/api/compliance-report/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Generation failed');
+    return data;
+  }
+
+  async function handleGenerate() {
+    const btn   = document.getElementById('btn-generate');
+    const url   = document.getElementById('input-url').value.trim();
+    const email = document.getElementById('input-email')?.value.trim() || '';
+
+    if (!url) { showMsg('Please enter a website URL.', 'error'); return; }
+    if (_preToken && !url) { showMsg('Please enter a website URL.', 'error'); return; }
+    if (!_preToken && (!email || !email.includes('@'))) {
+      showMsg('Please enter a valid email address.', 'error'); return;
+    }
+
+    btn.disabled = true;
+
+    // ── Token flow (LemonSqueezy pre-paid) ─────────────────────────────────
+    if (_preToken) {
+      btn.innerHTML = '<span class="cta-loading"></span>Scanning and generating report…';
+      try {
+        await _submitGenerate(url, email, { compliance_token: _preToken });
+        showMsg('✓ Report generated and emailed! Check your inbox.', 'success');
+        btn.textContent = '✓ Report sent to your email';
+      } catch (err) {
+        showMsg(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Generate report →';
+      }
+      return;
+    }
+
+    // ── International: btn-ls anchor handles navigation; btn-generate is hidden ──
+    // (This branch is unreachable when _provider !== 'razorpay' since btn-generate is hidden)
+
+
+    // ── Razorpay flow (India) ───────────────────────────────────────────────
+    btn.innerHTML = '<span class="cta-loading"></span>Preparing payment…';
+    try {
+      const payRes = await fetch(`${API_BASE}/api/compliance-report/pay`, { method: 'POST' });
+      if (!payRes.ok) throw new Error('Payment setup failed');
+      const { order_id, amount, key } = await payRes.json();
+
+      await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+      btn.disabled = false;
+      btn.textContent = 'Get compliance report →';
+
+      const rzp = new Razorpay({
+        key,
+        order_id,
+        amount,
+        currency: 'INR',
+        name: 'SecureScanr',
+        description: 'Security Compliance Report',
+        image: 'https://securescanr.com/favicon.ico',
+        prefill: { email },
+        theme: { color: '#00d4aa' },
+        handler: async function(response) {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="cta-loading"></span>Generating your report…';
+          try {
+            await _submitGenerate(url, email, {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_signature:  response.razorpay_signature,
+            });
+            showMsg('✓ Report generated and emailed to ' + email + '!', 'success');
+            btn.textContent = '✓ Report sent to your email';
+          } catch (err) {
+            showMsg('Payment succeeded but report generation failed. Email hello@securescanr.com for help.', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Pay ₹249 & get report →';
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            btn.disabled = false;
+            btn.textContent = 'Pay ₹249 & get report →';
+          }
+        }
+      });
+      rzp.open();
+
+    } catch (err) {
+      console.error('[compliance] error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Pay ₹249 & get report →';
+      showMsg('Something went wrong. Please try again or email hello@securescanr.com.', 'error');
+    }
+  }
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

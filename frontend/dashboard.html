@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pro Dashboard — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-badge {
+      margin-left: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; background: rgba(0,212,170,.12); color: var(--accent);
+      border: 1px solid rgba(0,212,170,.25); padding: 3px 8px; border-radius: 4px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+    }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); text-decoration: none; padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page shell ──────────────────────────────────────────────────────── */
+    .page-wrap {
+      max-width: 780px; margin: 0 auto;
+      padding: 48px 24px 96px;
+    }
+
+    /* ── States ──────────────────────────────────────────────────────────── */
+    [hidden] { display: none !important; }
+    .state-loading {
+      display: flex; align-items: center; gap: 14px;
+      padding: 60px 0;
+      color: var(--muted); font-size: 15px;
+    }
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .state-error {
+      background: var(--surface);
+      border: 1px solid rgba(255,71,87,.3);
+      border-radius: 12px;
+      padding: 40px 36px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .state-error .err-icon { font-size: 36px; margin-bottom: 16px; }
+    .state-error h2 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+    .state-error p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .btn-outline {
+      display: inline-block;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      color: var(--text); text-decoration: none;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .key-entry-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin: 16px 0 6px;
+    }
+    .manual-key-input {
+      flex: 1; min-width: 200px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 13px; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .manual-key-input:focus { border-color: var(--accent); }
+    .manual-key-input::placeholder { color: var(--muted); }
+    .btn-primary-sm {
+      padding: 10px 18px;
+      background: var(--accent); color: #0a0b0d;
+      font-size: 13px; font-weight: 700;
+      border: none; border-radius: 8px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      white-space: nowrap; transition: opacity .15s;
+    }
+    .btn-primary-sm:hover { opacity: .88; }
+    .key-input-error { font-size: 13px; color: var(--danger); min-height: 18px; }
+
+    /* ── Dashboard header ────────────────────────────────────────────────── */
+    .dash-header { margin-bottom: 36px; }
+    .dash-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .dash-title {
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 700; letter-spacing: -.5px;
+      color: var(--text);
+    }
+    .dash-email {
+      margin-top: 6px; font-size: 14px; color: var(--muted);
+    }
+
+    /* ── Cards ───────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    .card-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    /* ── API key card ────────────────────────────────────────────────────── */
+    .key-row {
+      display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .key-display {
+      flex: 1; min-width: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 14px; color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      letter-spacing: .5px;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+    .key-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-icon {
+      display: flex; align-items: center; gap: 6px;
+      padding: 9px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      white-space: nowrap;
+    }
+    .btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-icon.copied { border-color: var(--accent); color: var(--accent); }
+    .key-meta { margin-top: 14px; display: flex; align-items: center; gap: 10px; }
+    .badge-active {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0,212,170,.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,212,170,.3);
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .key-plan { font-size: 13px; color: var(--muted); }
+
+    /* ── Usage card ──────────────────────────────────────────────────────── */
+    .usage-numbers {
+      display: flex; align-items: baseline; gap: 8px;
+      margin-bottom: 16px;
+    }
+    .usage-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 36px; font-weight: 700;
+      color: var(--text); letter-spacing: -1px;
+      line-height: 1;
+    }
+    .usage-denom {
+      font-family: 'Space Mono', monospace;
+      font-size: 18px; color: var(--muted);
+    }
+    .usage-label { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .progress-track {
+      width: 100%; height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width .5s ease;
+    }
+    .progress-fill.warn { background: #ffa502; }
+    .progress-fill.full { background: var(--danger); }
+    .usage-reset { font-size: 12px; color: var(--muted); }
+
+    /* ── Quick start card ────────────────────────────────────────────────── */
+    .code-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 20px;
+      overflow-x: auto;
+    }
+    .code-block code {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.9;
+      white-space: pre;
+      display: block;
+    }
+    .code-block code .tok-method  { color: #06B6D4; }
+    .code-block code .tok-url     { color: var(--text); }
+    .code-block code .tok-header  { color: #a78bfa; }
+    .code-block code .tok-value   { color: var(--accent); }
+    .code-block code .tok-key     { color: var(--accent); font-weight: 700; }
+    .code-block code .tok-string  { color: #f97316; }
+    .code-block code .tok-comment { color: var(--muted); }
+
+    /* ── CTA ─────────────────────────────────────────────────────────────── */
+    .cta-row {
+      display: flex; gap: 12px; flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .btn-primary {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: #0a0b0d;
+      font-size: 14px; font-weight: 700;
+      border-radius: 8px; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn-primary:hover { opacity: .88; }
+
+    /* ── Billing / cancel ────────────────────────────────────────────────── */
+    .btn-danger-outline {
+      padding: 9px 18px;
+      background: transparent;
+      border: 1px solid rgba(255,71,87,.4);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: var(--danger);
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn-danger-outline:hover { border-color: var(--danger); background: rgba(255,71,87,.06); }
+    .btn-danger-outline:disabled { opacity: .45; cursor: not-allowed; }
+    .cancel-notice {
+      font-size: 13px; line-height: 1.6;
+      padding: 12px 16px; border-radius: 8px;
+      margin-bottom: 14px;
+    }
+    .cancel-notice.info {
+      background: rgba(0,212,170,.06);
+      border: 1px solid rgba(0,212,170,.2);
+      color: var(--accent);
+    }
+    .cancel-notice.warn {
+      background: rgba(255,165,2,.06);
+      border: 1px solid rgba(255,165,2,.2);
+      color: #ffa502;
+    }
+    .cancel-notice.err {
+      background: rgba(255,71,87,.06);
+      border: 1px solid rgba(255,71,87,.2);
+      color: var(--danger);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 12px; color: var(--muted);
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-sep { margin: 0 8px; opacity: .4; }
+
+    /* ── Mobile (≤768px) ─────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      /* Page wrap: tighter padding on small screens */
+      .page-wrap { padding: 28px 16px 56px; }
+
+      /* Cards: reduce generous desktop horizontal padding */
+      .card { padding: 20px 18px; }
+
+      /* Error / key-entry panel: reduce wide horizontal padding */
+      .state-error { padding: 28px 18px; }
+
+      /* Key entry row: stack input above button, both full width */
+      .key-entry-row { flex-direction: column; align-items: stretch; gap: 8px; }
+      .manual-key-input { min-width: 0; width: 100%; }
+      .btn-primary-sm { width: 100%; }
+
+      /* API key card: stack key display above action buttons */
+      .key-row { flex-direction: column; align-items: stretch; }
+      .key-actions { width: 100%; }
+
+      /* key-meta: let badge + plan text wrap to next line if needed */
+      .key-meta { flex-wrap: wrap; }
+
+      /* CTA row: "Run a scan" + "Get help" stack full-width */
+      .cta-row { flex-direction: column; align-items: stretch; gap: 10px; }
+      .btn-primary { width: 100%; text-align: center; box-sizing: border-box; }
+      .btn-outline  { width: 100%; text-align: center; box-sizing: border-box; }
+    }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <span class="nav-badge">Pro Dashboard</span>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="mailto:hello@securescanr.com" class="nav-cta">Support →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="mailto:hello@securescanr.com">Support →</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Loading -->
+  <div id="state-loading" class="state-loading">
+    <div class="spinner"></div>
+    <span>Verifying your API key…</span>
+  </div>
+
+  <!-- Error / key entry -->
+  <div id="state-error" hidden>
+    <div class="state-error">
+      <div class="err-icon">🔑</div>
+      <h2 id="err-title">Enter your API key</h2>
+      <p id="err-body">Paste your SecureScanr Pro API key from your welcome email.</p>
+      <div class="key-entry-row">
+        <input type="text" id="manual-key-input" class="manual-key-input"
+               placeholder="wa_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+               autocomplete="off" spellcheck="false"
+               onkeydown="if(event.key==='Enter')loadWithKey()">
+        <button class="btn-primary-sm" onclick="loadWithKey()">Load dashboard →</button>
+      </div>
+      <p id="key-input-error" class="key-input-error"></p>
+      <a href="plans.html" class="btn-outline" style="margin-top:16px;display:inline-block">Get API access →</a>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="state-dashboard" hidden>
+
+    <div class="dash-header">
+      <p class="dash-eyebrow">Pro Dashboard</p>
+      <h1 class="dash-title">Your API access</h1>
+      <p class="dash-email" id="dash-email"></p>
+    </div>
+
+    <!-- API Key card -->
+    <div class="card">
+      <p class="card-label">API Key</p>
+      <div class="key-row">
+        <div class="key-display" id="key-display">••••••••••••••••••••••••••••••••</div>
+        <div class="key-actions">
+          <button class="btn-icon" id="btn-reveal" onclick="toggleReveal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Reveal
+          </button>
+          <button class="btn-icon" id="btn-copy" onclick="copyKey()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+      </div>
+      <div class="key-meta">
+        <span class="badge-active">● Active</span>
+        <span class="key-plan" id="key-plan">Pro plan</span>
+      </div>
+    </div>
+
+    <!-- Usage card -->
+    <div class="card">
+      <p class="card-label">Usage this month</p>
+      <div class="usage-numbers">
+        <span class="usage-count" id="usage-count">0</span>
+        <span class="usage-denom" id="usage-denom">/ 50 scans</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <p class="usage-reset">Resets on the 1st of each month.</p>
+    </div>
+
+    <!-- Quick start card -->
+    <div class="card">
+      <p class="card-label">Quick start</p>
+      <div class="code-block">
+        <code id="code-snippet"></code>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-row">
+      <a href="scan.html" class="btn-primary">Run a scan →</a>
+      <a href="mailto:hello@securescanr.com" class="btn-outline">Get help</a>
+    </div>
+
+    <!-- Billing card -->
+    <div class="card" style="margin-top:20px">
+      <p class="card-label">Subscription</p>
+      <div id="cancel-notice"></div>
+      <div id="cancel-action">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">
+          Cancel to stop future charges. You keep full access until the end of the current billing period.
+        </p>
+        <button class="btn-danger-outline" id="btn-cancel-sub" onclick="cancelSubscription()">Cancel subscription</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <span>© 2026 SecureScanr</span>
+  <span class="footer-sep">·</span>
+  <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+  <span class="footer-sep">·</span>
+  <a href="privacy.html">Privacy</a>
+  <span class="footer-sep">·</span>
+  <a href="terms.html">Terms</a>
+  <span class="footer-sep">·</span>
+  <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+  let _apiKey    = '';
+  let _revealed  = false;
+
+  function mask(key) {
+    return '••••••••••••••••••••••••••••••••';
+  }
+
+  function toggleReveal() {
+    _revealed = !_revealed;
+    const display = document.getElementById('key-display');
+    const btn     = document.getElementById('btn-reveal');
+    if (_revealed) {
+      display.textContent = _apiKey;
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        Hide`;
+    } else {
+      display.textContent = mask(_apiKey);
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Reveal`;
+    }
+  }
+
+  async function copyKey() {
+    try {
+      await navigator.clipboard.writeText(_apiKey);
+    } catch {
+      // fallback for non-HTTPS or older browsers
+      const ta = document.createElement('textarea');
+      ta.value = _apiKey;
+      ta.style.position = 'fixed';
+      ta.style.opacity  = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const btn = document.getElementById('btn-copy');
+    btn.classList.add('copied');
+    btn.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy`;
+    }, 2000);
+  }
+
+  function buildCodeSnippet(key) {
+    return [
+      `# Scan a URL and get JSON results`,
+      `curl -s -X POST https://api.securescanr.com/api/scan \\`,
+      `  -H "X-API-Key: ${key}" \\`,
+      `  -H "Content-Type: application/json" \\`,
+      `  -d '{"url": "https://example.com"}'`,
+      ``,
+      `# Export a PDF report`,
+      `curl -X POST https://api.securescanr.com/api/report/pdf \\`,
+      `  -H "X-API-Key: ${key}" \\`,
+      `  -H "Content-Type: application/json" \\`,
+      `  -d '{"url": "https://example.com"}' \\`,
+      `  --output report.pdf`,
+    ].join('\n');
+  }
+
+  function showError(title, body) {
+    document.getElementById('state-loading').hidden   = true;
+    document.getElementById('state-error').hidden     = false;
+    document.getElementById('state-dashboard').hidden = true;
+    if (title) document.getElementById('err-title').textContent = title;
+    if (body)  document.getElementById('err-body').textContent  = body;
+    if (_apiKey) document.getElementById('manual-key-input').value = _apiKey;
+  }
+
+  async function loadWithKey() {
+    const input  = document.getElementById('manual-key-input');
+    const errEl  = document.getElementById('key-input-error');
+    const key    = input.value.trim();
+    if (!key) { errEl.textContent = 'Please enter your API key.'; return; }
+    errEl.textContent = '';
+    _apiKey = key;
+    const url = new URL(window.location.href);
+    url.searchParams.set('key', key);
+    window.history.replaceState({}, '', url.toString());
+    document.getElementById('state-loading').hidden = false;
+    document.getElementById('state-error').hidden   = true;
+    try {
+      const res  = await fetch(`${API_BASE}/api/usage?key=${encodeURIComponent(key)}`);
+      const data = await res.json();
+      document.getElementById('state-loading').hidden = true;
+      if (!data.valid) {
+        showError('Invalid or expired key', 'This key was not found. Check your welcome email or contact hello@securescanr.com.');
+        return;
+      }
+      showDashboard(data);
+    } catch {
+      document.getElementById('state-loading').hidden = true;
+      showError('Could not reach the API', 'Please check your connection and try refreshing.');
+    }
+  }
+
+  function showDashboard(data) {
+    document.getElementById('state-loading').hidden   = true;
+    document.getElementById('state-error').hidden     = true;
+    document.getElementById('state-dashboard').hidden = false;
+
+    // Email
+    if (data.email) {
+      document.getElementById('dash-email').textContent = data.email;
+    }
+
+    // Plan
+    const plan = (data.plan || 'pro').charAt(0).toUpperCase() + (data.plan || 'pro').slice(1);
+    document.getElementById('key-plan').textContent = plan + ' plan';
+
+    // Usage
+    const used  = data.scans_used  ?? 0;
+    const limit = data.scans_limit ?? 50;
+    const pct   = Math.min(100, Math.round((used / limit) * 100));
+    document.getElementById('usage-count').textContent = used;
+    document.getElementById('usage-denom').textContent = `/ ${limit} scans`;
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = pct + '%';
+    if (pct >= 100) fill.classList.add('full');
+    else if (pct >= 80) fill.classList.add('warn');
+
+    // Code snippet
+    document.getElementById('code-snippet').textContent = buildCodeSnippet(_apiKey);
+
+    // Billing / cancellation state
+    if (data.subscription_status === 'cancel_pending') {
+      document.getElementById('cancel-action').hidden = true;
+      document.getElementById('cancel-notice').innerHTML =
+        '<div class="cancel-notice warn">Cancellation scheduled — your access continues until the end of the current billing period.</div>';
+    }
+  }
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    const key    = params.get('key') || '';
+
+    if (!key) {
+      showError('Enter your API key', 'Paste your SecureScanr Pro API key from your welcome email.');
+      return;
+    }
+
+    _apiKey = key;
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/usage?key=${encodeURIComponent(key)}`);
+      const data = await res.json();
+
+      if (!data.valid) {
+        showError('Invalid or expired key', 'This key was not found in our system. Check your welcome email or contact support.');
+        return;
+      }
+
+      showDashboard(data);
+    } catch {
+      showError('Could not reach the API', 'Please check your connection and try refreshing.');
+    }
+  }
+
+  async function cancelSubscription() {
+    if (!confirm(
+      'Cancel your subscription?\n\n' +
+      'You will keep full access until the end of the current billing period. ' +
+      'After that, your API key will stop working.'
+    )) return;
+
+    const btn = document.getElementById('btn-cancel-sub');
+    btn.disabled = true;
+    btn.textContent = 'Cancelling…';
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/cancel-subscription`, {
+        method:  'POST',
+        headers: { 'X-API-Key': _apiKey },
+      });
+      const data = await res.json();
+
+      const noticeEl = document.getElementById('cancel-notice');
+      const actionEl = document.getElementById('cancel-action');
+
+      if (res.ok) {
+        actionEl.hidden = true;
+        noticeEl.innerHTML =
+          '<div class="cancel-notice info">Your subscription will cancel at the end of the current billing period. You retain full access until then.</div>';
+      } else {
+        btn.disabled    = false;
+        btn.textContent = 'Cancel subscription';
+        noticeEl.innerHTML = `<div class="cancel-notice err">${data.error || 'Cancellation failed. Please email hello@securescanr.com.'}</div>`;
+      }
+    } catch {
+      btn.disabled    = false;
+      btn.textContent = 'Cancel subscription';
+    }
+  }
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  init();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

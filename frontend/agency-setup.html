@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Set up your SecureScanr Agency account — configure monitored domains and scan schedule.">
+  <meta name="robots" content="noindex">
+  <title>Agency Setup — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+    a { color: var(--accent); text-decoration: none; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #0a0b0d !important; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px; transition: opacity .15s !important; }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; font-family: inherit; transition: color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; }
+    .nav-dropdown-menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 6px 6px; min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: var(--muted); border-radius: 6px; text-decoration: none; transition: background .12s, color .12s; }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger { display: none; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto; }
+    .nav-mobile { display: none; flex-direction: column; border-top: 1px solid var(--border); padding: 12px 24px 16px; }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) { .nav-links { display: none; } .nav-hamburger { display: block; } }
+
+    .page-wrap { max-width: 640px; margin: 0 auto; padding: 64px 24px 96px; }
+
+    .step-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .step { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+    .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+    .step.active .step-num { background: var(--accent); color: #0a0b0d; }
+    .step.done .step-num { background: var(--success); color: #0a0b0d; }
+    .step.inactive .step-num { background: var(--border); color: var(--muted); }
+    .step.active .step-label { color: var(--text); }
+    .step.done .step-label { color: var(--success); }
+    .step.inactive .step-label { color: var(--muted); }
+    .step-sep { flex: 1; height: 1px; background: var(--border); }
+
+    .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .section-title { font-size: clamp(22px, 4vw, 32px); font-weight: 700; letter-spacing: -.5px; color: var(--text); margin-bottom: 8px; }
+    .section-sub { font-size: 14px; color: var(--muted); margin-bottom: 36px; line-height: 1.6; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px; margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 24px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .form-hint { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .form-input { width: 100%; background: #0a0b0d; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); }
+
+    .domain-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .domain-row { display: flex; align-items: center; gap: 8px; }
+    .domain-row input { flex: 1; }
+    .domain-remove { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; transition: color .15s; }
+    .domain-remove:hover { color: var(--danger); }
+    .add-domain-btn { background: none; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; font-family: inherit; cursor: pointer; padding: 8px 14px; width: 100%; text-align: left; transition: border-color .15s, color .15s; }
+    .add-domain-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .domain-count { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-card { flex: 1; min-width: 120px; }
+    .radio-card input[type="radio"] { display: none; }
+    .radio-card label { display: block; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--muted); text-align: center; transition: border-color .15s, color .15s, background .15s; }
+    .radio-card input[type="radio"]:checked + label { border-color: var(--accent); color: var(--accent); background: rgba(0,212,170,.06); font-weight: 600; }
+
+    .select-input { width: 100%; background: #0a0b0d; border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; appearance: none; cursor: pointer; }
+    .select-input:focus { border-color: var(--accent); }
+
+    .submit-btn { display: block; width: 100%; background: var(--accent); color: #0a0b0d; font-size: 15px; font-weight: 700; padding: 14px 24px; border-radius: 10px; border: none; cursor: pointer; font-family: inherit; transition: opacity .15s, transform .15s; margin-top: 8px; }
+    .submit-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 8px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box { background: rgba(255,71,87,.08); border: 1px solid rgba(255,71,87,.3); border-radius: 10px; padding: 16px 20px; color: var(--danger); font-size: 14px; margin-top: 16px; }
+
+    /* ── Success state ── */
+    #state-success { display: none; }
+    .success-icon { font-size: 48px; margin-bottom: 20px; }
+    .api-key-box { background: #0a0b0d; border: 1px solid var(--accent); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
+    .api-key-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .api-key-value { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--text); word-break: break-all; margin-bottom: 10px; }
+    .copy-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 12px; font-family: inherit; cursor: pointer; padding: 4px 12px; transition: border-color .15s, color .15s; }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .dashboard-btn { display: inline-block; background: var(--accent); color: #0a0b0d; font-size: 14px; font-weight: 700; padding: 12px 28px; border-radius: 8px; text-decoration: none; margin-top: 8px; transition: opacity .15s; }
+    .dashboard-btn:hover { opacity: .88; }
+    .warning-note { background: rgba(255,165,2,.08); border: 1px solid rgba(255,165,2,.3); border-radius: 8px; padding: 14px 18px; font-size: 13px; color: var(--warning); margin-top: 20px; line-height: 1.6; }
+
+    /* ── Verifying state ── */
+    #state-verifying { display: none; text-align: center; padding: 64px 24px; }
+    .verifying-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+
+    /* ── Error state ── */
+    #state-error { display: none; text-align: center; padding: 48px 24px; }
+    .error-icon { font-size: 40px; margin-bottom: 16px; }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+          <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Verifying state -->
+  <div id="state-verifying">
+    <div class="verifying-spinner"></div>
+    <p style="color:var(--muted);font-size:15px;">Verifying your subscription…</p>
+  </div>
+
+  <!-- Error state -->
+  <div id="state-error">
+    <div class="error-icon">✗</div>
+    <h2 style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;">Something went wrong</h2>
+    <p id="error-message" style="color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6;"></p>
+    <a href="plans.html" style="color:var(--accent);font-size:14px;">← Back to Plans</a>
+  </div>
+
+  <!-- Setup form -->
+  <div id="state-form" style="display:none">
+    <div class="step-indicator">
+      <div class="step done"><div class="step-num">✓</div><span class="step-label">Payment</span></div>
+      <div class="step-sep"></div>
+      <div class="step active"><div class="step-num">2</div><span class="step-label">Setup</span></div>
+      <div class="step-sep"></div>
+      <div class="step inactive"><div class="step-num">3</div><span class="step-label">Done</span></div>
+    </div>
+
+    <p class="section-eyebrow">Agency Setup</p>
+    <h1 class="section-title">Configure your account</h1>
+    <p class="section-sub">Add the domains you want to monitor and set your automated scan schedule. You can update these at any time from your dashboard.</p>
+
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label" for="email-input">Email address</label>
+        <p class="form-hint">Where we'll send your API key and scheduled scan reports.</p>
+        <input type="email" id="email-input" class="form-input" placeholder="you@company.com" autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Domains to monitor</label>
+        <p class="form-hint">Add up to 25 domains. Enter domain only — no https:// or path.</p>
+        <div class="domain-list" id="domain-list">
+          <div class="domain-row">
+            <input type="text" class="form-input domain-input" placeholder="example.com">
+            <button class="domain-remove" onclick="removeDomain(this)" title="Remove">×</button>
+          </div>
+        </div>
+        <button class="add-domain-btn" onclick="addDomain()" id="add-domain-btn">+ Add another domain</button>
+        <p class="domain-count" id="domain-count">1 / 25 domains</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Scan schedule</label>
+        <p class="form-hint">How often should we automatically scan all your domains?</p>
+        <div class="radio-group">
+          <div class="radio-card">
+            <input type="radio" name="schedule" id="sched-weekly" value="weekly" checked onchange="updateScheduleDay()">
+            <label for="sched-weekly">Weekly</label>
+          </div>
+          <div class="radio-card">
+            <input type="radio" name="schedule" id="sched-monthly" value="monthly" onchange="updateScheduleDay()">
+            <label for="sched-monthly">Monthly</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group" id="schedule-day-group">
+        <label class="form-label" id="schedule-day-label" for="schedule-day">Day of week</label>
+        <select class="select-input" id="schedule-day">
+          <option value="0">Monday</option>
+          <option value="1">Tuesday</option>
+          <option value="2">Wednesday</option>
+          <option value="3">Thursday</option>
+          <option value="4">Friday</option>
+          <option value="5">Saturday</option>
+          <option value="6">Sunday</option>
+        </select>
+      </div>
+
+      <button class="submit-btn" id="setup-btn" onclick="submitSetup()">Activate Agency Account →</button>
+      <div id="setup-error" class="error-box" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Success state -->
+  <div id="state-success">
+    <div class="step-indicator">
+      <div class="step done"><div class="step-num">✓</div><span class="step-label">Payment</span></div>
+      <div class="step-sep"></div>
+      <div class="step done"><div class="step-num">✓</div><span class="step-label">Setup</span></div>
+      <div class="step-sep"></div>
+      <div class="step active"><div class="step-num">3</div><span class="step-label">Done</span></div>
+    </div>
+
+    <div class="success-icon">✓</div>
+    <p class="section-eyebrow">Agency Active</p>
+    <h1 class="section-title">Your account is ready</h1>
+    <p class="section-sub">Your API key has been emailed to you. Bookmark your dashboard URL — it uses your API key for access.</p>
+
+    <div class="api-key-box">
+      <div class="api-key-label">Your Agency API Key</div>
+      <div class="api-key-value" id="success-api-key"></div>
+      <button class="copy-btn" onclick="copyKey()">Copy</button>
+    </div>
+
+    <a href="#" id="dashboard-link" class="dashboard-btn">Open Agency Dashboard →</a>
+
+    <div class="warning-note">
+      Keep your API key private. Anyone with this key can access your agency dashboard and trigger scans.
+      Save this page or bookmark the dashboard URL — we only email the key once.
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div style="max-width:1100px;margin:0 auto;padding:12px 24px 16px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 16px;font-size:12px;color:var(--muted);">
+    <span>© 2026 SecureScanr</span>
+    <span style="opacity:.4">·</span>
+    <a href="privacy.html" style="color:var(--muted)">Privacy</a>
+    <span style="opacity:.4">·</span>
+    <a href="terms.html" style="color:var(--muted)">Terms</a>
+    <span style="opacity:.4">·</span>
+    <a href="status.html" style="color:var(--muted)">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+  let rzpSubId = null;
+  let lsSubId  = null;
+
+  function showState(id) {
+    ['state-verifying','state-error','state-form','state-success'].forEach(s => {
+      document.getElementById(s).style.display = s === id ? '' : 'none';
+    });
+  }
+
+  function showError(msg) {
+    document.getElementById('error-message').textContent = msg;
+    showState('state-error');
+  }
+
+  function addDomain() {
+    const list = document.getElementById('domain-list');
+    const rows = list.querySelectorAll('.domain-row');
+    if (rows.length >= 25) return;
+    const row = document.createElement('div');
+    row.className = 'domain-row';
+    row.innerHTML = '<input type="text" class="form-input domain-input" placeholder="example.com"><button class="domain-remove" onclick="removeDomain(this)" title="Remove">×</button>';
+    list.appendChild(row);
+    updateDomainCount();
+    row.querySelector('input').focus();
+  }
+
+  function removeDomain(btn) {
+    const list = document.getElementById('domain-list');
+    if (list.querySelectorAll('.domain-row').length <= 1) return;
+    btn.closest('.domain-row').remove();
+    updateDomainCount();
+  }
+
+  function updateDomainCount() {
+    const count = document.getElementById('domain-list').querySelectorAll('.domain-row').length;
+    document.getElementById('domain-count').textContent = count + ' / 25 domains';
+    document.getElementById('add-domain-btn').style.display = count >= 25 ? 'none' : '';
+  }
+
+  function updateScheduleDay() {
+    const weekly = document.getElementById('sched-weekly').checked;
+    const label  = document.getElementById('schedule-day-label');
+    const sel    = document.getElementById('schedule-day');
+    label.textContent = weekly ? 'Day of week' : 'Day of month';
+    sel.innerHTML = weekly
+      ? '<option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option><option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option>'
+      : Array.from({length:31},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+  }
+
+  async function submitSetup() {
+    const btn   = document.getElementById('setup-btn');
+    const errEl = document.getElementById('setup-error');
+    errEl.style.display = 'none';
+
+    const email = document.getElementById('email-input').value.trim();
+    if (!email || !email.includes('@')) {
+      errEl.textContent = 'Please enter a valid email address.';
+      errEl.style.display = '';
+      return;
+    }
+
+    const domainInputs = document.querySelectorAll('.domain-input');
+    const domains = Array.from(domainInputs).map(i => i.value.trim().replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0]).filter(Boolean);
+    if (domains.length === 0) {
+      errEl.textContent = 'Please add at least one domain.';
+      errEl.style.display = '';
+      return;
+    }
+
+    const scheduleType = document.querySelector('input[name="schedule"]:checked').value;
+    const scheduleDay  = parseInt(document.getElementById('schedule-day').value);
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Setting up your account…';
+
+    try {
+      const body = { email, domains, schedule_type: scheduleType, schedule_day: scheduleDay };
+      if (rzpSubId)  body.razorpay_subscription_id     = rzpSubId;
+      if (lsSubId)   body.lemonsqueezy_subscription_id = lsSubId;
+
+      const res = await fetch(`${API_BASE}/api/agency/setup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Setup failed.');
+
+      const apiKey = data.api_key;
+      document.getElementById('success-api-key').textContent = apiKey;
+      document.getElementById('dashboard-link').href = 'agency-dashboard.html?api_key=' + apiKey;
+      showState('state-success');
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Activate Agency Account →';
+      errEl.textContent = err.message;
+      errEl.style.display = '';
+    }
+  }
+
+  function copyKey() {
+    const key = document.getElementById('success-api-key').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+    });
+  }
+
+  // Init: read subscription IDs from URL
+  (function init() {
+    const params = new URLSearchParams(window.location.search);
+    rzpSubId = params.get('razorpay_subscription_id') || null;
+    lsSubId  = params.get('subscription_id') || params.get('lemonsqueezy_subscription_id') || null;
+
+    if (!rzpSubId && !lsSubId) {
+      showError('No subscription ID found in the URL. Please complete payment on the plans page first.');
+      return;
+    }
+    showState('state-form');
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

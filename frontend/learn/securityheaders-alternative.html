@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecurityHeaders.com API shut down in April 2026. Here are the best free alternatives to scan HTTP security headers, with SecureScanr as the top pick.">
+  <meta property="og:title" content="Best SecurityHeaders.com Alternative in 2026 — SecureScanr">
+  <meta property="og:description" content="SecurityHeaders.com API shut down in April 2026. Here are the best free alternatives to scan HTTP security headers, with SecureScanr as the top pick.">
+  <meta property="og:url" content="https://securescanr.com/learn/securityheaders-alternative.html">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn/securityheaders-alternative.html">
+  <title>Best SecurityHeaders.com Alternative in 2026 — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --radius:  10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: clamp(14px, 1vw + 0.5rem, 17px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Article layout ──────────────────────────────────────────────────── */
+    .article-hero {
+      width: 100%;
+      background: radial-gradient(ellipse 80% 80% at 50% -10%, rgba(0,212,170,.13) 0%, transparent 70%);
+      padding: 40px 24px 1rem;
+    }
+    .article-hero-inner {
+      max-width: 740px; margin: 0 auto;
+    }
+    .article-wrap {
+      max-width: 740px; margin: 0 auto;
+      padding: 1rem 24px 80px;
+      flex: 1;
+    }
+    .breadcrumb {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 32px; display: flex; align-items: center; gap: 6px;
+    }
+    .breadcrumb a { color: var(--muted); }
+    .breadcrumb a:hover { color: var(--accent); text-decoration: none; }
+
+    .article-meta-row {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .sev-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; padding: 3px 8px; border-radius: 4px;
+    }
+    .sev-critical { background: rgba(255,71,87,.12); color: #ff6b7a; border: 1px solid rgba(255,71,87,.25); }
+    .sev-important { background: rgba(255,165,2,.12); color: #ffa502; border: 1px solid rgba(255,165,2,.25); }
+    .sev-minor { background: rgba(0,212,170,.10); color: var(--accent); border: 1px solid rgba(0,212,170,.25); }
+    .meta-tag {
+      font-size: 12px; color: var(--muted);
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 2px 8px; border-radius: 4px;
+    }
+
+    h1 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700; letter-spacing: -.5px; line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .article-lead {
+      font-size: 1rem; color: var(--text); line-height: 1.7;
+      border-left: 3px solid var(--accent);
+      padding-left: 16px; margin-bottom: 0;
+    }
+    h2 {
+      font-size: 1.25rem; font-weight: 700; margin: 36px 0 12px;
+      color: var(--text);
+    }
+    .article-wrap > h2:first-child { margin-top: 0; }
+    h3 {
+      font-size: 1rem; font-weight: 700; margin: 24px 0 8px;
+      color: var(--accent);
+    }
+    p { margin-bottom: 16px; color: var(--text); }
+    ul, ol { margin: 0 0 16px 20px; }
+    li { margin-bottom: 6px; }
+
+    code {
+      font-family: 'Space Mono', monospace;
+      font-size: 12.5px;
+      background: rgba(0,212,170,.07);
+      color: var(--accent);
+      padding: 1px 5px; border-radius: 3px;
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      margin: 0 0 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 12.5px;
+      color: var(--accent);
+      line-height: 1.7;
+    }
+    .callout {
+      background: rgba(255,165,2,.07);
+      border-left: 3px solid var(--warning);
+      border-radius: 0 6px 6px 0;
+      padding: 14px 16px;
+      margin: 0 0 20px;
+      font-size: 14px;
+    }
+    .callout-danger {
+      background: rgba(255,71,87,.07);
+      border-left-color: var(--danger);
+    }
+    .callout-success {
+      background: rgba(46,213,115,.07);
+      border-left-color: var(--success);
+    }
+    .directive-table {
+      width: 100%; border-collapse: collapse;
+      margin: 0 0 24px; font-size: 13.5px;
+    }
+    .directive-table th {
+      background: rgba(255,255,255,.03);
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted);
+      padding: 9px 14px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .directive-table td {
+      padding: 9px 14px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .directive-table tr:last-child td { border-bottom: none; }
+    .directive-table code { font-size: 12px; }
+    .check { color: var(--success); font-weight: 700; }
+    .cross { color: var(--danger); font-weight: 700; }
+    .partial { color: var(--warning); font-weight: 700; }
+
+    /* ── Bottom CTA ──────────────────────────────────────────────────────── */
+    .article-cta {
+      background: linear-gradient(135deg, rgba(0,212,170,.08) 0%, rgba(0,212,170,.03) 100%);
+      border: 1px solid rgba(0,212,170,.2);
+      border-radius: var(--radius);
+      padding: 28px 32px; text-align: center;
+      margin-top: 48px;
+    }
+    .article-cta h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .article-cta p  { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
+    .btn-accent {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #0a0b0d;
+      border-radius: 8px; padding: 12px 28px;
+      font-size: 15px; font-weight: 700;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-accent:hover { opacity: .88; color: #0a0b0d; text-decoration: none; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { background: var(--surface); border-top: 1px solid var(--border); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: .4; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why did SecurityHeaders.com shut down its API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecurityHeaders.com retired its public API in April 2026. The free API had been widely used by security tools and CI/CD pipelines to automate header checks. With the API gone, teams using it for automated scanning need a drop-in replacement that offers comparable header analysis via a REST API."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the best free alternative to SecurityHeaders.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecureScanr (securescanr.com) is the closest free alternative — it checks the same HTTP security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) plus TLS certificates, DNS email security (SPF, DMARC, DKIM), cookie flags, and cross-origin isolation headers. The free tier requires no login. A Pro plan at Rs 499/month (India) or $7/month (international) unlocks API access and PDF export."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SecureScanr give the same grades as SecurityHeaders.com?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The grading scales are similar but not identical. Both use A+ through F letter grades based on which security headers are present. SecureScanr's score also factors in TLS, DNS, cookies, and cross-origin headers, so a site that scored A on SecurityHeaders.com may score differently on SecureScanr depending on its broader security posture. SecureScanr's methodology is documented at securescanr.com/methodology.html."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SecureScanr's API to replace the SecurityHeaders.com API?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. SecureScanr's REST API (documented at securescanr.com/api-docs.html) accepts a URL and returns a JSON response with header grades, TLS results, DNS records, and scoring — suitable for integration into CI/CD pipelines, security dashboards, and monitoring tools. API access requires a Pro plan (Rs 499/month in India or $7/month internationally)."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="../scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="../versus.html">Versus</a>
+          <a href="../generators.html">Generators</a>
+          <a href="../security-txt.html">Security.txt</a>
+          <a href="../api-docs.html">API Docs</a>
+          <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="../plans.html">Plans</a>
+      <a href="../world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../about.html">About</a>
+          <a href="securityheaders-alternative.html" class="active-link">SecurityHeaders Alternative</a>
+          <a href="../compliance-report.html">Compliance Report</a>
+          <a href="../status.html">Status</a>
+        </div>
+      </div>
+      <a href="../plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="../scan.html">Scan</a>
+    <a href="../versus.html">Versus</a>
+    <a href="../generators.html">Generators</a>
+    <a href="../security-txt.html">Security.txt</a>
+    <a href="../api-docs.html">API Docs</a>
+    <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+    <a href="../plans.html">Plans</a>
+    <a href="../world-security-index.html">World Index</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../about.html">About</a>
+    <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="../compliance-report.html">Compliance Report</a>
+    <a href="../status.html">Status</a>
+    <a href="../plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Article hero ───────────────────────────────────────────────────────────── -->
+<div class="article-hero">
+  <div class="article-hero-inner">
+
+    <div class="breadcrumb">
+      <a href="../learn.html">← Learning Center</a>
+      <span>/</span>
+      <span>SecurityHeaders Alternative</span>
+    </div>
+
+    <div class="article-meta-row">
+      <span class="sev-badge sev-important">2026 Update</span>
+      <span class="meta-tag">Tools</span>
+      <span class="meta-tag">6 min read</span>
+    </div>
+
+    <h1>SecurityHeaders.com Shut Down Its API — Here Are the Best Alternatives (2026)</h1>
+
+    <p class="article-lead">SecurityHeaders.com was the go-to tool for checking HTTP security headers. In April 2026, it shut down its public API, leaving pentesters and developers without their primary automated scanning option. This guide covers the best free alternatives and why SecureScanr is the strongest replacement for Indian security professionals.</p>
+
+  </div>
+</div>
+
+<!-- ── Article body ───────────────────────────────────────────────────────────── -->
+<div class="article-wrap">
+
+  <h2>What Was SecurityHeaders.com?</h2>
+  <p>SecurityHeaders.com, built by Scott Helme, was a free online scanner that graded websites on the quality of their HTTP security headers. You pasted a URL, it fetched the headers, assigned a grade from A+ to F, and showed you exactly what was missing. It became a standard reference — consultants used it in client reports, developers checked it before launch, and pentesters cited its grades in findings.</p>
+  <p>The site's real value was its API. For a low monthly fee, you could integrate it into CI/CD pipelines, automate regression testing, and generate data at scale. That API was shut down in April 2026, making automated workflows that depended on it immediately non-functional.</p>
+  <p>Without an API or PDF export, it no longer meets the needs of professionals who need to deliver client-ready reports or automate security testing.</p>
+
+  <div class="callout callout-danger">
+    <strong>SecurityHeaders.com API shutdown date: April 2026.</strong> If your scripts or CI pipelines call the SecurityHeaders.com API, they are now silently failing or returning errors. You need a replacement.
+  </div>
+
+  <h2>What to Look for in an Alternative</h2>
+  <p>Not all header scanners are equal. Before choosing a replacement, consider these criteria:</p>
+  <ul>
+    <li><strong>Headers checked:</strong> At minimum you want CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy. Better tools also check CORS policy, server fingerprinting, and cross-origin isolation headers.</li>
+    <li><strong>TLS and DNS:</strong> HTTP headers are only part of the picture. A good alternative also checks certificate expiry, TLS version, SPF, DMARC, and DKIM — all in one scan.</li>
+    <li><strong>PDF export:</strong> If you write client reports or security assessments, you need a branded PDF you can attach to a deliverable. Not all tools provide this.</li>
+    <li><strong>API access:</strong> For automation, CI integration, or bulk scanning you need a stable REST API with documented endpoints.</li>
+    <li><strong>Pricing in INR:</strong> Tools priced in USD add unnecessary friction for Indian freelancers and agencies. A tool with INR pricing avoids international payment charges and currency conversion costs.</li>
+    <li><strong>No login required for basic scans:</strong> Tools that force account creation before showing any results slow down your workflow. The best alternatives show results immediately.</li>
+  </ul>
+
+  <h2>Comparison: Best SecurityHeaders.com Alternatives</h2>
+
+  <div style="overflow-x:auto; width:100%">
+  <table class="directive-table">
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Free scan</th>
+        <th>PDF (free tier)</th>
+        <th>API (free tier)</th>
+        <th>Pricing</th>
+        <th>No account needed</th>
+        <th>Full results on free tier</th>
+        <th>COMPLIANCE REPORT</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>SecureScanr</strong> <span style="font-size:11px;color:var(--accent)">(securescanr.com)</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="cross">✗ Pro only</span></td>
+        <td><span class="cross">✗ Pro only</span></td>
+        <td><span class="check">✓ ₹499/mo Pro (India)</span><br><span style="font-size:11px;color:var(--muted)">$7/mo (international)</span><br><a href="../one-time-scan.html" style="font-size:11px;color:var(--accent);text-decoration:none">₹99 / $2 one-time scan</a><br><a href="../compliance-report.html" style="font-size:11px;color:var(--accent);font-weight:700;text-decoration:none">₹249 / $3 compliance PDF</a><br><span style="font-size:11px;color:var(--muted)">₹999/mo Agency (India) · $28/mo (Intl)</span></td>
+        <td><span class="check">✓</span> <span style="font-size:11px;color:var(--muted)">API key, no signup</span></td>
+        <td><span class="partial">~ partial</span></td>
+        <td><span class="check" style="color:#16a34a;font-weight:700">✓ ₹249 / $3</span></td>
+      </tr>
+      <tr>
+        <td><strong>SiteSecurityScore</strong> <span style="font-size:11px;color:var(--muted)">(sitesecurityscore.com)</span></td>
+        <td><span class="check">✓</span></td>
+        <td><span class="partial">~ 3/mo</span></td>
+        <td><span class="partial">~ 10 calls/mo</span></td>
+        <td><span class="cross">✗ USD $7/mo Pro</span></td>
+        <td><span class="cross">✗ account required</span></td>
+        <td><span class="partial">~ partial</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+      <tr>
+        <td><strong>ImmuniWeb</strong> <span style="font-size:11px;color:var(--muted)">(immuniweb.com)</span></td>
+        <td><span class="partial">~ limited</span></td>
+        <td><span class="cross">✗</span></td>
+        <td><span class="cross">✗ enterprise only</span></td>
+        <td><span class="cross">✗ USD only</span></td>
+        <td><span class="cross">✗ account required</span></td>
+        <td><span class="partial">~ limited</span></td>
+        <td><span class="cross">✗</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p style="text-align:center;margin-bottom:24px"><a href="https://securescanr.com/scan.html" style="color:var(--accent);font-weight:600">Run a Free Scan →</a></p>
+
+  <p>The table above covers the most actively developed alternatives with documented APIs and ongoing development.</p>
+
+  <h2>Why SecureScanr Is the Best Alternative for Indian Pentesters</h2>
+
+  <h3>No account needed — instant results</h3>
+  <p>Paste a URL, get a grade. No signup, no account, no onboarding flow. Results appear in under 10 seconds covering HTTP headers, TLS certificate details, and DNS email security (SPF, DMARC, DKIM). Pro access is delivered via an API key — no dashboard login required. Cookie security and cross-origin isolation analysis are available on Pro. The free tier shows header, TLS, and DNS results on screen with no restrictions on how many manual scans you run.</p>
+
+  <h3>INR pricing — no dollar conversion</h3>
+  <p>SecureScanr Pro is priced at ₹499/month for India (billed in INR through Razorpay) or $7/month internationally (billed in USD through LemonSqueezy). There is no currency conversion or international transaction fee for Indian users, and no need for a dollar-denominated card. For Indian freelancers billing clients in rupees, this matters: you are not paying a 3–5% forex surcharge on top of the subscription fee every month. Teams handling multiple clients can upgrade to the Agency tier at ₹999/month (India) or $28/month (international), which monitors up to 25 domains with automated weekly or monthly scheduled scans and PDF delivery by email.</p>
+  <p>For one-off engagements where a monthly subscription makes no sense, a <a href="../one-time-scan.html">₹99 (~$2) one-time scan</a> is also available — pay once, get a full Pro-level report for one URL with all fix recommendations included. No account, no subscription, no recurring charge.</p>
+
+  <h3>PDF reports your clients can read</h3>
+  <p>The single biggest gap left by SecurityHeaders.com for professional use was the absence of a downloadable report. SecureScanr Pro generates a full branded PDF containing the security grade, all header findings with fix recommendations, TLS details, and DNS analysis. You attach it to a deliverable or share it with a client without any additional formatting work.</p>
+
+  <h3>REST API for automation</h3>
+  <p>The SecureScanr API is a documented REST API. Pro subscribers get an API key that can be used to run programmatic scans, integrate with CI/CD pipelines, and pull raw JSON results for custom reporting. The endpoints mirror what SecurityHeaders.com's API offered — a <code>POST /api/scan/pro</code> with a URL body returns grade, score, and per-header findings.</p>
+
+  <pre>curl -X POST https://api.securescanr.com/api/scan/pro \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -d '{"url": "https://example.com"}'</pre>
+
+  <h3>Broader coverage than just headers</h3>
+  <p>SecurityHeaders.com checked headers only. SecureScanr checks headers, TLS/SSL certificates, DNS email security records, cookie security attributes, cross-origin isolation headers, server fingerprinting, and page-level issues like mixed content and missing Subresource Integrity (SRI) checks — all in a single scan.</p>
+
+  <h3>World Security Index — global benchmarking</h3>
+  <p>SecureScanr maintains a public <a href="../world-security-index.html" style="color:var(--accent)">World Security Index</a> — security grades for the top 100 global websites, updated weekly. This gives you an immediate benchmark: see how your client's site compares to major banks, e-commerce platforms, and tech companies worldwide. SecurityHeaders.com had no such benchmarking feature.</p>
+
+  <h2>Migrating from SecurityHeaders.com API</h2>
+  <p>If you had scripts calling the SecurityHeaders.com API, here is what needs to change:</p>
+  <ul>
+    <li>Replace the SecurityHeaders.com API endpoint with <code>https://api.securescanr.com/api/scan/pro</code></li>
+    <li>Switch authentication from the SecurityHeaders.com API key format to the <code>X-API-Key</code> header</li>
+    <li>Update your JSON parsing — SecureScanr returns a richer response with <code>score</code>, <code>grade</code>, and per-module breakdowns for headers, TLS, DNS, and cookies</li>
+    <li>Update your grade mapping if needed — SecureScanr uses A+, A, B, C, D, F on the same 0–100 scale</li>
+  </ul>
+
+  <div class="callout callout-success">
+    <strong>Migration is straightforward.</strong> The SecureScanr API uses the same conceptual model as SecurityHeaders.com — POST a URL, get back a grade and per-header findings. The response JSON is richer, but the core workflow is identical.
+  </div>
+
+  <h2>The Bottom Line</h2>
+  <p>For developers and pentesters who want the most complete free replacement — no account, no signup, instant results — SecureScanr covers everything SecurityHeaders.com did plus TLS, DNS, and cookies. Pro unlocks PDF export and API access at ₹499/month (India) or $7/month (international). Need just one report without subscribing? A <a href="../one-time-scan.html">₹99 / $2 one-time scan</a> gives a full Pro-level result for a single URL. Teams monitoring multiple clients can use the Agency tier (₹999/month India · $28/month international) for automated scheduled scans across 25 domains with PDF delivery by email. INR pricing is a bonus for Indian users, but the tool works the same everywhere.</p>
+  <p>For teams that need free-tier PDF and API access, SiteSecurityScore offers 3 PDFs and 10 API calls monthly on its free plan but requires an account and USD pricing. ImmuniWeb suits occasional manual checks but lacks a usable API at accessible prices.</p>
+
+  <div class="article-cta">
+    <h3>Scan your site free at SecureScanr</h3>
+    <p>No login required. Results in under 10 seconds. Headers, TLS, DNS, cookies — all in one report.</p>
+    <a href="../scan.html" class="btn-accent">Scan your site free now →</a>
+  </div>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="../methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="../privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="../terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="../status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

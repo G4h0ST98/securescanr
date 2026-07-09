@@ -1,0 +1,612 @@
+<!-- cache-bust: 2026-05-15 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="India's Web Security Report Card — SecureScanr scanned the top Indian websites so you don't have to. See their security grades.">
+  <meta property="og:title" content="India's Web Security Report Card — SecureScanr">
+  <meta property="og:description" content="We scanned the top Indian websites so you don't have to. See live security grades for SBI, HDFC, IRCTC, Zomato, Flipkart and more.">
+  <meta property="og:url" content="https://securescanr.com/halloffame.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/halloffame.html">
+  <title>India's Web Security Report Card — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+
+      --grade-ap: #2ed573;
+      --grade-a:  #2ed573;
+      --grade-b:  #00d4aa;
+      --grade-c:  #ffa502;
+      --grade-d:  #ff6b35;
+      --grade-f:  #ff4757;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 24px 64px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,170,.10) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 20% 80%, rgba(255,71,87,.04) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(0,212,170,.04) 0%, transparent 60%);
+    }
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(.75); }
+    }
+    .hero-title {
+      font-size: clamp(32px, 5vw, 58px);
+      font-weight: 700; letter-spacing: -1.5px;
+      line-height: 1.1; color: var(--text);
+      max-width: 720px; margin: 0 auto;
+    }
+    .hero-title em { color: var(--accent); font-style: normal; }
+    .hero-sub {
+      margin-top: 20px;
+      font-size: clamp(14px, 2vw, 17px);
+      color: var(--muted); max-width: 520px; margin-inline: auto;
+      line-height: 1.6;
+    }
+    .hero-meta {
+      margin-top: 28px;
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2px;
+    }
+    .hero-stat-n {
+      font-family: 'Space Mono', monospace;
+      font-size: 24px; font-weight: 700; color: var(--text);
+      letter-spacing: -1px;
+    }
+    .hero-stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .hero-stat-div { width: 1px; height: 32px; background: var(--border); }
+    .last-updated {
+      margin-top: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* ── Loading / scanning notice ───────────────────────────────────────── */
+    .notice {
+      max-width: 540px; margin: 0 auto 48px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; color: var(--muted);
+    }
+    .notice-spinner {
+      width: 14px; height: 14px; flex-shrink: 0;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Grade grid ──────────────────────────────────────────────────────── */
+    .grid-section {
+      max-width: 1060px; margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+    .grade-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1000px) { .grade-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 780px)  { .grade-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 560px)  { .grade-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .grade-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 20px 22px;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .grade-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--border));
+      border-radius: 14px 14px 0 0;
+    }
+    .grade-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.3);
+    }
+
+    /* grade badge */
+    .grade-badge {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      font-family: 'Space Mono', monospace;
+      font-size: 28px; font-weight: 700;
+      color: #0a0b0d;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .grade-badge::after {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid var(--badge-color, #333);
+      opacity: .3;
+    }
+
+    .grade-domain {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      color: var(--text); margin-bottom: 6px;
+      word-break: break-all; line-height: 1.3;
+    }
+    .grade-score {
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .grade-score strong {
+      font-family: 'Space Mono', monospace;
+      font-size: 15px; color: var(--text);
+    }
+
+    .btn-report {
+      display: block; width: 100%;
+      padding: 9px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 600;
+      color: var(--muted); text-decoration: none;
+      transition: border-color .15s, color .15s;
+      text-align: center;
+    }
+    .btn-report:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* skeleton */
+    .skeleton-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 20px 22px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .skel {
+      background: linear-gradient(90deg, var(--border) 25%, #252a34 50%, var(--border) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+    }
+    .skel-circle { width: 72px; height: 72px; border-radius: 50%; }
+    .skel-line   { height: 12px; width: 80%; }
+    .skel-line-sm { height: 10px; width: 55%; }
+    .skel-btn    { height: 34px; width: 100%; border-radius: 8px; }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── Legend ──────────────────────────────────────────────────────────── */
+    .legend {
+      max-width: 1060px; margin: 0 auto 48px;
+      padding: 0 24px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--muted);
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer note ─────────────────────────────────────────────────────── */
+    .hof-note {
+      max-width: 1060px; margin: 0 auto;
+      padding: 0 24px 40px;
+      text-align: center;
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+    }
+    .hof-note a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 0 24px;
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 14px 0 18px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────────── -->
+<div class="hero">
+  <p class="hero-eyebrow">
+    <span class="live-dot"></span>
+    Live Security Data
+  </p>
+  <h1 class="hero-title">India's Web Security<br><em>Report Card</em></h1>
+  <p class="hero-sub">We scanned the top Indian websites so you don't have to. Updated weekly, automatically.</p>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <span class="hero-stat-n" id="stat-sites">10</span>
+      <span class="hero-stat-l">Sites Scanned</span>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-n" id="stat-checks">200+</span>
+      <span class="hero-stat-l">Security Checks</span>
+    </div>
+    <div class="hero-stat-div"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-n" id="stat-avg">—</span>
+      <span class="hero-stat-l">Avg. Score</span>
+    </div>
+  </div>
+  <p class="last-updated" id="last-updated"></p>
+</div>
+
+<!-- ── Scanning notice (shown while cache is empty + scanning) ────────────────── -->
+<div class="notice" id="scan-notice" style="display:none;">
+  <div class="notice-spinner"></div>
+  <span>First scan in progress — results will appear shortly. Refresh in a minute.</span>
+</div>
+
+<!-- ── Legend ────────────────────────────────────────────────────────────────── -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#2ed573"></div>A+ / A — Excellent</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#00d4aa"></div>B — Good</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffa502"></div>C — Average</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff6b35"></div>D — Weak</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff4757"></div>F — Critical</div>
+</div>
+
+<!-- ── Grade Grid ─────────────────────────────────────────────────────────────── -->
+<div class="grid-section">
+  <div class="grade-grid" id="grade-grid">
+    <!-- skeletons while loading -->
+    <div class="skeleton-card">
+      <div class="skel skel-circle"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line-sm"></div>
+      <div class="skel skel-btn"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skel skel-circle"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line-sm"></div>
+      <div class="skel skel-btn"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skel skel-circle"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line-sm"></div>
+      <div class="skel skel-btn"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skel skel-circle"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line-sm"></div>
+      <div class="skel skel-btn"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skel skel-circle"></div>
+      <div class="skel skel-line"></div>
+      <div class="skel skel-line-sm"></div>
+      <div class="skel skel-btn"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Footer note ───────────────────────────────────────────────────────────── -->
+<div class="hof-note">
+  Scans are automated and updated weekly. Results are for educational purposes only.<br>
+  All scans are passive, read-only HTTP header checks — no active testing or exploitation.
+  <a href="methodology.html">How we score →</a>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const GRADE_COLORS = {
+    'A+': '#2ed573',
+    'A':  '#2ed573',
+    'B':  '#00d4aa',
+    'C':  '#ffa502',
+    'D':  '#ff6b35',
+    'F':  '#ff4757',
+  };
+
+  const API_BASE  = 'https://api.securescanr.com';
+  let   _pollTimer = null;
+
+  function gradeColor(g) {
+    return GRADE_COLORS[g] || '#ff4757';
+  }
+
+  function buildCard(item) {
+    const color = gradeColor(item.grade);
+    return `
+      <div class="grade-card" style="--card-accent:${color}">
+        <div class="grade-badge" style="background:${color};--badge-color:${color}">
+          ${item.grade}
+        </div>
+        <div class="grade-domain">${item.domain}</div>
+        <div class="grade-score"><strong>${item.score}</strong> / 100</div>
+        <a href="scan.html?url=${encodeURIComponent(item.domain)}" class="btn-report">
+          View full report →
+        </a>
+      </div>
+    `;
+  }
+
+  function renderGrid(results) {
+    const grid    = document.getElementById('grade-grid');
+    const notice  = document.getElementById('scan-notice');
+    if (!results || results.length === 0) {
+      grid.innerHTML = '';
+      notice.style.display = 'flex';
+      return;
+    }
+    notice.style.display = 'none';
+    grid.innerHTML = results.map(buildCard).join('');
+    document.getElementById('stat-sites').textContent = results.length;
+    const avg = Math.round(results.reduce((s, r) => s + r.score, 0) / results.length);
+    document.getElementById('stat-avg').textContent = avg;
+  }
+
+  async function load() {
+    try {
+      const res  = await fetch(`${API_BASE}/api/halloffame?_=${Date.now()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      renderGrid(data.results || []);
+
+      if (data.last_scanned) {
+        document.getElementById('last-updated').textContent =
+          'Last updated: ' + data.last_scanned;
+      }
+
+      // Keep polling until we have a full set of results
+      const gotAll = data.results && data.results.length >= 10;
+      if (!gotAll) {
+        clearTimeout(_pollTimer);
+        _pollTimer = setTimeout(load, 15000);
+      }
+    } catch (err) {
+      // On network error show a retry message and poll again
+      document.getElementById('grade-grid').innerHTML =
+        '<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px 0">' +
+        'Could not reach the API — retrying…</p>';
+      clearTimeout(_pollTimer);
+      _pollTimer = setTimeout(load, 20000);
+    }
+  }
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  load();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

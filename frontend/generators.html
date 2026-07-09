@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online CSP generator, HSTS generator, Permissions-Policy builder, CORS header generator, and CSP validator. Visual editors with instant RFC-compliant output. No login.">
+  <meta property="og:title" content="CSP Generator &amp; Security Header Tools — Free Online | SecureScanr">
+  <meta property="og:description" content="Free online CSP generator, HSTS generator, Permissions-Policy builder, CORS header generator, and CSP validator. Visual editors with instant RFC-compliant output. No login.">
+  <meta property="og:url" content="https://securescanr.com/generators.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/generators.html">
+  <title>CSP Generator &amp; Security Header Tools — Free Online | SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --radius:  10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    main { flex: 1; }
+    a { color: var(--accent); text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    code { font-family: 'Space Mono', monospace; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page Header ─────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 60px 24px 48px; text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,170,.1) 0%, transparent 70%);
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px; line-height: 1.15;
+    }
+    .page-sub {
+      margin-top: 10px; font-size: 15px; color: var(--muted);
+      max-width: 540px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── Tabs ────────────────────────────────────────────────────────────── */
+    .tabs-wrap {
+      max-width: 900px; margin: 32px auto 0;
+      padding: 0 24px; display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted);
+      font-size: 13px; font-weight: 600; transition: all .18s;
+    }
+    .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+    .tab-btn.active { background: var(--accent); color: #0a0b0d; border-color: var(--accent); }
+
+    /* ── Generator panels ────────────────────────────────────────────────── */
+    .gen-panels { max-width: 900px; margin: 20px auto 80px; padding: 0 24px; }
+    .gen-panel { display: none; }
+    .gen-panel.active { display: block; }
+
+    .gen-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+
+    /* Output bar */
+    .output-bar {
+      padding: 16px 20px;
+      background: rgba(0,212,170,.04);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .output-code {
+      flex: 1; font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--accent); word-break: break-all; line-height: 1.7;
+      background: none; border: none; outline: none; resize: none;
+      min-height: 40px; overflow: hidden;
+    }
+    .copy-btn {
+      flex-shrink: 0; padding: 8px 16px;
+      background: rgba(0,212,170,.12); color: var(--accent);
+      border: 1px solid rgba(0,212,170,.3); border-radius: 6px;
+      font-size: 13px; font-weight: 600; white-space: nowrap;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: rgba(0,212,170,.22); }
+    .copy-btn.copied { background: rgba(46,213,115,.15); color: var(--success); border-color: rgba(46,213,115,.3); }
+
+    /* Controls grid */
+    .controls { padding: 20px; }
+    .controls-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .control-group {
+      background: rgba(255,255,255,.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px;
+    }
+    .control-group-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted); margin-bottom: 10px;
+    }
+    .check-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 0; cursor: pointer;
+    }
+    .check-row input[type=checkbox] {
+      width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0;
+    }
+    .check-row label { font-size: 13px; color: var(--text); cursor: pointer; flex: 1; }
+    .check-row .check-hint { font-size: 11px; color: var(--muted); }
+
+    /* Source input rows */
+    .source-row {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px;
+    }
+    .source-label { font-size: 12px; color: var(--muted); width: 80px; flex-shrink: 0; }
+    .source-input {
+      flex: 1; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 5px; padding: 5px 10px;
+      font-size: 12px; font-family: 'Space Mono', monospace; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .source-input:focus { border-color: var(--accent); }
+    .source-input::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+    }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: var(--text); }
+    .toggle-sublabel { font-size: 11px; color: var(--muted); }
+    .toggle-switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; background: var(--border);
+      border-radius: 10px; cursor: pointer; transition: background .2s;
+    }
+    .toggle-track::after {
+      content: ''; position: absolute;
+      left: 3px; top: 3px; width: 14px; height: 14px;
+      background: #fff; border-radius: 50%; transition: transform .2s;
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--accent); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(16px); }
+
+    /* Slider */
+    .slider-row { margin-top: 8px; }
+    .slider-row label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .slider-wrap { display: flex; align-items: center; gap: 10px; }
+    .slider-wrap input[type=range] {
+      flex: 1; accent-color: var(--accent); cursor: pointer;
+    }
+    .slider-val {
+      font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--accent); width: 64px; text-align: right; white-space: nowrap;
+    }
+
+    /* Number input */
+    .number-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 5px; padding: 7px 10px; margin-top: 8px;
+      font-size: 13px; font-family: 'Space Mono', monospace; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .number-input:focus { border-color: var(--accent); }
+
+    /* Full-width text input (CORS origin) */
+    .full-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 5px; padding: 9px 12px; margin-top: 8px;
+      font-size: 13px; font-family: 'Space Mono', monospace; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .full-input:focus { border-color: var(--accent); }
+    .full-input::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+
+    /* Info note */
+    .info-note {
+      margin: 12px 0 0;
+      padding: 10px 14px;
+      background: rgba(0,212,170,.05); border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0; font-size: 12px; color: var(--muted);
+    }
+    .info-note strong { color: var(--accent); }
+
+    /* Warning box */
+    .warn-box {
+      margin: 12px 0 0;
+      padding: 10px 14px;
+      background: rgba(255,71,87,.08); border-left: 3px solid var(--danger);
+      border-radius: 0 6px 6px 0; font-size: 12px; color: #ff8088;
+    }
+    .warn-box strong { color: var(--danger); }
+
+    /* ── CSP Validator Panel ─────────────────────────────────────────────── */
+    .validator-input-area {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .validator-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-family: 'Space Mono', monospace;
+      color: var(--text);
+      outline: none;
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.7;
+      transition: border-color .15s;
+    }
+    .validator-textarea:focus { border-color: var(--accent); }
+    .validator-textarea::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; }
+    .validate-btn {
+      padding: 10px 26px;
+      background: var(--accent); color: #0a0b0d;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 700;
+      transition: opacity .15s;
+    }
+    .validate-btn:hover { opacity: .88; }
+    .validate-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .validator-results { padding: 20px; }
+
+    .validator-overall {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; border-radius: 10px; margin-bottom: 20px;
+    }
+    .validator-overall.good    { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); }
+    .validator-overall.weak    { background: rgba(255,165,2,.08);  border: 1px solid rgba(255,165,2,.25); }
+    .validator-overall.dangerous { background: rgba(255,71,87,.08); border: 1px solid rgba(255,71,87,.25); }
+    .overall-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+    .overall-text { flex: 1; }
+    .overall-label { font-size: 16px; font-weight: 700; text-transform: capitalize; }
+    .overall-sub   { font-size: 12px; margin-top: 2px; opacity: .75; }
+    .validator-overall.good     .overall-label { color: var(--success); }
+    .validator-overall.weak     .overall-label { color: var(--warning); }
+    .validator-overall.dangerous .overall-label { color: var(--danger); }
+    .overall-meta { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+
+    .issues-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted); margin-bottom: 10px;
+    }
+    .issue-item {
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px; margin-bottom: 10px;
+    }
+    .issue-item:last-child { margin-bottom: 0; }
+    .issue-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .sev-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; padding: 2px 8px; border-radius: 4px; flex-shrink: 0;
+    }
+    .sev-badge.critical { background: rgba(255,71,87,.15);  color: var(--danger);  }
+    .sev-badge.warning  { background: rgba(255,165,2,.15);  color: var(--warning); }
+    .sev-badge.info     { background: rgba(0,212,170,.12);  color: var(--accent);  }
+    .issue-directive {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      color: var(--accent); background: rgba(0,212,170,.08);
+      padding: 2px 9px; border-radius: 4px; flex-shrink: 0;
+    }
+    .issue-desc { font-size: 13px; color: var(--text); line-height: 1.55; }
+    .issue-fix {
+      margin-top: 9px; padding: 8px 12px;
+      background: rgba(0,212,170,.04); border-left: 2px solid rgba(0,212,170,.35);
+      border-radius: 0 5px 5px 0;
+      font-size: 12px; color: var(--muted); line-height: 1.55;
+    }
+    .issue-fix strong { color: var(--accent); }
+
+    /* "→ Validate this CSP" shortcut in generator */
+    .validate-shortcut-btn {
+      background: none;
+      border: 1px solid rgba(0,212,170,.3);
+      color: var(--accent);
+      padding: 7px 16px; border-radius: 6px;
+      font-size: 13px; font-weight: 500;
+      transition: background .15s, border-color .15s;
+    }
+    .validate-shortcut-btn:hover {
+      background: rgba(0,212,170,.08); border-color: var(--accent);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { background: #111318; border-top: 1px solid rgba(255,255,255,0.08); padding: 0; font-size: 13px; color: var(--muted); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 14px 24px 18px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+
+    .hidden { display: none !important; }
+    @media (max-width: 600px) {
+      .controls-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Content-Security-Policy (CSP) and why do I need it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Content-Security-Policy is an HTTP response header that tells browsers which sources are allowed to load scripts, styles, images, and other resources on your page. A properly configured CSP is the most effective defence against Cross-Site Scripting (XSS) attacks. Without it, injected scripts can execute freely in your visitors' browsers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does HSTS do and should I enable it?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "HTTP Strict Transport Security (HSTS) instructs browsers to always connect to your site over HTTPS, even if the user types http://. This prevents SSL-stripping attacks and protocol downgrade attacks. You should enable it on any site that has a valid TLS certificate. Start with a short max-age (e.g. 300 seconds) and increase to 31536000 (1 year) once confirmed working."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is Permissions-Policy and which features should I disable?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Permissions-Policy (formerly Feature-Policy) controls which browser APIs your page and embedded iframes can access — camera, microphone, geolocation, payment, and more. As a rule, disable any feature your site does not actively use. This limits the blast radius if a third-party script is compromised."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I test if my security headers are working?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "After deploying your headers, run a free scan on SecureScanr (securescanr.com). It checks all major security headers — CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy — and gives you a security grade with specific fix recommendations for anything missing or misconfigured."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn" style="color:var(--text)">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html" class="active-link">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <p class="page-eyebrow">Free Tools</p>
+  <h1 class="page-title">Security Header Generators &amp; CSP Validator</h1>
+  <p class="page-sub">Build production-ready security headers visually — no docs needed. Copy and paste into your server config.</p>
+</div>
+
+<!-- ── Tabs ─────────────────────────────────────────────────────────────────── -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" data-tab="csp"       onclick="switchTab('csp')">Content-Security-Policy</button>
+  <button class="tab-btn"        data-tab="hsts"      onclick="switchTab('hsts')">Strict-Transport-Security</button>
+  <button class="tab-btn"        data-tab="pp"        onclick="switchTab('pp')">Permissions-Policy</button>
+  <button class="tab-btn"        data-tab="cors"      onclick="switchTab('cors')">CORS Policy</button>
+  <button class="tab-btn"        data-tab="validator" onclick="switchTab('validator')">CSP Validator</button>
+</div>
+
+<!-- ── Panels ────────────────────────────────────────────────────────────────── -->
+<div class="gen-panels">
+
+  <!-- ── CSP ──────────────────────────────────────────────────────────────── -->
+  <div class="gen-panel active" id="panel-csp">
+    <div class="gen-card">
+      <div class="output-bar">
+        <textarea class="output-code" id="csp-output" readonly rows="2"></textarea>
+        <button class="copy-btn" onclick="copyOutput('csp-output', this)">⎘ Copy</button>
+      </div>
+      <div class="controls">
+        <div class="controls-grid">
+
+          <!-- Script sources -->
+          <div class="control-group">
+            <div class="control-group-title">script-src</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-script-self" checked onchange="updateCSP()">
+              <span class="check-row"><label for="csp-script-self">'self'</label></span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-script-inline" onchange="updateCSP()">
+              <span><label for="csp-script-inline">'unsafe-inline' <span class="check-hint">⚠ weak</span></label></span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-script-eval" onchange="updateCSP()">
+              <span><label for="csp-script-eval">'unsafe-eval' <span class="check-hint">⚠ weak</span></label></span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-script-nonce" onchange="updateCSP()">
+              <span><label for="csp-script-nonce">'nonce-...' (recommended)</label></span>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="csp-script-custom" placeholder="cdn.example.com" oninput="updateCSP()">
+            </div>
+          </div>
+
+          <!-- Style sources -->
+          <div class="control-group">
+            <div class="control-group-title">style-src</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-style-self" checked onchange="updateCSP()">
+              <label for="csp-style-self">'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-style-inline" onchange="updateCSP()">
+              <label for="csp-style-inline">'unsafe-inline' <span class="check-hint">⚠ common but weak</span></label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-style-fonts" onchange="updateCSP()">
+              <label for="csp-style-fonts">fonts.googleapis.com</label>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="csp-style-custom" placeholder="styles.example.com" oninput="updateCSP()">
+            </div>
+          </div>
+
+          <!-- Image sources -->
+          <div class="control-group">
+            <div class="control-group-title">img-src</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-img-self" checked onchange="updateCSP()">
+              <label for="csp-img-self">'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-img-data" checked onchange="updateCSP()">
+              <label for="csp-img-data">data: <span class="check-hint">(inline images)</span></label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-img-https" onchange="updateCSP()">
+              <label for="csp-img-https">https: <span class="check-hint">(any HTTPS)</span></label>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="csp-img-custom" placeholder="images.example.com" oninput="updateCSP()">
+            </div>
+          </div>
+
+          <!-- Font sources -->
+          <div class="control-group">
+            <div class="control-group-title">font-src</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-font-self" checked onchange="updateCSP()">
+              <label for="csp-font-self">'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-font-gstatic" onchange="updateCSP()">
+              <label for="csp-font-gstatic">fonts.gstatic.com</label>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="csp-font-custom" placeholder="fonts.example.com" oninput="updateCSP()">
+            </div>
+          </div>
+
+          <!-- Connect sources -->
+          <div class="control-group">
+            <div class="control-group-title">connect-src</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-connect-self" checked onchange="updateCSP()">
+              <label for="csp-connect-self">'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-connect-wss" onchange="updateCSP()">
+              <label for="csp-connect-wss">wss: <span class="check-hint">(WebSocket)</span></label>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="csp-connect-custom" placeholder="api.example.com" oninput="updateCSP()">
+            </div>
+          </div>
+
+          <!-- Frame / form / object -->
+          <div class="control-group">
+            <div class="control-group-title">Frame &amp; Form Control</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-frame-ancestors-none" checked onchange="updateCSP()">
+              <label for="csp-frame-ancestors-none">frame-ancestors 'none' <span class="check-hint">(blocks iframing)</span></label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-frame-ancestors-self" onchange="updateCSP()">
+              <label for="csp-frame-ancestors-self">frame-ancestors 'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-form-action-self" checked onchange="updateCSP()">
+              <label for="csp-form-action-self">form-action 'self'</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-object-none" checked onchange="updateCSP()">
+              <label for="csp-object-none">object-src 'none' <span class="check-hint">(blocks Flash)</span></label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-base-self" checked onchange="updateCSP()">
+              <label for="csp-base-self">base-uri 'self'</label>
+            </label>
+          </div>
+
+          <!-- Upgrade / report -->
+          <div class="control-group">
+            <div class="control-group-title">Extras</div>
+            <label class="check-row">
+              <input type="checkbox" id="csp-upgrade" checked onchange="updateCSP()">
+              <label for="csp-upgrade">upgrade-insecure-requests</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="csp-report" onchange="updateCSP()">
+              <label for="csp-report">report-uri endpoint</label>
+            </label>
+            <div class="source-row" id="csp-report-row" style="display:none">
+              <span class="source-label">URL</span>
+              <input type="text" class="source-input" id="csp-report-url" placeholder="https://your-site.com/csp-report" oninput="updateCSP()">
+            </div>
+          </div>
+
+        </div>
+        <div class="info-note">
+          <strong>Tip:</strong> Start with the strict defaults above and gradually allow sources as needed. Avoid <code>'unsafe-inline'</code> and <code>'unsafe-eval'</code> — use nonces or hashes instead.
+        </div>
+        <div style="margin-top:12px">
+          <button class="validate-shortcut-btn" onclick="sendToValidator(el('csp-output').value)">→ Validate this CSP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HSTS ─────────────────────────────────────────────────────────────── -->
+  <div class="gen-panel" id="panel-hsts">
+    <div class="gen-card">
+      <div class="output-bar">
+        <textarea class="output-code" id="hsts-output" readonly rows="1"></textarea>
+        <button class="copy-btn" onclick="copyOutput('hsts-output', this)">⎘ Copy</button>
+      </div>
+      <div class="controls">
+        <div class="controls-grid">
+
+          <div class="control-group" style="grid-column: 1/-1">
+            <div class="control-group-title">max-age — How long browsers enforce HTTPS</div>
+            <div class="slider-row">
+              <label id="hsts-age-label">1 year (31536000 seconds) — recommended</label>
+              <div class="slider-wrap">
+                <input type="range" id="hsts-age-slider" min="0" max="5"
+                  value="4" oninput="updateHSTSSlider()">
+                <span class="slider-val" id="hsts-age-val">31536000</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-group-title">Options</div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">includeSubDomains</div>
+                <div class="toggle-sublabel">Apply HSTS to all subdomains</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="hsts-subdomains" checked onchange="updateHSTS()">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">preload</div>
+                <div class="toggle-sublabel">Submit to browser preload list</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="hsts-preload" checked onchange="updateHSTS()">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-group-title">Preload Requirements</div>
+            <div class="info-note" style="margin-top:0">
+              <strong>To join the HSTS preload list:</strong><br>
+              max-age must be ≥ 31536000 (1 year), includeSubDomains must be set, and preload must be present.
+              Submit at <a href="https://hstspreload.org" target="_blank" rel="noopener">hstspreload.org</a>.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Permissions-Policy ────────────────────────────────────────────────── -->
+  <div class="gen-panel" id="panel-pp">
+    <div class="gen-card">
+      <div class="output-bar">
+        <textarea class="output-code" id="pp-output" readonly rows="2"></textarea>
+        <button class="copy-btn" onclick="copyOutput('pp-output', this)">⎘ Copy</button>
+      </div>
+      <div class="controls">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px">
+          Toggle each browser feature on or off. <strong style="color:var(--text)">Off = blocked ()</strong> means your site and any iframes cannot use this API. <strong style="color:var(--text)">Self = your origin only</strong>.
+        </p>
+        <div class="controls-grid">
+
+          <div class="control-group">
+            <div class="control-group-title">Hardware Access</div>
+            <div id="pp-features-hw"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-group-title">Sensors &amp; Location</div>
+            <div id="pp-features-sensors"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-group-title">Media &amp; Display</div>
+            <div id="pp-features-media"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-group-title">Payment &amp; Identity</div>
+            <div id="pp-features-misc"></div>
+          </div>
+
+        </div>
+        <div class="info-note">
+          <strong>Best practice:</strong> Block everything you don't use. If your site never needs the camera or microphone, setting them to <code>()</code> means a compromised third-party script can't silently activate them.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CORS Policy ───────────────────────────────────────────────────────── -->
+  <div class="gen-panel" id="panel-cors">
+    <div class="gen-card">
+      <div class="output-bar">
+        <textarea class="output-code" id="cors-output" readonly rows="5"></textarea>
+        <button class="copy-btn" onclick="copyOutput('cors-output', this)">⎘ Copy All</button>
+      </div>
+      <div class="controls">
+        <div class="controls-grid">
+
+          <!-- Allowed Origin -->
+          <div class="control-group" style="grid-column: 1/-1">
+            <div class="control-group-title">Access-Control-Allow-Origin</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:4px">Specify the allowed origin, or <code>*</code> for public APIs that don't use credentials.</p>
+            <input type="text" class="full-input" id="cors-origin"
+              placeholder="https://example.com"
+              oninput="updateCORS()">
+            <div style="margin-top:8px">
+              <label class="check-row">
+                <input type="checkbox" id="cors-wildcard" onchange="setCORSWildcard()">
+                <label for="cors-wildcard">Use <code>*</code> (wildcard — public API, no credentials)</label>
+              </label>
+            </div>
+          </div>
+
+          <!-- Allowed Methods -->
+          <div class="control-group">
+            <div class="control-group-title">Access-Control-Allow-Methods</div>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-get" checked onchange="updateCORS()">
+              <label for="cors-method-get">GET</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-post" checked onchange="updateCORS()">
+              <label for="cors-method-post">POST</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-put" onchange="updateCORS()">
+              <label for="cors-method-put">PUT</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-delete" onchange="updateCORS()">
+              <label for="cors-method-delete">DELETE</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-options" checked onchange="updateCORS()">
+              <label for="cors-method-options">OPTIONS <span class="check-hint">(required for preflight)</span></label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-method-patch" onchange="updateCORS()">
+              <label for="cors-method-patch">PATCH</label>
+            </label>
+          </div>
+
+          <!-- Allowed Headers -->
+          <div class="control-group">
+            <div class="control-group-title">Access-Control-Allow-Headers</div>
+            <label class="check-row">
+              <input type="checkbox" id="cors-header-contenttype" checked onchange="updateCORS()">
+              <label for="cors-header-contenttype">Content-Type</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-header-authorization" checked onchange="updateCORS()">
+              <label for="cors-header-authorization">Authorization</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-header-xapikey" onchange="updateCORS()">
+              <label for="cors-header-xapikey">X-API-Key</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-header-accept" onchange="updateCORS()">
+              <label for="cors-header-accept">Accept</label>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" id="cors-header-origin" onchange="updateCORS()">
+              <label for="cors-header-origin">Origin</label>
+            </label>
+            <div class="source-row">
+              <span class="source-label">Custom</span>
+              <input type="text" class="source-input" id="cors-header-custom" placeholder="X-Custom-Header" oninput="updateCORS()">
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div class="control-group">
+            <div class="control-group-title">Options</div>
+            <div class="toggle-row">
+              <div>
+                <div class="toggle-label">Allow-Credentials</div>
+                <div class="toggle-sublabel">Send cookies / auth headers cross-origin</div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="cors-credentials" onchange="updateCORS()">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div style="margin-top:14px">
+              <div class="control-group-title" style="margin-bottom:6px">Access-Control-Max-Age (seconds)</div>
+              <p style="font-size:11px;color:var(--muted);margin-bottom:4px">How long the browser caches the preflight result.</p>
+              <input type="number" class="number-input" id="cors-max-age"
+                value="86400" min="0" oninput="updateCORS()">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Wildcard + credentials warning -->
+        <div class="warn-box hidden" id="cors-warn">
+          <strong>⚠ Invalid combination:</strong> <code>Access-Control-Allow-Origin: *</code> cannot be used together with <code>Access-Control-Allow-Credentials: true</code>. Browsers will block the response. Use a specific origin (e.g. <code>https://example.com</code>) when credentials are required.
+        </div>
+
+        <div class="info-note">
+          <strong>Tip:</strong> Only expose CORS headers on API endpoints that genuinely need cross-origin access. Never set <code>*</code> on endpoints that handle authenticated requests — use an explicit origin allowlist instead.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CSP Validator ─────────────────────────────────────────────────────── -->
+  <div class="gen-panel" id="panel-validator">
+    <div class="gen-card">
+      <div class="validator-input-area">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
+          Paste an existing <code>Content-Security-Policy</code> header value below to check for misconfigurations, dangerous directives, and missing protections.
+        </p>
+        <textarea class="validator-textarea" id="csp-validator-input"
+          placeholder="default-src 'self'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none';"
+          rows="5"></textarea>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:12px">
+          <button class="validate-btn" id="validate-btn" onclick="validateCSP()">Validate</button>
+          <span id="validate-loading" style="font-size:13px;color:var(--muted);display:none">Analyzing…</span>
+        </div>
+      </div>
+      <div class="validator-results hidden" id="validator-results">
+        <div class="validator-overall" id="validator-overall"></div>
+        <div id="validator-issues"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  function el(id) { return document.getElementById(id); }
+  function toggleNav() { el('nav-mobile').classList.toggle('open'); }
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+  function switchTab(id) {
+    document.querySelectorAll('.gen-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    el(`panel-${id}`).classList.add('active');
+    const btn = document.querySelector(`[data-tab="${id}"]`);
+    if (btn) btn.classList.add('active');
+  }
+
+  // ── Copy ──────────────────────────────────────────────────────────────────
+  function copyOutput(inputId, btn) {
+    const text = el(inputId).value;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = inputId === 'cors-output' ? '⎘ Copy All' : '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = inputId === 'cors-output' ? '⎘ Copy All' : '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── CSP Generator ─────────────────────────────────────────────────────────
+  function checked(id) { return el(id) && el(id).checked; }
+  function val(id) { return (el(id) && el(id).value.trim()) || ''; }
+
+  function updateCSP() {
+    const directives = [];
+
+    // script-src
+    const scriptSrcs = [];
+    if (checked('csp-script-self')) scriptSrcs.push("'self'");
+    if (checked('csp-script-inline')) scriptSrcs.push("'unsafe-inline'");
+    if (checked('csp-script-eval')) scriptSrcs.push("'unsafe-eval'");
+    if (checked('csp-script-nonce')) scriptSrcs.push("'nonce-REPLACE_WITH_NONCE'");
+    if (val('csp-script-custom')) scriptSrcs.push(...val('csp-script-custom').split(/\s+/));
+    if (scriptSrcs.length) directives.push(`script-src ${scriptSrcs.join(' ')}`);
+
+    // style-src
+    const styleSrcs = [];
+    if (checked('csp-style-self')) styleSrcs.push("'self'");
+    if (checked('csp-style-inline')) styleSrcs.push("'unsafe-inline'");
+    if (checked('csp-style-fonts')) styleSrcs.push('fonts.googleapis.com');
+    if (val('csp-style-custom')) styleSrcs.push(...val('csp-style-custom').split(/\s+/));
+    if (styleSrcs.length) directives.push(`style-src ${styleSrcs.join(' ')}`);
+
+    // img-src
+    const imgSrcs = [];
+    if (checked('csp-img-self')) imgSrcs.push("'self'");
+    if (checked('csp-img-data')) imgSrcs.push('data:');
+    if (checked('csp-img-https')) imgSrcs.push('https:');
+    if (val('csp-img-custom')) imgSrcs.push(...val('csp-img-custom').split(/\s+/));
+    if (imgSrcs.length) directives.push(`img-src ${imgSrcs.join(' ')}`);
+
+    // font-src
+    const fontSrcs = [];
+    if (checked('csp-font-self')) fontSrcs.push("'self'");
+    if (checked('csp-font-gstatic')) fontSrcs.push('fonts.gstatic.com');
+    if (val('csp-font-custom')) fontSrcs.push(...val('csp-font-custom').split(/\s+/));
+    if (fontSrcs.length) directives.push(`font-src ${fontSrcs.join(' ')}`);
+
+    // connect-src
+    const connectSrcs = [];
+    if (checked('csp-connect-self')) connectSrcs.push("'self'");
+    if (checked('csp-connect-wss')) connectSrcs.push('wss:');
+    if (val('csp-connect-custom')) connectSrcs.push(...val('csp-connect-custom').split(/\s+/));
+    if (connectSrcs.length) directives.push(`connect-src ${connectSrcs.join(' ')}`);
+
+    // frame-ancestors
+    if (checked('csp-frame-ancestors-none') && !checked('csp-frame-ancestors-self')) {
+      directives.push("frame-ancestors 'none'");
+    } else if (checked('csp-frame-ancestors-self')) {
+      directives.push("frame-ancestors 'self'");
+    }
+    if (checked('csp-form-action-self')) directives.push("form-action 'self'");
+    if (checked('csp-object-none')) directives.push("object-src 'none'");
+    if (checked('csp-base-self')) directives.push("base-uri 'self'");
+    if (checked('csp-upgrade')) directives.push('upgrade-insecure-requests');
+
+    // report-uri
+    const reportRow = el('csp-report-row');
+    if (checked('csp-report')) {
+      if (reportRow) reportRow.style.display = 'flex';
+      const url = val('csp-report-url');
+      if (url) directives.push(`report-uri ${url}`);
+    } else {
+      if (reportRow) reportRow.style.display = 'none';
+    }
+
+    const value = directives.join('; ') + (directives.length ? ';' : '');
+    el('csp-output').value = `Content-Security-Policy: ${value}`;
+    autoResize(el('csp-output'));
+  }
+
+  // ── HSTS Generator ────────────────────────────────────────────────────────
+  const HSTS_PRESETS = [
+    { label: '1 day (86400)', val: 86400 },
+    { label: '1 week (604800)', val: 604800 },
+    { label: '1 month (2592000)', val: 2592000 },
+    { label: '6 months (15768000)', val: 15768000 },
+    { label: '1 year (31536000) — recommended', val: 31536000 },
+    { label: '2 years (63072000)', val: 63072000 },
+  ];
+
+  function updateHSTSSlider() {
+    const idx = parseInt(el('hsts-age-slider').value);
+    const preset = HSTS_PRESETS[idx];
+    el('hsts-age-label').textContent = preset.label;
+    el('hsts-age-val').textContent = preset.val;
+    updateHSTS();
+  }
+
+  function updateHSTS() {
+    const idx = parseInt(el('hsts-age-slider').value);
+    const maxAge = HSTS_PRESETS[idx].val;
+    let value = `max-age=${maxAge}`;
+    if (checked('hsts-subdomains')) value += '; includeSubDomains';
+    if (checked('hsts-preload')) value += '; preload';
+    el('hsts-output').value = `Strict-Transport-Security: ${value}`;
+    autoResize(el('hsts-output'));
+  }
+
+  // ── Permissions-Policy Generator ──────────────────────────────────────────
+  const PP_FEATURES = {
+    hw: [
+      { id: 'camera',      label: 'camera',      hint: 'Camera access' },
+      { id: 'microphone',  label: 'microphone',  hint: 'Microphone access' },
+      { id: 'usb',         label: 'usb',         hint: 'USB device access' },
+      { id: 'bluetooth',   label: 'bluetooth',   hint: 'Bluetooth access' },
+      { id: 'hid',         label: 'hid',         hint: 'Human Interface Devices' },
+    ],
+    sensors: [
+      { id: 'geolocation',          label: 'geolocation',          hint: 'GPS/location' },
+      { id: 'accelerometer',        label: 'accelerometer',        hint: 'Device motion' },
+      { id: 'gyroscope',            label: 'gyroscope',            hint: 'Device orientation' },
+      { id: 'magnetometer',         label: 'magnetometer',         hint: 'Compass' },
+      { id: 'ambient-light-sensor', label: 'ambient-light-sensor', hint: 'Light sensor' },
+    ],
+    media: [
+      { id: 'fullscreen',         label: 'fullscreen',         hint: 'Full screen mode' },
+      { id: 'autoplay',           label: 'autoplay',           hint: 'Auto-play media' },
+      { id: 'picture-in-picture', label: 'picture-in-picture', hint: 'PiP video' },
+      { id: 'display-capture',    label: 'display-capture',    hint: 'Screen sharing' },
+    ],
+    misc: [
+      { id: 'payment',                  label: 'payment',                  hint: 'Payment Request API' },
+      { id: 'identity-credentials-get', label: 'identity-credentials-get', hint: 'FedCM sign-in' },
+      { id: 'clipboard-read',           label: 'clipboard-read',           hint: 'Read clipboard' },
+      { id: 'clipboard-write',          label: 'clipboard-write',          hint: 'Write clipboard' },
+    ],
+  };
+
+  function buildPPGroup(features, containerId) {
+    const container = el(containerId);
+    features.forEach(f => {
+      const row = document.createElement('div');
+      row.className = 'toggle-row';
+      row.innerHTML = `
+        <div>
+          <div class="toggle-label">${f.label}</div>
+          <div class="toggle-sublabel">${f.hint}</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="pp-${f.id}" onchange="updatePP()">
+          <span class="toggle-track"></span>
+        </label>`;
+      container.appendChild(row);
+    });
+  }
+
+  function updatePP() {
+    const all = [...PP_FEATURES.hw, ...PP_FEATURES.sensors, ...PP_FEATURES.media, ...PP_FEATURES.misc];
+    const parts = all.map(f => {
+      const on = el(`pp-${f.id}`) && el(`pp-${f.id}`).checked;
+      return `${f.label}=${on ? '(self)' : '()'}`;
+    });
+    el('pp-output').value = `Permissions-Policy: ${parts.join(', ')}`;
+    autoResize(el('pp-output'));
+  }
+
+  // ── CORS Generator ────────────────────────────────────────────────────────
+  function setCORSWildcard() {
+    const input = el('cors-origin');
+    if (checked('cors-wildcard')) {
+      input.value = '*';
+      input.disabled = true;
+    } else {
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+    }
+    updateCORS();
+  }
+
+  function updateCORS() {
+    const origin = val('cors-origin') || '*';
+    const credentials = checked('cors-credentials');
+    const maxAge = val('cors-max-age') || '86400';
+
+    // Sync wildcard checkbox with input value
+    const wcCb = el('cors-wildcard');
+    if (wcCb && origin === '*') {
+      wcCb.checked = true;
+      el('cors-origin').disabled = true;
+    }
+
+    // Show/hide warning
+    const warnEl = el('cors-warn');
+    if (origin === '*' && credentials) {
+      warnEl.classList.remove('hidden');
+    } else {
+      warnEl.classList.add('hidden');
+    }
+
+    // Build allowed methods
+    const METHODS = [
+      { id: 'cors-method-get',     label: 'GET' },
+      { id: 'cors-method-post',    label: 'POST' },
+      { id: 'cors-method-put',     label: 'PUT' },
+      { id: 'cors-method-delete',  label: 'DELETE' },
+      { id: 'cors-method-options', label: 'OPTIONS' },
+      { id: 'cors-method-patch',   label: 'PATCH' },
+    ];
+    const methods = METHODS.filter(m => checked(m.id)).map(m => m.label);
+
+    // Build allowed headers
+    const HEADERS = [
+      { id: 'cors-header-contenttype',   label: 'Content-Type' },
+      { id: 'cors-header-authorization', label: 'Authorization' },
+      { id: 'cors-header-xapikey',       label: 'X-API-Key' },
+      { id: 'cors-header-accept',        label: 'Accept' },
+      { id: 'cors-header-origin',        label: 'Origin' },
+    ];
+    const headers = HEADERS.filter(h => checked(h.id)).map(h => h.label);
+    const customHdr = val('cors-header-custom');
+    if (customHdr) headers.push(customHdr);
+
+    // Assemble output lines
+    const lines = [];
+    lines.push(`Access-Control-Allow-Origin: ${origin}`);
+    if (credentials) lines.push('Access-Control-Allow-Credentials: true');
+    if (methods.length) lines.push(`Access-Control-Allow-Methods: ${methods.join(', ')}`);
+    if (headers.length) lines.push(`Access-Control-Allow-Headers: ${headers.join(', ')}`);
+    lines.push(`Access-Control-Max-Age: ${maxAge}`);
+
+    el('cors-output').value = lines.join('\n');
+    autoResize(el('cors-output'));
+  }
+
+  // ── CSP Validator ─────────────────────────────────────────────────────────
+  async function validateCSP() {
+    const input  = el('csp-validator-input');
+    const cspRaw = input.value.trim();
+    if (!cspRaw) {
+      input.style.borderColor = 'var(--danger)';
+      setTimeout(() => { input.style.borderColor = ''; }, 1500);
+      return;
+    }
+
+    const btn     = el('validate-btn');
+    const loading = el('validate-loading');
+    btn.disabled          = true;
+    loading.style.display = 'inline';
+
+    try {
+      const res  = await fetch('https://api.securescanr.com/api/tools/validate-csp', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ csp: cspRaw }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Validation failed');
+      renderValidatorResults(data);
+    } catch (err) {
+      el('validator-results').classList.remove('hidden');
+      el('validator-overall').className = 'validator-overall dangerous';
+      el('validator-overall').innerHTML = `<span class="overall-icon">✕</span><div class="overall-text"><div class="overall-label" style="color:var(--danger)">Error</div><div class="overall-sub">${escHtml(err.message)}</div></div>`;
+      el('validator-issues').innerHTML  = '';
+    } finally {
+      btn.disabled          = false;
+      loading.style.display = 'none';
+    }
+  }
+
+  function renderValidatorResults(data) {
+    el('validator-results').classList.remove('hidden');
+
+    const QUALITY = {
+      good:      { icon: '✓', label: 'Good',      sub: 'No significant issues found in this policy.',                cls: 'good'      },
+      weak:      { icon: '⚠', label: 'Weak',      sub: 'Some issues reduce the effectiveness of this policy.',      cls: 'weak'      },
+      dangerous: { icon: '✕', label: 'Dangerous', sub: 'Critical issues found — XSS protection may be bypassed.',   cls: 'dangerous' },
+    };
+
+    const q       = QUALITY[data.quality] || QUALITY.weak;
+    const overall = el('validator-overall');
+    overall.className = `validator-overall ${q.cls}`;
+    overall.innerHTML = `
+      <span class="overall-icon">${q.icon}</span>
+      <div class="overall-text">
+        <div class="overall-label">${q.label}</div>
+        <div class="overall-sub">${q.sub}</div>
+      </div>
+      <span class="overall-meta">${data.directive_count} directive${data.directive_count !== 1 ? 's' : ''} parsed</span>`;
+
+    const issuesEl = el('validator-issues');
+    issuesEl.innerHTML = '';
+
+    if (!data.issues || data.issues.length === 0) {
+      issuesEl.innerHTML = `<div class="info-note" style="margin-top:0"><strong>All checks passed.</strong> Your CSP is well-configured. Review it periodically as new directives and best practices emerge.</div>`;
+      return;
+    }
+
+    const SEV_ORDER = { critical: 0, warning: 1, info: 2 };
+    const sorted    = [...data.issues].sort((a, b) => (SEV_ORDER[a.severity] ?? 9) - (SEV_ORDER[b.severity] ?? 9));
+
+    const titleEl       = document.createElement('div');
+    titleEl.className   = 'issues-title';
+    titleEl.textContent = `${sorted.length} issue${sorted.length !== 1 ? 's' : ''} found`;
+    issuesEl.appendChild(titleEl);
+
+    sorted.forEach(issue => {
+      const item       = document.createElement('div');
+      item.className   = 'issue-item';
+      item.innerHTML   = `
+        <div class="issue-header">
+          <span class="sev-badge ${escHtml(issue.severity)}">${escHtml(issue.severity)}</span>
+          <code class="issue-directive">${escHtml(issue.directive)}</code>
+        </div>
+        <div class="issue-desc">${escHtml(issue.issue)}</div>
+        <div class="issue-fix"><strong>Fix:</strong> ${escHtml(issue.fix)}</div>`;
+      issuesEl.appendChild(item);
+    });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function sendToValidator(cspRaw) {
+    const value = cspRaw.replace(/^Content-Security-Policy:\s*/i, '').trim();
+    el('csp-validator-input').value = value;
+    el('validator-results').classList.add('hidden');
+    switchTab('validator');
+    el('csp-validator-input').focus();
+  }
+
+  // ── Shared ────────────────────────────────────────────────────────────────
+  function autoResize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  buildPPGroup(PP_FEATURES.hw,      'pp-features-hw');
+  buildPPGroup(PP_FEATURES.sensors, 'pp-features-sensors');
+  buildPPGroup(PP_FEATURES.media,   'pp-features-media');
+  buildPPGroup(PP_FEATURES.misc,    'pp-features-misc');
+
+  updateCSP();
+  updateHSTSSlider();
+  updatePP();
+  updateCORS();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

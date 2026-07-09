@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecureScanr privacy policy — no accounts, no cookies, no data stored.">
+  <meta property="og:title" content="Privacy Policy — SecureScanr">
+  <meta property="og:url" content="https://securescanr.com/privacy.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/privacy.html">
+  <title>Privacy — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav.site-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 28px; margin-left: auto; }
+    .nav-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+    }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Content ─────────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 50px 24px 34px;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,212,170,.08) 0%, transparent 70%);
+    }
+    .page-inner { max-width: 720px; margin: 0 auto; }
+    .page-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px;
+    }
+    .page-sub {
+      margin-top: 8px; font-size: 15px; color: var(--muted);
+    }
+
+    .content-section {
+      max-width: 720px; margin: 0 auto;
+      padding: 39px 48px 56px;
+      text-align: left;
+    }
+    .content-section h2 {
+      font-size: 18px; font-weight: 700;
+      margin-top: 28px; margin-bottom: 8px;
+      letter-spacing: -.3px; color: var(--text);
+    }
+    .content-section h2:first-child { margin-top: 0; }
+    .content-section p {
+      font-size: 15px; color: var(--muted);
+      margin-bottom: 10px; line-height: 1.7;
+    }
+    .content-section p strong { color: var(--text); }
+    .content-section ul {
+      list-style: none; margin-bottom: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .content-section ul li {
+      font-size: 15px; color: var(--muted);
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .content-section ul li::before {
+      content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0;
+    }
+    .updated-note {
+      display: inline-block; margin-bottom: 16px;
+      font-size: 12px; color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 40px 24px 0;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: start; gap: 32px;
+      padding-bottom: 20px;
+    }
+    .footer-logo { font-size: 16px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .footer-nav {
+      display: flex; gap: 20px; justify-content: center; align-items: center;
+      position: static; background: none;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      border: none; z-index: auto;
+    }
+    .footer-nav a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footer-nav a:hover { color: var(--text); }
+    .footer-right { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
+    .footer-right a { color: var(--muted); }
+    .footer-right a:hover { color: var(--text); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 12px 0 16px;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+    @media (max-width: 640px) {
+      .footer-inner { grid-template-columns: 1fr; text-align: center; }
+      .footer-right { text-align: center; }
+      .footer-nav { flex-wrap: wrap; }
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <a href="plans.html">Plans</a>
+      <a href="methodology.html">Methodology</a>
+      <a href="about.html">About</a>
+      <a href="security-txt.html">Security.txt</a>
+      <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="plans.html">Plans</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-inner">
+    <p class="page-label">Privacy</p>
+    <h1 class="page-title">Privacy Policy</h1>
+    <p class="page-sub">Short version: we collect nothing. Longer version below.</p>
+  </div>
+</div>
+
+<!-- ── Content ───────────────────────────────────────────────────────────────── -->
+<div class="content-section">
+  <span class="updated-note">Last updated: April 2026</span>
+
+  <h2>What we collect</h2>
+  <p><strong>Nothing.</strong> SecureScanr does not collect, store, or process any personal data.</p>
+  <ul>
+    <li>No account creation, no email address, no name required</li>
+    <li>No cookies set by SecureScanr — first-party or third-party</li>
+    <li>No tracking scripts, analytics, or ad networks</li>
+    <li>No IP addresses logged or retained</li>
+  </ul>
+
+  <h2>Scanned URLs</h2>
+  <p>
+    When you scan a URL, SecureScanr sends a request to that URL from our server to retrieve
+    HTTP headers and other publicly available security signals. <strong>Scanned URLs are
+    not stored anywhere</strong> — they exist only for the duration of the scan request
+    and are discarded immediately after the response is returned to your browser.
+  </p>
+  <p>
+    We do not build a database of scanned domains. We do not log what sites you scan.
+    Each scan is fully ephemeral.
+  </p>
+
+  <h2>PDF reports</h2>
+  <p>
+    PDF reports are generated on-demand server-side and returned directly to your browser
+    as a file download. <strong>No PDF report is saved, cached, or stored server-side.</strong>
+    Once the response stream closes, the report no longer exists anywhere except on your device.
+  </p>
+
+  <h2>API keys</h2>
+  <p>
+    If you obtain an API key for paid access, your email address is retained only to
+    associate it with your key. It is not shared, sold, or used for marketing.
+    You can request deletion at any time by emailing
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>.
+  </p>
+
+  <h2>Third-party services</h2>
+  <p>
+    The frontend is served via Cloudflare Pages. The backend runs on Railway.
+    Both are infrastructure providers and may log standard server access logs
+    (IP, timestamp, request path) per their own privacy policies. SecureScanr does not
+    access or retain those logs.
+  </p>
+  <p>
+    Google Fonts is loaded from Google's CDN for typography. This means your browser
+    makes a request to Google's servers when loading any SecureScanr page. If you prefer
+    to avoid this, use a browser extension that blocks Google Fonts.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about this policy?
+    Email <a href="mailto:hello@securescanr.com">hello@securescanr.com</a> — I read every message.
+  </p>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html" style="color:var(--accent)">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+  </div>
+</footer>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TLS/SSL security guide — understand TLS versions, cipher suites, certificate expiry, self-signed risks, and how to check your configuration.">
+  <meta property="og:title" content="TLS/SSL Security: What to Check and Why — SecureScanr">
+  <meta property="og:description" content="TLS/SSL security guide — understand TLS versions, cipher suites, certificate expiry, self-signed risks, and how to check your configuration.">
+  <meta property="og:url" content="https://securescanr.com/learn/tls-ssl-guide.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn/tls-ssl-guide.html">
+  <title>TLS/SSL Security: What to Check and Why — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    :root { --bg:#0a0b0d; --surface:#111318; --border:#1e2128; --accent:#00d4aa; --danger:#ff4757; --warning:#ffa502; --success:#2ed573; --text:#e8eaf0; --muted:#6b7280; --radius:10px; }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; overflow-x: hidden; font-size:clamp(15px,1.1vw + 0.5rem,18px); }
+    body { overflow-x: hidden; }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; display:flex; flex-direction:column; min-height:100vh; }
+    a { color:var(--accent); text-decoration:none; }
+    nav { position:sticky; top:0; z-index:100; background:rgba(10,11,13,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; }
+    .nav-logo { font-size:18px; font-weight:700; color:var(--muted); letter-spacing:-.2px; }
+    .logo-accent { color:var(--accent); }
+    .nav-links { display:flex; align-items:center; gap:24px; margin-left:auto; }
+    .nav-links > a { font-size:13px; color:var(--muted); transition:color .15s; }
+    .nav-links > a:hover { color:var(--text); }
+    .nav-cta { background:var(--accent); color:#0a0b0d !important; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; transition:opacity .15s !important; }
+    .nav-cta:hover { opacity:.88; }
+    .nav-dropdown { position:relative; }
+    .nav-dropdown-btn { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; font-family:inherit; transition:color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color:var(--text); }
+    .nav-dropdown-btn::after { content:'▾'; font-size:10px; margin-left:2px; }
+    .nav-dropdown::after { content:''; position:absolute; bottom:-8px; left:0; width:100%; height:8px; }
+    .nav-dropdown-menu { display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); background:rgba(15,20,25,0.85); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:14px 6px 6px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.5); z-index:200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display:block; }
+    .nav-dropdown-menu a { display:block; padding:8px 12px; font-size:13px; color:var(--muted); border-radius:6px; text-decoration:none; transition:background .12s,color .12s; }
+    .nav-dropdown-menu a:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .nav-dropdown-menu a.active-link { color:var(--text); }
+    .nav-hamburger { display:none; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; margin-left:auto; }
+    .nav-mobile { display:none; flex-direction:column; border-top:1px solid var(--border); padding:12px 24px 16px; }
+    .nav-mobile a { font-size:14px; color:var(--muted); padding:9px 0; border-bottom:1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile.open { display:flex; }
+    @media (max-width:700px) { .nav-links { display:none; } .nav-hamburger { display:block; } }
+
+    .article-wrap { max-width:740px; margin:0 auto; padding:40px 24px 80px; flex:1; }
+    .breadcrumb { font-size:13px; color:var(--muted); margin-bottom:32px; display:flex; align-items:center; gap:6px; }
+    .breadcrumb a { color:var(--muted); }
+    .breadcrumb a:hover { color:var(--accent); text-decoration:none; }
+    .article-meta-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+    .sev-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 8px; border-radius:4px; }
+    .sev-critical { background:rgba(255,71,87,.12); color:#ff6b7a; border:1px solid rgba(255,71,87,.25); }
+    .meta-tag { font-size:12px; color:var(--muted); background:var(--surface); border:1px solid var(--border); padding:2px 8px; border-radius:4px; }
+    h1 { font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:-.5px; line-height:1.2; margin-bottom:20px; }
+    .article-lead { font-size:16px; color:var(--muted); line-height:1.7; border-left:3px solid var(--accent); padding-left:16px; margin-bottom:40px; }
+    h2 { font-size:20px; font-weight:700; margin:36px 0 12px; }
+    h3 { font-size:16px; font-weight:700; margin:24px 0 8px; color:var(--accent); }
+    p { margin-bottom:16px; }
+    ul,ol { margin:0 0 16px 20px; }
+    li { margin-bottom:6px; }
+    code { font-family:'Space Mono',monospace; font-size:12.5px; background:rgba(0,212,170,.07); color:var(--accent); padding:1px 5px; border-radius:3px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:6px; padding:16px 18px; overflow-x:auto; margin:0 0 20px; font-family:'Space Mono',monospace; font-size:12.5px; color:var(--accent); line-height:1.7; }
+    .callout { background:rgba(255,165,2,.07); border-left:3px solid var(--warning); border-radius:0 6px 6px 0; padding:14px 16px; margin:0 0 20px; font-size:14px; }
+    .callout-danger { background:rgba(255,71,87,.07); border-left-color:var(--danger); }
+    .callout-success { background:rgba(46,213,115,.07); border-left-color:var(--success); }
+    .version-table { width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
+    .version-table th { background:rgba(255,255,255,.03); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:9px 14px; text-align:left; border-bottom:1px solid var(--border); }
+    .version-table td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .version-table tr:last-child td { border-bottom:none; }
+    .tag-good { color:var(--success); font-weight:700; font-size:12px; }
+    .tag-bad  { color:var(--danger); font-weight:700; font-size:12px; }
+    .tag-warn { color:var(--warning); font-weight:700; font-size:12px; }
+    .article-cta { background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(0,212,170,.03) 100%); border:1px solid rgba(0,212,170,.2); border-radius:var(--radius); padding:28px 32px; text-align:center; margin-top:48px; }
+    .article-cta h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+    .article-cta p  { font-size:14px; color:var(--muted); margin-bottom:20px; }
+    .btn-accent { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0a0b0d; border-radius:8px; padding:12px 28px; font-size:15px; font-weight:700; text-decoration:none; transition:opacity .15s; }
+    .btn-accent:hover { opacity:.88; color:#0a0b0d; text-decoration:none; }
+    footer { background:var(--surface); border-top:1px solid var(--border); }
+    .footer-bottom { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px 16px; font-size:12px; color:var(--muted); }
+    .footer-bottom a { color:var(--muted); }
+    .footer-bottom a:hover { color:var(--text); }
+    .footer-sep { opacity:.4; }
+    footer a { color:var(--muted); }
+    footer a:hover { color:var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between TLS and SSL?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SSL (Secure Sockets Layer) is the older protocol that TLS (Transport Layer Security) replaced. All SSL versions (2.0, 3.0) and early TLS versions (1.0, 1.1) are now deprecated due to known vulnerabilities. Modern servers should support TLS 1.2 and TLS 1.3 only. The term 'SSL certificate' is still commonly used in the industry but the underlying protocol in use is always TLS."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which TLS versions are still considered secure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TLS 1.2 and TLS 1.3 are the only versions considered secure as of 2026. TLS 1.3 is preferred — it removed weak cipher suites, reduced handshake round trips, and mandates forward secrecy. TLS 1.0 and 1.1 are deprecated by RFC 8996 and disabled in all major browsers. Servers still supporting these older versions will be flagged by SecureScanr with a score deduction."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How far in advance should I renew my TLS certificate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Renew at least 30 days before expiry — most CAs and automation tools (Let's Encrypt, Certbot) default to renewing at 30 days remaining. SecureScanr deducts 5 points for certificates expiring within 60 days, 10 points within 30 days, and 20 points within 14 days. An expired certificate deducts 30 points and will trigger browser security warnings that block visitors."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a self-signed TLS certificate and why is it risky in production?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A self-signed certificate is signed by the server itself rather than a trusted Certificate Authority (CA). Browsers do not trust self-signed certificates and show a full-page security warning, causing visitors to leave. They also provide no protection against man-in-the-middle attacks because anyone can create a self-signed cert for any domain. Use free CA-signed certificates from Let's Encrypt for any public-facing site."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="../scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="../versus.html">Versus</a>
+          <a href="../generators.html">Generators</a>
+          <a href="../security-txt.html">Security.txt</a>
+          <a href="../api-docs.html">API Docs</a>
+          <a href="../learn.html" class="active-link">Learn</a>
+          <a href="../badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="../plans.html">Plans</a>
+      <a href="../world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../about.html">About</a>
+          <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="../compliance-report.html">Compliance Report</a>
+          <a href="../status.html">Status</a>
+        </div>
+      </div>
+      <a href="../plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="../scan.html">Scan</a>
+    <a href="../versus.html">Versus</a>
+    <a href="../generators.html">Generators</a>
+    <a href="../security-txt.html">Security.txt</a>
+    <a href="../api-docs.html">API Docs</a>
+    <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+    <a href="../plans.html">Plans</a>
+    <a href="../world-security-index.html">World Index</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../about.html">About</a>
+    <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="../compliance-report.html">Compliance Report</a>
+    <a href="../status.html">Status</a>
+    <a href="../plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../learn.html">← Learning Center</a>
+    <span>/</span>
+    <span>TLS/SSL Guide</span>
+  </div>
+
+  <div class="article-meta-row">
+    <span class="sev-badge sev-critical">Critical</span>
+    <span class="meta-tag">TLS</span>
+    <span class="meta-tag">6 min read</span>
+  </div>
+
+  <h1>TLS/SSL Security: What to Check and Why</h1>
+
+  <p class="article-lead">TLS is the encryption layer that protects every HTTPS connection. But not all TLS is equal — old versions have known breaks, weak cipher suites can be downgraded or cracked, and an expired certificate kills user trust instantly. Here's what matters and how to verify it.</p>
+
+  <h2>TLS vs SSL: What's the Difference?</h2>
+  <p>SSL (Secure Sockets Layer) is the predecessor to TLS (Transport Layer Security). SSL 2.0 and 3.0 are both fully broken and have been deprecated for over a decade. TLS 1.0 and TLS 1.1 followed and are now also deprecated. When people say "SSL" colloquially today, they almost always mean TLS 1.2 or TLS 1.3. Your server shouldn't support any version called "SSL" at all.</p>
+
+  <h2>TLS Versions: What's Safe</h2>
+
+  <table class="version-table">
+    <thead><tr><th>Version</th><th>Status</th><th>Action required</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>SSL 2.0 / 3.0</td>
+        <td><span class="tag-bad">BROKEN</span></td>
+        <td>Disable immediately. POODLE and DROWN attacks exploit these.</td>
+      </tr>
+      <tr>
+        <td>TLS 1.0</td>
+        <td><span class="tag-bad">DEPRECATED</span></td>
+        <td>Disable. Deprecated by PCI DSS, RFC 8996, and all major browsers in 2020.</td>
+      </tr>
+      <tr>
+        <td>TLS 1.1</td>
+        <td><span class="tag-bad">DEPRECATED</span></td>
+        <td>Disable. No known breaks yet, but deprecated alongside TLS 1.0 and has no improvements over TLS 1.2.</td>
+      </tr>
+      <tr>
+        <td>TLS 1.2</td>
+        <td><span class="tag-good">GOOD</span></td>
+        <td>Still safe. Widely supported. Ensure only strong cipher suites are enabled.</td>
+      </tr>
+      <tr>
+        <td>TLS 1.3</td>
+        <td><span class="tag-good">BEST</span></td>
+        <td>Enable and prefer. Faster handshake, perfect forward secrecy mandatory, weak ciphers removed from the spec entirely.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-danger">
+    If your server still accepts TLS 1.0 or 1.1, it will fail PCI DSS compliance audits and most modern security scanners will flag it as a critical finding. Disable these versions in your web server config.
+  </div>
+
+  <h3>Nginx — disable old TLS</h3>
+  <pre>ssl_protocols TLSv1.2 TLSv1.3;</pre>
+
+  <h3>Apache — disable old TLS</h3>
+  <pre>SSLProtocol -all +TLSv1.2 +TLSv1.3</pre>
+
+  <h2>Cipher Suites</h2>
+  <p>A cipher suite is a combination of algorithms used to encrypt the TLS connection: key exchange, authentication, bulk encryption, and message authentication. Not all cipher suites are equal — some use known-weak algorithms that can be broken with enough compute.</p>
+
+  <h3>What to avoid</h3>
+  <ul>
+    <li><strong>NULL ciphers</strong> — no encryption at all. Authentication only.</li>
+    <li><strong>EXPORT ciphers</strong> — deliberately weakened 40-bit encryption, legacy of US export controls. Exploited by FREAK and LOGJAM attacks.</li>
+    <li><strong>RC4</strong> — stream cipher with statistical biases that make it breakable. Disabled in all modern browsers.</li>
+    <li><strong>DES / 3DES</strong> — 56-bit and 112-bit keys. Vulnerable to SWEET32 birthday attacks in 3DES with long sessions.</li>
+    <li><strong>Anonymous key exchange (aNULL)</strong> — no server authentication, trivially MitM'd.</li>
+  </ul>
+
+  <h3>Recommended cipher string for Nginx (TLS 1.2 + 1.3)</h3>
+  <pre>ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256;
+ssl_prefer_server_ciphers off;</pre>
+
+  <p>TLS 1.3 has its own fixed cipher list and doesn't use the <code>ssl_ciphers</code> directive — the weak options are removed from the spec entirely, which is one of TLS 1.3's major improvements.</p>
+
+  <h2>Certificate Expiry</h2>
+  <p>An expired TLS certificate causes browsers to show a hard security warning to all visitors — and most users will leave rather than click through. Certificate expiry is entirely preventable with monitoring and automated renewal.</p>
+
+  <ul>
+    <li><strong>Let's Encrypt</strong> certificates expire every 90 days. Use certbot's cron job or a hosting provider that auto-renews to avoid surprises.</li>
+    <li><strong>DV, OV, EV certificates</strong> from commercial CAs now max out at 398 days (about 13 months). Plan renewals well before expiry.</li>
+    <li>Set up monitoring: tools like UptimeRobot, Checkly, and SecureScanr's own scanner alert you when expiry is within 30 days.</li>
+    <li>SecureScanr deducts 5 points when expiry is within 30 days and 15 points for an already-expired certificate.</li>
+  </ul>
+
+  <h2>Self-Signed Certificates</h2>
+  <p>A self-signed certificate is one where the certificate issuer is the same as the subject — the server signed its own certificate rather than having it signed by a trusted Certificate Authority (CA). Browsers don't trust self-signed certificates because there's no third party vouching that you are who you claim to be.</p>
+
+  <p>Self-signed certificates are fine for local development and internal tools where you can distribute and trust the certificate manually. For any public-facing site, use a certificate from a trusted CA. Let's Encrypt provides free DV certificates for public domains — there's no excuse for self-signed certificates on production web servers.</p>
+
+  <div class="callout callout-danger">
+    Self-signed certificates create a dangerous user habit. Training your users to click through the "Your connection is not private" warning means they'll do it for malicious sites too.
+  </div>
+
+  <h2>The Connection to HSTS</h2>
+  <p>TLS and HSTS are complementary. TLS encrypts the connection; HSTS ensures the browser always uses TLS. A strong TLS configuration without HSTS still leaves the first connection vulnerable to SSL stripping. See the <a href="hsts.html">HSTS guide</a> for how to lock down both sides of the equation.</p>
+
+  <h2>Quick Checklist</h2>
+  <ul>
+    <li>Disable SSL 2.0, SSL 3.0, TLS 1.0, TLS 1.1</li>
+    <li>Enable TLS 1.2 and TLS 1.3</li>
+    <li>Remove NULL, EXPORT, RC4, DES, 3DES, aNULL cipher suites</li>
+    <li>Use ECDHE key exchange (supports Perfect Forward Secrecy)</li>
+    <li>Certificate from a trusted CA, not self-signed</li>
+    <li>Certificate expiry &gt; 30 days; set up automated renewal</li>
+    <li>Deploy HSTS after confirming TLS is correct on all subdomains</li>
+  </ul>
+
+  <div class="article-cta">
+    <h3>Check your TLS configuration</h3>
+    <p>SecureScanr checks your TLS version, cipher suite, certificate expiry, issuer, and flags weak configurations automatically.</p>
+    <a href="../scan.html" class="btn-accent">Check your site's security now →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="../methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="../privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="../terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="../status.html">Status</a>
+  </div>
+</footer>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

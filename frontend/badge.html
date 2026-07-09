@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Embed a live website security grade badge on your GitHub README, docs, or portfolio. One img tag, no account needed. Shows A+ to F grade updated daily.">
+  <meta property="og:title" content="Website Security Badge — Embed Your Security Grade | SecureScanr">
+  <meta property="og:description" content="Embed a live website security grade badge on your GitHub README, docs, or portfolio. One img tag, no account needed. Shows A+ to F grade updated daily.">
+  <meta property="og:url" content="https://securescanr.com/badge.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/badge.html">
+  <title>Website Security Badge — Embed Your Security Grade | SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; font-size: 15px;
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ──────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page layout ──────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 56px 24px 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,212,170,.08) 0%, transparent 70%);
+    }
+    .page-inner { max-width: 760px; margin: 0 auto; }
+    .page-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .page-title {
+      font-size: clamp(26px, 4vw, 42px);
+      font-weight: 700; letter-spacing: -.6px; line-height: 1.15;
+    }
+    .page-sub { margin-top: 10px; font-size: 16px; color: var(--muted); }
+    .content-wrap { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; flex: 1; }
+
+    /* ── Badge preview card ───────────────────────────────────────────────── */
+    .preview-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 32px 28px; margin: 32px 0;
+    }
+    .preview-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .domain-form { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+    .domain-input {
+      flex: 1; min-width: 200px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 14px; color: var(--text); font-family: inherit;
+      outline: none; transition: border-color .15s;
+    }
+    .domain-input:focus { border-color: var(--accent); }
+    .domain-input::placeholder { color: var(--muted); }
+    .preview-btn {
+      background: var(--accent); color: #0a0b0d;
+      font-size: 13px; font-weight: 700; border: none;
+      padding: 10px 20px; border-radius: 8px; cursor: pointer;
+      font-family: inherit; transition: opacity .15s; white-space: nowrap;
+    }
+    .preview-btn:hover { opacity: .88; }
+
+    .badge-display {
+      background: rgba(255,255,255,.02); border: 1px solid var(--border);
+      border-radius: 8px; padding: 20px 20px 16px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .badge-display-row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .badge-display-label { font-size: 12px; color: var(--muted); width: 60px; flex-shrink: 0; }
+    .badge-img-wrap { display: flex; align-items: center; }
+    .badge-context {
+      font-size: 12px; color: var(--muted);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 4px; padding: 2px 8px; margin-left: 12px;
+    }
+
+    /* ── Embed code ───────────────────────────────────────────────────────── */
+    .embed-section { margin-top: 32px; }
+    .embed-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .embed-section p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .embed-tabs { display: flex; gap: 4px; margin-bottom: 0; }
+    .tab-btn {
+      font-size: 12px; font-weight: 700; padding: 6px 14px;
+      border-radius: 6px 6px 0 0; border: 1px solid var(--border);
+      border-bottom: none; background: var(--bg); color: var(--muted);
+      cursor: pointer; font-family: inherit; transition: color .12s, background .12s;
+    }
+    .tab-btn.active { background: var(--surface); color: var(--text); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .code-block {
+      background: var(--surface); border: 1px solid var(--border);
+      border-top: none; border-radius: 0 8px 8px 8px;
+      padding: 16px 18px; position: relative;
+    }
+    .code-block pre {
+      font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--accent); line-height: 1.7; white-space: pre-wrap;
+      word-break: break-all; margin: 0;
+    }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,212,170,.12); border: 1px solid rgba(0,212,170,.25);
+      color: var(--accent); font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 4px; cursor: pointer;
+      font-family: inherit; transition: background .12s;
+    }
+    .copy-btn:hover { background: rgba(0,212,170,.2); }
+    .copy-btn.copied { color: var(--success); border-color: rgba(46,213,115,.3); background: rgba(46,213,115,.1); }
+
+    /* ── How it works ─────────────────────────────────────────────────────── */
+    .how-section { margin-top: 40px; }
+    .how-section h2 { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+    .how-list { display: flex; flex-direction: column; gap: 12px; }
+    .how-item {
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .how-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(0,212,170,.12); border: 1px solid rgba(0,212,170,.25);
+      color: var(--accent); font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .how-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .how-text strong { color: var(--text); }
+
+    /* ── Grade legend ─────────────────────────────────────────────────────── */
+    .grade-legend { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0; }
+    .grade-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; padding: 6px 12px;
+      font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700;
+    }
+    .gc-ap { color: #2ed573; } .gc-a  { color: #2ed573; }
+    .gc-b  { color: #00d4aa; } .gc-c  { color: #ffa502; }
+    .gc-d  { color: #ff6b35; } .gc-f  { color: #ff4757; }
+    .grade-chip .chip-range { font-size: 10px; color: var(--muted); font-family: inherit; font-weight: 400; }
+
+    /* ── Note box ─────────────────────────────────────────────────────────── */
+    .note-box {
+      background: rgba(0,212,170,.04); border: 1px solid rgba(0,212,170,.15);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0; padding: 14px 18px;
+      font-size: 14px; color: var(--muted); line-height: 1.7; margin-top: 32px;
+    }
+    .note-box strong { color: var(--text); }
+
+    /* ── CTA ──────────────────────────────────────────────────────────────── */
+    .cta-box {
+      background: linear-gradient(135deg, rgba(0,212,170,.07) 0%, rgba(0,212,170,.03) 100%);
+      border: 1px solid rgba(0,212,170,.2); border-radius: 12px;
+      padding: 28px 32px; text-align: center; margin-top: 40px;
+    }
+    .cta-box h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .cta-box p  { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .btn-accent {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #0a0b0d;
+      border-radius: 8px; padding: 12px 28px;
+      font-size: 15px; font-weight: 700; text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn-accent:hover { opacity: .88; color: #0a0b0d; text-decoration: none; }
+
+    /* ── Footer ───────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318; border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto; padding: 16px 24px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: .4; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the SecureScanr security badge?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The SecureScanr security badge is an SVG image served from api.securescanr.com/api/badge?url=yourdomain.com that displays your site's current security grade (A+ to F) in a colour-coded label. It updates daily and can be embedded in a GitHub README, project documentation, a portfolio site, or a client report with a single img tag — no account or login required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add the security badge to my GitHub README?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add the following Markdown to your README: ![SecureScanr Security Grade](https://api.securescanr.com/api/badge?url=yourdomain.com). Replace yourdomain.com with your actual domain. The badge renders inline and updates automatically — no re-deploying needed when your grade changes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often does the badge update?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Badge grades are cached for 24 hours. The cache is refreshed the next time the badge URL is requested after expiry, so the displayed grade reflects a scan from within the past day. If you have just made security improvements and want to force a refresh, run a fresh scan at securescanr.com/scan.html — the updated grade will appear in the badge within 24 hours."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does embedding the badge cost anything?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The security badge endpoint is free and requires no API key or account. It is rate-limited per domain to prevent abuse but there is no charge for embedding or displaying the badge. The badge is a good way to show visitors and clients that you actively monitor your site's security posture."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ───────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn" style="color:var(--text)">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+          <a href="badge.html" class="active-link">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-inner">
+    <p class="page-label">Badge Embed</p>
+    <h1 class="page-title">Security grade badge for any site</h1>
+    <p class="page-sub">Embed a live A+ to F grade badge on GitHub, README files, or client websites. One <code style="font-size:13px;background:rgba(0,212,170,.08);color:var(--accent);padding:1px 5px;border-radius:3px">&lt;img&gt;</code> tag, no account needed.</p>
+  </div>
+</div>
+
+<!-- ── Content ────────────────────────────────────────────────────────────────── -->
+<div class="content-wrap">
+
+  <!-- Live preview -->
+  <div class="preview-card">
+    <h2>Live preview</h2>
+    <div class="domain-form">
+      <input type="text" id="domain-input" class="domain-input" placeholder="example.com" autocomplete="off" spellcheck="false">
+      <button class="preview-btn" id="preview-btn" type="button">Preview badge →</button>
+    </div>
+
+    <div class="badge-display">
+      <div class="badge-display-row">
+        <span class="badge-display-label">Light bg</span>
+        <div class="badge-img-wrap">
+          <img id="badge-preview" src="https://api.securescanr.com/api/badge?url=google.com" alt="SecureScanr security badge" height="20">
+          <span class="badge-context">On white / light background</span>
+        </div>
+      </div>
+      <div class="badge-display-row">
+        <span class="badge-display-label">Dark bg</span>
+        <div class="badge-img-wrap" style="background:#1a1f2e;padding:8px 12px;border-radius:6px">
+          <img id="badge-preview-dark" src="https://api.securescanr.com/api/badge?url=google.com" alt="SecureScanr security badge" height="20">
+        </div>
+        <span style="font-size:12px;color:var(--muted)">On dark background (GitHub dark mode)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embed code -->
+  <div class="embed-section">
+    <h2>Embed code</h2>
+    <p>Copy the snippet for your project. Replace <code>example.com</code> with your domain.</p>
+
+    <div class="embed-tabs">
+      <button class="tab-btn active" onclick="switchTab('html', this)">HTML</button>
+      <button class="tab-btn" onclick="switchTab('markdown', this)">Markdown</button>
+      <button class="tab-btn" onclick="switchTab('url', this)">Image URL</button>
+    </div>
+
+    <div id="tab-html" class="tab-panel active">
+      <div class="code-block">
+        <pre id="code-html">&lt;a href="https://securescanr.com/scan.html?url=example.com"&gt;
+  &lt;img src="https://api.securescanr.com/api/badge?url=example.com"
+       alt="SecureScanr Security Grade" height="20"&gt;
+&lt;/a&gt;</pre>
+        <button class="copy-btn" onclick="copyCode('code-html', this)">Copy</button>
+      </div>
+    </div>
+
+    <div id="tab-markdown" class="tab-panel">
+      <div class="code-block">
+        <pre id="code-markdown">[![SecureScanr](https://api.securescanr.com/api/badge?url=example.com)](https://securescanr.com/scan.html?url=example.com)</pre>
+        <button class="copy-btn" onclick="copyCode('code-markdown', this)">Copy</button>
+      </div>
+    </div>
+
+    <div id="tab-url" class="tab-panel">
+      <div class="code-block">
+        <pre id="code-url">https://api.securescanr.com/api/badge?url=example.com</pre>
+        <button class="copy-btn" onclick="copyCode('code-url', this)">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grade legend -->
+  <div class="how-section" style="margin-top:36px">
+    <h2>Grade colours</h2>
+    <p style="font-size:14px;color:var(--muted);margin:8px 0 16px">The badge colour changes automatically based on the domain's current security grade.</p>
+    <div class="grade-legend">
+      <div class="grade-chip"><span class="gc-ap">A+</span> <span class="badge-img-wrap"><img src="https://api.securescanr.com/api/badge?url=github.com" height="18" alt="A+ badge example"></span></div>
+      <div class="grade-chip"><span class="gc-b">B</span>  <img src="https://api.securescanr.com/api/badge?url=flipkart.com" height="18" alt="B badge example"></div>
+      <div class="grade-chip"><span class="gc-c">C</span>  <img src="https://api.securescanr.com/api/badge?url=sbi.co.in" height="18" alt="C badge example"></div>
+      <div class="grade-chip"><span class="gc-f">F</span>  <img src="https://api.securescanr.com/api/badge?url=example.com" height="18" alt="unscanned badge example"></div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-section">
+    <h2>How it works</h2>
+    <div class="how-list">
+      <div class="how-item">
+        <span class="how-num">1</span>
+        <p class="how-text"><strong>Enter your domain</strong> in the preview form above to see what your badge will look like, then copy the embed snippet for your project.</p>
+      </div>
+      <div class="how-item">
+        <span class="how-num">2</span>
+        <p class="how-text"><strong>Paste the img tag</strong> into your GitHub README, website footer, or client report. The badge is served as a standard SVG image — works anywhere an img tag works.</p>
+      </div>
+      <div class="how-item">
+        <span class="how-num">3</span>
+        <p class="how-text"><strong>Grades are pulled</strong> from the SecureScanr scan database. The badge shows "unscanned" until the domain has been scanned. <a href="scan.html">Run a scan first →</a></p>
+      </div>
+      <div class="how-item">
+        <span class="how-num">4</span>
+        <p class="how-text"><strong>Badge responses are cached for 24 hours</strong> at the server and by CDNs. Grade changes appear on the badge within 24 hours of the next scan.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>For the badge to show a grade, the domain must be in the SecureScanr scan database.</strong>
+    If your domain shows "unscanned", run a free scan at <a href="scan.html">securescanr.com/scan.html</a> first.
+    The <a href="world-security-index.html">World Security Index</a> domains are pre-scanned and will show grades immediately.
+  </div>
+
+  <div class="cta-box">
+    <h3>Scan your domain first</h3>
+    <p>The badge pulls the grade from the last scan. Run a free scan to populate the badge, then embed it.</p>
+    <a href="scan.html" class="btn-accent">Run a free scan →</a>
+  </div>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  function normalizeDomain(raw) {
+    raw = raw.trim();
+    if (!raw) return 'example.com';
+    if (raw.includes('://')) {
+      try { raw = new URL(raw).hostname; } catch { /* keep as-is */ }
+    }
+    if (raw.startsWith('www.')) raw = raw.slice(4);
+    return raw.toLowerCase();
+  }
+
+  function updatePreview() {
+    const raw = document.getElementById('domain-input').value.trim() || 'example.com';
+    const domain = normalizeDomain(raw);
+    const badgeUrl = `${API_BASE}/api/badge?url=${encodeURIComponent(domain)}`;
+    const scanUrl = `https://securescanr.com/scan.html?url=${encodeURIComponent(domain)}`;
+    const busted = badgeUrl + '&_=' + Date.now();
+
+    // Force-reload: clear src first so browsers that deduplicate requests always re-fetch
+    ['badge-preview', 'badge-preview-dark'].forEach(function(id) {
+      var img = document.getElementById(id);
+      img.src = '';
+      img.src = busted;
+    });
+
+    // Update embed code snippets
+    document.getElementById('code-html').textContent =
+      `<a href="${scanUrl}">\n  <img src="${badgeUrl}"\n       alt="SecureScanr Security Grade" height="20">\n</a>`;
+    document.getElementById('code-markdown').textContent =
+      `[![SecureScanr](${badgeUrl})](${scanUrl})`;
+    document.getElementById('code-url').textContent = badgeUrl;
+  }
+
+  document.getElementById('preview-btn').addEventListener('click', updatePreview);
+  document.getElementById('domain-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); updatePreview(); }
+  });
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  function _flashCopied(btn) {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  }
+
+  function _fallbackCopy(text, btn) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    _flashCopied(btn);
+  }
+
+  function copyCode(id, btn) {
+    const text = document.getElementById(id).textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => _flashCopied(btn))
+        .catch(() => _fallbackCopy(text, btn));
+    } else {
+      _fallbackCopy(text, btn);
+    }
+  }
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

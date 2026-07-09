@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecureScanr Agency Dashboard — manage monitored domains, scheduled scans, PDF reports.">
+  <meta name="robots" content="noindex">
+  <title>Agency Dashboard — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --agency:  #06B6D4;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.90); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-badge {
+      margin-left: 12px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; background: rgba(6,182,212,.12); color: var(--agency);
+      border: 1px solid rgba(6,182,212,.28); padding: 3px 9px; border-radius: 4px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta { background: var(--accent); color: #0a0b0d !important; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 6px; transition: opacity .15s !important; }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; font-family: inherit; transition: color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 8px; }
+    .nav-dropdown-menu { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: rgba(15,20,25,0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px 6px 6px; min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: var(--muted); border-radius: 6px; text-decoration: none; transition: background .12s, color .12s; }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger { display: none; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto; }
+    .nav-mobile { display: none; flex-direction: column; border-top: 1px solid var(--border); padding: 12px 24px 16px; }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); text-decoration: none; }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) { .nav-links { display: none; } .nav-hamburger { display: block; } }
+
+    /* ── Layout ── */
+    .page-wrap { max-width: 1060px; margin: 0 auto; padding: 48px 24px 96px; }
+
+    /* ── States ── */
+    #state-loading { text-align: center; padding: 80px 24px; }
+    .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--agency); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #state-error { display: none; text-align: center; padding: 64px 24px; }
+    #state-dash  { display: none; }
+
+    /* ── Cards ── */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; margin-bottom: 24px; }
+    .card-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 32px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--text); }
+
+    /* ── Agency key card ── */
+    .key-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .dash-title { font-size: clamp(22px, 3.5vw, 30px); font-weight: 700; letter-spacing: -.5px; color: var(--text); }
+    .tier-badge {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      background: rgba(6,182,212,.12); color: var(--agency);
+      border: 1px solid rgba(6,182,212,.3); padding: 4px 12px; border-radius: 20px;
+    }
+    .key-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .key-display {
+      flex: 1; min-width: 0; font-family: 'Space Mono', monospace;
+      font-size: 13px; color: var(--text); background: var(--bg);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; letter-spacing: .5px; word-break: break-all; line-height: 1.5;
+    }
+    .key-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-icon {
+      display: flex; align-items: center; gap: 6px; padding: 9px 14px;
+      background: transparent; border: 1px solid var(--border); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      color: var(--muted); cursor: pointer; transition: border-color .15s, color .15s; white-space: nowrap;
+    }
+    .btn-icon:hover { border-color: var(--agency); color: var(--agency); }
+    .btn-icon.copied { border-color: var(--success); color: var(--success); }
+    .key-meta { margin-top: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .badge-active { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; background: rgba(46,213,115,.12); color: var(--success); border: 1px solid rgba(46,213,115,.3); padding: 3px 10px; border-radius: 20px; }
+    .key-plan { font-size: 13px; color: var(--muted); }
+
+    /* ── Stats grid ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+    .stat-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .stat-value { font-family: 'Space Mono', monospace; font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-denom { font-size: 14px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .stat-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .quota-bar { height: 5px; background: var(--border); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+    .quota-fill { height: 100%; background: var(--agency); border-radius: 3px; transition: width .5s ease; }
+    .quota-fill.warn { background: var(--warning); }
+    .quota-fill.danger { background: var(--danger); }
+    .quota-fill.green { background: var(--success); }
+
+    /* ── Spinner ── */
+    .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; margin-right: 6px; }
+
+    /* ── Domains grid ── */
+    .domains-grid { display: grid; gap: 10px; }
+    .domain-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .domain-card:hover { border-color: rgba(6,182,212,.25); }
+    .domain-icon { font-size: 18px; opacity: .5; flex-shrink: 0; }
+    .domain-name { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; min-width: 140px; word-break: break-all; }
+    .domain-meta { font-size: 12px; color: var(--muted); }
+    .grade-pill { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px; white-space: nowrap; }
+    .grade-A\+ { background: rgba(46,213,115,.15); color: #2ed573; }
+    .grade-A   { background: rgba(46,213,115,.15); color: #2ed573; }
+    .grade-B   { background: rgba(0,212,170,.15);  color: #00d4aa; }
+    .grade-C   { background: rgba(255,165,2,.15);  color: #ffa502; }
+    .grade-D   { background: rgba(255,107,53,.15); color: #ff6b35; }
+    .grade-F   { background: rgba(255,71,87,.15);  color: #ff4757; }
+    .grade-none { background: var(--border); color: var(--muted); }
+
+    /* ── Scan controls ── */
+    .scan-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 24px; }
+    .scan-card-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
+    .scan-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .select-input { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; appearance: none; cursor: pointer; flex: 1; min-width: 180px; }
+    .select-input:focus { border-color: var(--agency); }
+    .scan-btn { background: var(--agency); color: #0a0b0d; font-size: 14px; font-weight: 700; padding: 10px 22px; border-radius: 8px; border: none; cursor: pointer; font-family: inherit; transition: opacity .15s, transform .15s; white-space: nowrap; flex-shrink: 0; }
+    .scan-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+    .scan-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .scan-hint { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    /* ── Live scan progress ── */
+    #live-progress { display: none; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 18px; }
+    .progress-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .progress-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid rgba(30,33,40,.6); font-size: 13px; }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-domain { color: var(--text); font-weight: 500; }
+    .progress-result { display: flex; align-items: center; gap: 8px; }
+
+    /* ── History table ── */
+    .history-wrap { overflow-x: auto; border-radius: 10px; }
+    .history-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .history-table th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .history-table td { padding: 12px 14px; border-bottom: 1px solid rgba(30,33,40,.6); color: var(--muted); vertical-align: middle; }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: rgba(255,255,255,.02); }
+    .pdf-link { color: var(--agency); font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+    .pdf-link:hover { opacity: .8; }
+    .no-pdf { color: var(--muted); font-size: 12px; opacity: .5; }
+    .empty-state { text-align: center; padding: 36px; color: var(--muted); font-size: 14px; border: 1px dashed var(--border); border-radius: 10px; }
+
+    /* ── Settings form ── */
+    .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px 32px; }
+    .form-group { margin-bottom: 22px; }
+    .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .form-hint { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 14px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .form-input:focus { border-color: var(--agency); }
+    .radio-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .radio-card { flex: 1; min-width: 100px; }
+    .radio-card input[type="radio"] { display: none; }
+    .radio-card label { display: block; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--muted); text-align: center; transition: border-color .15s, color .15s, background .15s; }
+    .radio-card input[type="radio"]:checked + label { border-color: var(--agency); color: var(--agency); background: rgba(6,182,212,.06); font-weight: 600; }
+    .domain-list-edit { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+    .domain-row { display: flex; align-items: center; gap: 8px; }
+    .domain-row input[type="text"] { flex: 1; }
+    .domain-pdf-label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); cursor: pointer; white-space: nowrap; user-select: none; flex-shrink: 0; }
+    .domain-pdf-label input[type="checkbox"] { accent-color: var(--agency); width: 14px; height: 14px; cursor: pointer; }
+    .domain-pdf-label:has(input:checked) { color: var(--agency); }
+    .domain-remove { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; transition: color .15s; }
+    .domain-remove:hover { color: var(--danger); }
+    .add-domain-btn { background: none; border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; font-family: inherit; cursor: pointer; padding: 8px 14px; width: 100%; text-align: left; transition: border-color .15s, color .15s; }
+    .add-domain-btn:hover { border-color: var(--agency); color: var(--agency); }
+    .save-btn { background: var(--agency); color: #0a0b0d; font-size: 14px; font-weight: 700; padding: 11px 26px; border-radius: 8px; border: none; cursor: pointer; font-family: inherit; transition: opacity .15s; }
+    .save-btn:hover:not(:disabled) { opacity: .88; }
+    .save-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .msg-ok  { color: var(--success); font-size: 13px; margin-top: 12px; }
+    .msg-err { color: var(--danger);  font-size: 13px; margin-top: 12px; }
+
+    /* ── API Reference ── */
+    .api-section { margin-top: 8px; }
+    .api-endpoint { margin-bottom: 28px; }
+    .api-endpoint-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+    .method-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-family: 'Space Mono', monospace; }
+    .method-post { background: rgba(6,182,212,.15); color: var(--agency); }
+    .method-get  { background: rgba(46,213,115,.15); color: var(--success); }
+    .api-desc { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+    .code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; overflow-x: auto; position: relative; }
+    .code-block code { font-family: 'Space Mono', monospace; font-size: 12px; color: #94a3b8; line-height: 1.9; white-space: pre; display: block; }
+    .code-block code .kw { color: #06B6D4; }
+    .code-block code .url { color: var(--text); }
+    .code-block code .hdr { color: #a78bfa; }
+    .code-block code .val { color: var(--accent); }
+    .code-block code .str { color: #f97316; }
+    .code-block code .cmt { color: var(--muted); }
+    .copy-code-btn { position: absolute; top: 10px; right: 10px; background: var(--border); border: none; border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer; font-family: inherit; transition: background .15s, color .15s; }
+    .copy-code-btn:hover { background: var(--agency); color: #0a0b0d; }
+
+    footer { border-top: 1px solid var(--border); padding: 20px 24px; text-align: center; font-size: 12px; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-sep { margin: 0 8px; opacity: .4; }
+
+    @media (max-width: 768px) {
+      /* Page wrap — tighter vertical padding, same safe horizontal */
+      .page-wrap { padding: 28px 16px 56px; }
+
+      /* Stats: always 2 columns so cards never collapse to 1 on small phones */
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Section header: title + button wrap instead of bleeding off */
+      .section-head { flex-wrap: wrap; gap: 8px; }
+
+      /* API key card: stack display above action buttons */
+      .key-row { flex-direction: column; align-items: stretch; }
+      .key-actions { width: 100%; }
+
+      /* Cards / scan-card / settings-card: reduce horizontal padding */
+      .card { padding: 20px 18px; }
+      .settings-card { padding: 20px 18px; }
+      .scan-card { padding: 18px 16px; }
+
+      /* Scan Now row: select + button become full-width column */
+      .scan-row { flex-direction: column; align-items: stretch; }
+      .select-input { min-width: 0; width: 100%; }
+      .scan-btn { width: 100%; }
+
+      /* Save button full-width */
+      .save-btn { width: 100%; }
+    }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <span class="nav-badge">Agency</span>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+          <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="mailto:hello@securescanr.com" class="nav-cta">Support →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="mailto:hello@securescanr.com">Support →</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- Loading -->
+  <div id="state-loading">
+    <div class="loading-spinner"></div>
+    <p style="color:var(--muted);font-size:15px;">Loading your agency dashboard…</p>
+  </div>
+
+  <!-- Error -->
+  <div id="state-error">
+    <p style="font-size:40px;margin-bottom:16px;opacity:.6">✗</p>
+    <h2 style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:12px;">Could not load dashboard</h2>
+    <p id="err-msg" style="color:var(--muted);font-size:14px;margin-bottom:28px;line-height:1.7;max-width:420px;margin-inline:auto;"></p>
+    <a href="plans.html" style="color:var(--agency);font-size:14px;">← Back to Plans</a>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="state-dash">
+
+    <!-- ① Agency Key + Tier -->
+    <div class="card">
+      <div class="key-header">
+        <h1 class="dash-title">Agency Dashboard</h1>
+        <span class="tier-badge">Agency Tier</span>
+      </div>
+      <p class="card-label" style="margin-bottom:12px;">Your Agency API Key</p>
+      <div class="key-row">
+        <div class="key-display" id="key-display">••••••••••••••••••••••••••••••••••••••••••</div>
+        <div class="key-actions">
+          <button class="btn-icon" id="btn-reveal" onclick="toggleReveal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            Reveal
+          </button>
+          <button class="btn-icon" id="btn-copy" onclick="copyKey()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+      </div>
+      <div class="key-meta">
+        <span class="badge-active">● Active</span>
+        <span class="key-plan">Agency plan · 500 scans/mo · 25 domains · scheduled PDF delivery</span>
+      </div>
+    </div>
+
+    <!-- ② Usage Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Scans This Month</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px;">
+          <span class="stat-value" id="stat-scans">—</span>
+          <span class="stat-denom" id="stat-scans-denom">/ 500</span>
+        </div>
+        <div class="stat-sub">Resets 1st of month</div>
+        <div class="quota-bar"><div class="quota-fill" id="scan-quota-fill" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Domains Monitored</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:6px;">
+          <span class="stat-value" id="stat-domains">—</span>
+          <span class="stat-denom">/ 25</span>
+        </div>
+        <div class="stat-sub">Slots remaining: <span id="stat-domain-slots">—</span></div>
+        <div class="quota-bar"><div class="quota-fill green" id="domain-quota-fill" style="width:0%"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Scan Schedule</div>
+        <div class="stat-value" id="stat-schedule" style="font-size:18px;margin-top:4px;">—</div>
+        <div class="stat-sub" id="stat-schedule-sub"></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Member Since</div>
+        <div class="stat-value" id="stat-since" style="font-size:18px;margin-top:4px;">—</div>
+        <div class="stat-sub">PDF reports emailed automatically</div>
+      </div>
+    </div>
+
+    <!-- ③ Monitored Domains -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">Monitored Domains</div>
+        <button class="btn-icon" style="font-size:12px;padding:6px 12px;" onclick="scrollToSettings()">+ Edit domains</button>
+      </div>
+      <div class="domains-grid" id="domains-grid">
+        <div class="empty-state">No domains configured yet. Add domains in the settings below.</div>
+      </div>
+    </div>
+
+    <!-- ④ Manual Scan Trigger -->
+    <div class="scan-card">
+      <div class="scan-card-title">Run a Scan Now</div>
+      <div class="scan-row">
+        <select class="select-input" id="scan-target-select">
+          <option value="all">All domains</option>
+        </select>
+        <button class="scan-btn" id="scan-now-btn" onclick="scanNow()">Scan Now</button>
+      </div>
+      <p class="scan-hint">Triggers an immediate scan of all monitored domains. Results emailed as PDF. Counts toward your monthly quota.</p>
+
+      <!-- Live progress -->
+      <div id="live-progress">
+        <div class="progress-title" id="progress-title">Scanning domains…</div>
+        <div id="progress-list"></div>
+      </div>
+    </div>
+
+    <!-- ⑤ Scan History -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">Scan History</div>
+        <span id="history-count" style="font-size:13px;color:var(--muted);"></span>
+      </div>
+      <div id="history-empty" class="empty-state" style="display:none">No scan history yet. Click "Scan Now" to run your first scan.</div>
+      <div class="history-wrap" id="history-wrap">
+        <table class="history-table" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Grade</th>
+              <th>Score</th>
+              <th>Scanned</th>
+              <th>Report</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ⑥ Update Settings -->
+    <div class="section" id="settings-section">
+      <div class="section-head">
+        <div class="section-title">Update Settings</div>
+      </div>
+      <div class="settings-card">
+
+        <div class="form-group">
+          <label class="form-label">Monitored Domains</label>
+          <p class="form-hint">Up to 25 domains. Enter domain only — no https:// prefix.</p>
+          <div class="domain-list-edit" id="edit-domain-list"></div>
+          <button class="add-domain-btn" onclick="addEditDomain()" id="edit-add-btn">+ Add domain</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Scan Schedule</label>
+          <div class="radio-group">
+            <div class="radio-card">
+              <input type="radio" name="edit-sched" id="edit-weekly" value="weekly" onchange="updateEditDay()">
+              <label for="edit-weekly">Weekly</label>
+            </div>
+            <div class="radio-card">
+              <input type="radio" name="edit-sched" id="edit-monthly" value="monthly" onchange="updateEditDay()">
+              <label for="edit-monthly">Monthly</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" id="edit-day-label" for="edit-day">Day of week</label>
+          <select class="select-input" id="edit-day"></select>
+        </div>
+
+        <button class="save-btn" id="save-btn" onclick="saveSettings()">Save Changes</button>
+        <p id="save-msg" style="display:none"></p>
+      </div>
+    </div>
+
+    <!-- ⑦ API Reference -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-title">API Reference</div>
+        <a href="api-docs.html" style="font-size:13px;color:var(--agency);">Full docs →</a>
+      </div>
+      <div class="card" style="padding:28px 28px;">
+        <div class="api-section">
+
+          <div class="api-endpoint">
+            <div class="api-endpoint-title">
+              <span class="method-badge method-post">POST</span>
+              Full security scan
+            </div>
+            <p class="api-desc">Scan any URL and receive a full JSON report including headers, TLS, DNS, cookies, and cross-origin analysis.</p>
+            <div class="code-block" style="position:relative">
+              <code id="code-scan"></code>
+              <button class="copy-code-btn" onclick="copyCode('code-scan',this)">Copy</button>
+            </div>
+          </div>
+
+          <div class="api-endpoint">
+            <div class="api-endpoint-title">
+              <span class="method-badge method-post">POST</span>
+              Generate PDF report
+            </div>
+            <p class="api-desc">Generate and download a branded PDF security report for any URL — perfect for client deliverables.</p>
+            <div class="code-block" style="position:relative">
+              <code id="code-pdf"></code>
+              <button class="copy-code-btn" onclick="copyCode('code-pdf',this)">Copy</button>
+            </div>
+          </div>
+
+          <div class="api-endpoint" style="margin-bottom:0">
+            <div class="api-endpoint-title">
+              <span class="method-badge method-get">GET</span>
+              Agency dashboard data
+            </div>
+            <p class="api-desc">Fetch your agency account info, domain list, scan history, and usage stats programmatically.</p>
+            <div class="code-block" style="position:relative">
+              <code id="code-dash"></code>
+              <button class="copy-code-btn" onclick="copyCode('code-dash',this)">Copy</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /state-dash -->
+</div>
+
+<footer>
+  <span>© 2026 SecureScanr</span>
+  <span class="footer-sep">·</span>
+  <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+  <span class="footer-sep">·</span>
+  <a href="privacy.html">Privacy</a>
+  <span class="footer-sep">·</span>
+  <a href="terms.html">Terms</a>
+  <span class="footer-sep">·</span>
+  <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+  let API_KEY = '';
+  let dashData = null;
+  let _revealed = false;
+
+  const DAY_NAMES = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+
+  /* ── Utility ── */
+  function showState(id) {
+    ['state-loading','state-error','state-dash'].forEach(s => {
+      document.getElementById(s).style.display = s === id ? 'block' : 'none';
+    });
+  }
+
+  function gradeColor(grade) {
+    return {'A+':'#2ed573','A':'#2ed573','B':'#00d4aa','C':'#ffa502','D':'#ff6b35','F':'#ff4757'}[grade] || '#6b7280';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleString('en-IN', {dateStyle:'medium', timeStyle:'short'}); }
+    catch { return iso.slice(0,10); }
+  }
+
+  function scheduleLabel(type, day) {
+    if (type === 'weekly') return 'Weekly on ' + (DAY_NAMES[day % 7] || 'Monday');
+    const ord = day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th';
+    return 'Monthly on the ' + day + ord;
+  }
+
+  function scrollToSettings() {
+    document.getElementById('settings-section').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  /* ── Key reveal / copy ── */
+  function toggleReveal() {
+    _revealed = !_revealed;
+    const display = document.getElementById('key-display');
+    const btn = document.getElementById('btn-reveal');
+    if (_revealed) {
+      display.textContent = API_KEY;
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Hide`;
+    } else {
+      display.textContent = '••••••••••••••••••••••••••••••••••••••••••';
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Reveal`;
+    }
+  }
+
+  async function copyKey() {
+    try { await navigator.clipboard.writeText(API_KEY); }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = API_KEY; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    const btn = document.getElementById('btn-copy');
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
+    }, 2000);
+  }
+
+  async function copyCode(elemId, btn) {
+    const text = document.getElementById(elemId).textContent;
+    try { await navigator.clipboard.writeText(text); }
+    catch {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  }
+
+  /* ── Render ── */
+  function renderStats(data) {
+    const scans = data.scan_count || 0;
+    const limit = data.scan_limit || 500;
+    const domCount = (data.domains || []).length;
+    const scanPct = Math.min(100, Math.round(scans / limit * 100));
+    const domPct  = Math.min(100, Math.round(domCount / 25 * 100));
+
+    document.getElementById('stat-scans').textContent = scans;
+    document.getElementById('stat-scans-denom').textContent = '/ ' + limit;
+    document.getElementById('stat-domains').textContent = domCount;
+    document.getElementById('stat-domain-slots').textContent = (25 - domCount);
+    document.getElementById('stat-schedule').textContent = (data.schedule_type || 'weekly') === 'weekly' ? 'Weekly' : 'Monthly';
+    document.getElementById('stat-schedule-sub').textContent = scheduleLabel(data.schedule_type, data.schedule_day);
+    document.getElementById('stat-since').textContent = data.created_at ? data.created_at.slice(0,10) : '—';
+
+    const scanFill = document.getElementById('scan-quota-fill');
+    scanFill.style.width = scanPct + '%';
+    scanFill.className = 'quota-fill' + (scanPct >= 90 ? ' danger' : scanPct >= 70 ? ' warn' : '');
+
+    const domFill = document.getElementById('domain-quota-fill');
+    domFill.style.width = domPct + '%';
+    domFill.className = 'quota-fill' + (domPct >= 90 ? ' danger' : domPct >= 70 ? ' warn' : ' green');
+  }
+
+  function renderDomains(domains, history) {
+    const lastByDomain = {};
+    (history || []).forEach(h => { if (!lastByDomain[h.domain]) lastByDomain[h.domain] = h; });
+
+    const grid = document.getElementById('domains-grid');
+    if (!domains || domains.length === 0) {
+      grid.innerHTML = '<div class="empty-state">No domains yet. Add them in the settings below.</div>';
+      return;
+    }
+    grid.innerHTML = domains.map(d => {
+      const last = lastByDomain[d];
+      const gradeHtml = last
+        ? `<span class="grade-pill" style="background:rgba(0,0,0,.3);color:${gradeColor(last.grade)}">${last.grade}</span>`
+        : `<span class="grade-pill grade-none">No scan</span>`;
+      const metaHtml = last ? `Score: ${last.score}/100 · ${formatDate(last.scanned_at)}` : 'Not yet scanned';
+      return `<div class="domain-card">
+        <span class="domain-icon">◉</span>
+        <div class="domain-name">${d}</div>
+        ${gradeHtml}
+        <div class="domain-meta">${metaHtml}</div>
+      </div>`;
+    }).join('');
+
+    // Populate scan target dropdown
+    const sel = document.getElementById('scan-target-select');
+    sel.innerHTML = '<option value="all">All domains (' + domains.length + ')</option>' +
+      domains.map(d => `<option value="${d}">${d}</option>`).join('');
+  }
+
+  function renderHistory(history) {
+    const wrap  = document.getElementById('history-wrap');
+    const empty = document.getElementById('history-empty');
+    const count = document.getElementById('history-count');
+
+    if (!history || history.length === 0) {
+      wrap.style.display  = 'none';
+      empty.style.display = '';
+      count.textContent   = '';
+      return;
+    }
+    wrap.style.display  = '';
+    empty.style.display = 'none';
+    count.textContent   = history.length + ' entries';
+
+    document.getElementById('history-tbody').innerHTML = history.map(h => `
+      <tr>
+        <td style="color:var(--text);font-weight:500">${h.domain}</td>
+        <td><span style="font-family:'Space Mono',monospace;font-weight:700;color:${gradeColor(h.grade)}">${h.grade}</span></td>
+        <td style="color:var(--text)">${h.score}/100</td>
+        <td style="white-space:nowrap">${formatDate(h.scanned_at)}</td>
+        <td>${h.has_pdf
+          ? `<a class="pdf-link" href="${API_BASE}/api/agency/pdf/${h.id}?api_key=${encodeURIComponent(API_KEY)}" target="_blank">
+               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+               PDF
+             </a>`
+          : '<span class="no-pdf">—</span>'
+        }</td>
+      </tr>`).join('');
+  }
+
+  function populateEditForm(data) {
+    const list  = document.getElementById('edit-domain-list');
+    const prefs = data.domain_pdf_prefs || {};
+    list.innerHTML = '';
+    (data.domains || []).forEach(d => addEditDomain(d, prefs[d] !== false));
+    if (list.querySelectorAll('.domain-row').length === 0) addEditDomain('', true);
+
+    document.getElementById(data.schedule_type === 'monthly' ? 'edit-monthly' : 'edit-weekly').checked = true;
+    updateEditDay(data.schedule_type, data.schedule_day);
+  }
+
+  function buildCodeSnippets(key) {
+    document.getElementById('code-scan').textContent =
+      `curl -s -X POST https://api.securescanr.com/api/scan/pro \\\n` +
+      `  -H "X-API-Key: ${key}" \\\n` +
+      `  -H "Content-Type: application/json" \\\n` +
+      `  -d '{"url": "https://example.com"}'`;
+
+    document.getElementById('code-pdf').textContent =
+      `curl -X POST https://api.securescanr.com/api/report/pdf \\\n` +
+      `  -H "X-API-Key: ${key}" \\\n` +
+      `  -H "Content-Type: application/json" \\\n` +
+      `  -d '{"url": "https://example.com"}' \\\n` +
+      `  --output report.pdf`;
+
+    document.getElementById('code-dash').textContent =
+      `curl "https://api.securescanr.com/api/agency/dashboard?api_key=${key}"`;
+  }
+
+  /* ── Data fetching ── */
+  async function loadDashboard() {
+    showState('state-loading');
+    const doFetch = () => fetch(`${API_BASE}/api/agency/dashboard?api_key=${encodeURIComponent(API_KEY)}`);
+    try {
+      let res;
+      try {
+        res = await doFetch();
+      } catch (_) {
+        /* Railway cold-start: wait 5s then retry once */
+        await new Promise(r => setTimeout(r, 5000));
+        res = await doFetch();
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load dashboard.');
+
+      dashData = data;
+      renderStats(data);
+      renderDomains(data.domains, data.history);
+      renderHistory(data.history);
+      populateEditForm(data);
+      buildCodeSnippets(API_KEY);
+      showState('state-dash');
+    } catch (err) {
+      document.getElementById('err-msg').textContent = err.message;
+      showState('state-error');
+    }
+  }
+
+  /* ── Scan Now ── */
+  async function scanNow() {
+    const btn = document.getElementById('scan-now-btn');
+    const target = document.getElementById('scan-target-select').value;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Scanning…';
+
+    const progress = document.getElementById('live-progress');
+    const progList = document.getElementById('progress-list');
+    const progTitle = document.getElementById('progress-title');
+
+    const domains = dashData && dashData.domains ? dashData.domains : [];
+    const targetDomains = target === 'all' ? domains : [target];
+
+    progress.style.display = 'block';
+    progress.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+
+    if (domains.length === 0) {
+      progTitle.textContent = 'No domains configured. Add domains in the settings below.';
+      btn.disabled = false;
+      btn.textContent = 'Scan Now';
+      return;
+    }
+
+    progTitle.textContent = 'Scanning ' + (target === 'all' ? 'all domains' : target) + '…';
+    progList.innerHTML = targetDomains.map(d =>
+      `<div class="progress-item" id="prog-${d.replace(/\./g,'_')}">
+        <span class="progress-domain">${d}</span>
+        <span class="progress-result"><span class="spinner" style="width:11px;height:11px;border-width:1.5px;"></span><span style="color:var(--muted);font-size:12px;">Scanning…</span></span>
+      </div>`
+    ).join('');
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/agency/scan-now?api_key=${encodeURIComponent(API_KEY)}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Scan failed.');
+
+      (data.results || []).forEach(r => {
+        const key = r.domain.replace(/\./g,'_');
+        const row = document.getElementById('prog-' + key);
+        if (!row) return;
+        if (r.error) {
+          row.querySelector('.progress-result').innerHTML = `<span style="color:var(--danger);font-size:12px;">${r.error}</span>`;
+        } else {
+          row.querySelector('.progress-result').innerHTML =
+            `<span style="font-family:'Space Mono',monospace;font-weight:700;color:${gradeColor(r.grade)}">${r.grade}</span>` +
+            `<span style="color:var(--muted);font-size:12px;margin-left:6px">${r.score}/100</span>`;
+        }
+      });
+
+      progTitle.textContent = 'Scan complete — PDF reports emailed to your address';
+      await loadDashboard();
+    } catch (err) {
+      progTitle.textContent = 'Scan failed: ' + err.message;
+    }
+    btn.disabled = false;
+    btn.textContent = 'Scan Now';
+  }
+
+  /* ── Edit form ── */
+  function addEditDomain(value, emailPdf) {
+    const list = document.getElementById('edit-domain-list');
+    if (list.querySelectorAll('.domain-row').length >= 25) return;
+    const row = document.createElement('div');
+    row.className = 'domain-row';
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-input edit-domain-input';
+    input.placeholder = 'example.com';
+    input.value = value || '';
+
+    const pdfLabel = document.createElement('label');
+    pdfLabel.className = 'domain-pdf-label';
+    pdfLabel.title = 'Email PDF report for this domain on scheduled scans';
+    const pdfCheck = document.createElement('input');
+    pdfCheck.type = 'checkbox';
+    pdfCheck.className = 'domain-pdf-check';
+    pdfCheck.checked = emailPdf !== false; // default on
+    const pdfSpan = document.createElement('span');
+    pdfSpan.textContent = 'PDF';
+    pdfLabel.appendChild(pdfCheck);
+    pdfLabel.appendChild(pdfSpan);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'domain-remove';
+    removeBtn.title = 'Remove';
+    removeBtn.textContent = '×';
+    removeBtn.addEventListener('click', function() {
+      row.remove();
+      updateEditAddBtn();
+    });
+
+    row.appendChild(input);
+    row.appendChild(pdfLabel);
+    row.appendChild(removeBtn);
+    list.appendChild(row);
+    updateEditAddBtn();
+  }
+
+  function updateEditAddBtn() {
+    const count = document.getElementById('edit-domain-list').querySelectorAll('.domain-row').length;
+    document.getElementById('edit-add-btn').style.display = count >= 25 ? 'none' : '';
+  }
+
+  function updateEditDay(type, selectedDay) {
+    const weekly = type ? type === 'weekly' : document.getElementById('edit-weekly').checked;
+    const label  = document.getElementById('edit-day-label');
+    const sel    = document.getElementById('edit-day');
+    label.textContent = weekly ? 'Day of week' : 'Day of month';
+    sel.innerHTML = weekly
+      ? DAY_NAMES.map((n,i) => `<option value="${i}">${n}</option>`).join('')
+      : Array.from({length:31}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+    if (selectedDay !== undefined) sel.value = selectedDay;
+  }
+
+  async function saveSettings() {
+    const btn = document.getElementById('save-btn');
+    const msg = document.getElementById('save-msg');
+    msg.style.display = 'none';
+
+    const domains = [];
+    const domain_pdf_prefs = {};
+    document.querySelectorAll('#edit-domain-list .domain-row').forEach(row => {
+      const domVal = (row.querySelector('.edit-domain-input')?.value || '')
+        .trim().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+      if (!domVal) return;
+      domains.push(domVal);
+      const chk = row.querySelector('.domain-pdf-check');
+      domain_pdf_prefs[domVal] = chk ? chk.checked : true;
+    });
+
+    if (domains.length === 0) {
+      msg.className = 'msg-err'; msg.textContent = 'Add at least one domain.'; msg.style.display = ''; return;
+    }
+
+    const scheduleType = document.querySelector('input[name="edit-sched"]:checked').value;
+    const scheduleDay  = parseInt(document.getElementById('edit-day').value);
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Saving…';
+
+    const doSave = () => fetch(`${API_BASE}/api/agency/update?api_key=${encodeURIComponent(API_KEY)}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({domains, schedule_type: scheduleType, schedule_day: scheduleDay, domain_pdf_prefs}),
+    });
+
+    try {
+      let res;
+      try {
+        res = await doSave();
+      } catch (_) {
+        /* Railway cold-start: show message, wait 3s, retry once */
+        msg.className = 'msg-err'; msg.textContent = 'Connection error — retrying…'; msg.style.display = '';
+        await new Promise(r => setTimeout(r, 3000));
+        msg.style.display = 'none';
+        res = await doSave();
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Update failed.');
+      msg.className = 'msg-ok'; msg.textContent = '✓ Settings saved successfully.'; msg.style.display = '';
+      await loadDashboard();
+    } catch (err) {
+      msg.className = 'msg-err'; msg.textContent = err.message; msg.style.display = '';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+  }
+
+  /* ── Init ── */
+  (function init() {
+    const params = new URLSearchParams(window.location.search);
+    API_KEY = params.get('api_key') || '';
+    if (!API_KEY) {
+      document.getElementById('err-msg').textContent = 'No API key in URL. Open the dashboard link from your welcome email.';
+      showState('state-error');
+      return;
+    }
+    loadDashboard();
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

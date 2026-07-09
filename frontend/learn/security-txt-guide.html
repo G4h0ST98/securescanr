@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="security.txt guide — RFC 9116 explained, required and optional fields, where to place the file, and how security researchers use it.">
+  <meta property="og:title" content="security.txt: The RFC 9116 Standard Explained — SecureScanr">
+  <meta property="og:description" content="security.txt guide — RFC 9116 explained, required and optional fields, where to place the file, and how security researchers use it.">
+  <meta property="og:url" content="https://securescanr.com/learn/security-txt-guide.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn/security-txt-guide.html">
+  <title>security.txt: The RFC 9116 Standard Explained — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    :root { --bg:#0a0b0d; --surface:#111318; --border:#1e2128; --accent:#00d4aa; --danger:#ff4757; --warning:#ffa502; --success:#2ed573; --text:#e8eaf0; --muted:#6b7280; --radius:10px; }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; overflow-x: hidden; font-size:clamp(15px,1.1vw + 0.5rem,18px); }
+    body { overflow-x: hidden; }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; display:flex; flex-direction:column; min-height:100vh; }
+    a { color:var(--accent); text-decoration:none; }
+    nav { position:sticky; top:0; z-index:100; background:rgba(10,11,13,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; }
+    .nav-logo { font-size:18px; font-weight:700; color:var(--muted); letter-spacing:-.2px; }
+    .logo-accent { color:var(--accent); }
+    .nav-links { display:flex; align-items:center; gap:24px; margin-left:auto; }
+    .nav-links > a { font-size:13px; color:var(--muted); transition:color .15s; }
+    .nav-links > a:hover { color:var(--text); }
+    .nav-cta { background:var(--accent); color:#0a0b0d !important; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; transition:opacity .15s !important; }
+    .nav-cta:hover { opacity:.88; }
+    .nav-dropdown { position:relative; }
+    .nav-dropdown-btn { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; font-family:inherit; transition:color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color:var(--text); }
+    .nav-dropdown-btn::after { content:'▾'; font-size:10px; margin-left:2px; }
+    .nav-dropdown::after { content:''; position:absolute; bottom:-8px; left:0; width:100%; height:8px; }
+    .nav-dropdown-menu { display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); background:rgba(15,20,25,0.85); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:14px 6px 6px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.5); z-index:200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display:block; }
+    .nav-dropdown-menu a { display:block; padding:8px 12px; font-size:13px; color:var(--muted); border-radius:6px; text-decoration:none; transition:background .12s,color .12s; }
+    .nav-dropdown-menu a:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .nav-dropdown-menu a.active-link { color:var(--text); }
+    .nav-hamburger { display:none; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; margin-left:auto; }
+    .nav-mobile { display:none; flex-direction:column; border-top:1px solid var(--border); padding:12px 24px 16px; }
+    .nav-mobile a { font-size:14px; color:var(--muted); padding:9px 0; border-bottom:1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile.open { display:flex; }
+    @media (max-width:700px) { .nav-links { display:none; } .nav-hamburger { display:block; } }
+
+    .article-wrap { max-width:740px; margin:0 auto; padding:40px 24px 80px; flex:1; }
+    .breadcrumb { font-size:13px; color:var(--muted); margin-bottom:32px; display:flex; align-items:center; gap:6px; }
+    .breadcrumb a { color:var(--muted); }
+    .breadcrumb a:hover { color:var(--accent); text-decoration:none; }
+    .article-meta-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+    .sev-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 8px; border-radius:4px; }
+    .sev-minor { background:rgba(0,212,170,.10); color:var(--accent); border:1px solid rgba(0,212,170,.25); }
+    .meta-tag { font-size:12px; color:var(--muted); background:var(--surface); border:1px solid var(--border); padding:2px 8px; border-radius:4px; }
+    h1 { font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:-.5px; line-height:1.2; margin-bottom:20px; }
+    .article-lead { font-size:16px; color:var(--muted); line-height:1.7; border-left:3px solid var(--accent); padding-left:16px; margin-bottom:40px; }
+    h2 { font-size:20px; font-weight:700; margin:36px 0 12px; }
+    h3 { font-size:16px; font-weight:700; margin:24px 0 8px; color:var(--accent); }
+    p { margin-bottom:16px; }
+    ul,ol { margin:0 0 16px 20px; }
+    li { margin-bottom:6px; }
+    code { font-family:'Space Mono',monospace; font-size:12.5px; background:rgba(0,212,170,.07); color:var(--accent); padding:1px 5px; border-radius:3px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:6px; padding:16px 18px; overflow-x:auto; margin:0 0 20px; font-family:'Space Mono',monospace; font-size:12.5px; color:var(--accent); line-height:1.7; }
+    .callout { background:rgba(255,165,2,.07); border-left:3px solid var(--warning); border-radius:0 6px 6px 0; padding:14px 16px; margin:0 0 20px; font-size:14px; }
+    .callout-success { background:rgba(46,213,115,.07); border-left-color:var(--success); }
+    .field-table { width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
+    .field-table th { background:rgba(255,255,255,.03); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:9px 14px; text-align:left; border-bottom:1px solid var(--border); }
+    .field-table td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .field-table tr:last-child td { border-bottom:none; }
+    .req-badge { font-size:10px; font-weight:700; padding:1px 6px; border-radius:3px; }
+    .req-required { background:rgba(255,71,87,.12); color:#ff6b7a; }
+    .req-optional { background:rgba(0,212,170,.10); color:var(--accent); }
+    .article-cta { background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(0,212,170,.03) 100%); border:1px solid rgba(0,212,170,.2); border-radius:var(--radius); padding:28px 32px; text-align:center; margin-top:48px; }
+    .article-cta h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+    .article-cta p  { font-size:14px; color:var(--muted); margin-bottom:20px; }
+    .btn-accent { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0a0b0d; border-radius:8px; padding:12px 28px; font-size:15px; font-weight:700; text-decoration:none; transition:opacity .15s; }
+    .btn-accent:hover { opacity:.88; color:#0a0b0d; text-decoration:none; }
+    footer { background:var(--surface); border-top:1px solid var(--border); }
+    .footer-bottom { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px 16px; font-size:12px; color:var(--muted); }
+    .footer-bottom a { color:var(--muted); }
+    .footer-bottom a:hover { color:var(--text); }
+    .footer-sep { opacity:.4; }
+    footer a { color:var(--muted); }
+    footer a:hover { color:var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a security.txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "security.txt is a plain-text file placed at a well-known URL on your website (/.well-known/security.txt) that tells security researchers how to report vulnerabilities to you. It is standardised by RFC 9116 and typically contains a contact method (email or web form URL), an expiry date, and optionally a link to your security policy or PGP key."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I place my security.txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RFC 9116 specifies that security.txt must be served from /.well-known/security.txt over HTTPS. A legacy location at /security.txt is also acceptable but the /.well-known/ path is canonical. The file must be served with Content-Type: text/plain and must be accessible without authentication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What fields are required in a security.txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "RFC 9116 requires two fields: Contact (a URI for reporting vulnerabilities — an email address or a web form URL) and Expires (an ISO 8601 datetime indicating when the file should be considered stale). Common optional fields include Encryption (link to a PGP public key), Policy (URL to your vulnerability disclosure policy), and Acknowledgments (URL to a page crediting reporters)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does having a security.txt file affect my SecureScanr security score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecureScanr detects whether your site serves a valid security.txt file and reports it in the HTTP headers section of the scan. While security.txt presence is currently reported as an informational finding rather than a scored item, it is considered a security best practice and is increasingly expected by bug bounty platforms and enterprise procurement checklists."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="../scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="../versus.html">Versus</a>
+          <a href="../generators.html">Generators</a>
+          <a href="../security-txt.html">Security.txt</a>
+          <a href="../api-docs.html">API Docs</a>
+          <a href="../learn.html" class="active-link">Learn</a>
+          <a href="../badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="../plans.html">Plans</a>
+      <a href="../world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../about.html">About</a>
+          <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="../compliance-report.html">Compliance Report</a>
+          <a href="../status.html">Status</a>
+        </div>
+      </div>
+      <a href="../plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="../scan.html">Scan</a>
+    <a href="../versus.html">Versus</a>
+    <a href="../generators.html">Generators</a>
+    <a href="../security-txt.html">Security.txt</a>
+    <a href="../api-docs.html">API Docs</a>
+    <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+    <a href="../plans.html">Plans</a>
+    <a href="../world-security-index.html">World Index</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../about.html">About</a>
+    <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="../compliance-report.html">Compliance Report</a>
+    <a href="../status.html">Status</a>
+    <a href="../plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../learn.html">← Learning Center</a>
+    <span>/</span>
+    <span>security.txt Guide</span>
+  </div>
+
+  <div class="article-meta-row">
+    <span class="sev-badge sev-minor">Minor</span>
+    <span class="meta-tag">Disclosure</span>
+    <span class="meta-tag">5 min read</span>
+  </div>
+
+  <h1>security.txt: The RFC 9116 Standard Explained</h1>
+
+  <p class="article-lead">Security researchers discover vulnerabilities in websites every day. Without a clear disclosure channel, they may not know who to contact — or give up entirely. A security.txt file is a two-minute setup that gives researchers a verified, machine-readable path to report what they find.</p>
+
+  <h2>What is security.txt?</h2>
+  <p>security.txt is a proposed standard (RFC 9116, published April 2022) that defines a plain-text file organisations can publish to communicate their security disclosure preferences. It tells security researchers: here's how to contact us, here's our disclosure policy, here's what we'd like you to include in a report.</p>
+  <p>The concept is modelled on <code>robots.txt</code> — a well-known convention that any tool can discover without needing to know the organisation's structure in advance. Automated vulnerability scanners, bug bounty platforms, and responsible disclosure tools all look for security.txt as the first step when reporting a finding.</p>
+  <p>Major organisations including Google, GitHub, and the UK NCSC publish security.txt files. Bug bounty programs commonly reference it. Without it, researchers who find something serious in your site often have no idea where to report it.</p>
+
+  <h2>Where to Place the File</h2>
+  <p>RFC 9116 specifies two canonical locations. Tools check them in this order:</p>
+  <ol>
+    <li><code>https://yourdomain.com/.well-known/security.txt</code> — the canonical location per RFC 8615 (Well-Known URIs)</li>
+    <li><code>https://yourdomain.com/security.txt</code> — a fallback location for compatibility</li>
+  </ol>
+  <p>The <code>.well-known/</code> location is preferred. Many web servers serve files from this directory automatically, but you may need to configure your server to allow access to this path if you have rules blocking dotfiles.</p>
+  <p>The file must be served over HTTPS. An HTTP-only security.txt is considered invalid by most tooling.</p>
+
+  <h2>Required Fields</h2>
+  <p>RFC 9116 defines two required fields. A security.txt without both is technically non-compliant:</p>
+
+  <div style="overflow-x:auto">
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Required</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>Contact:</code></td>
+        <td><span class="req-badge req-required">Required</span></td>
+        <td>Where to send vulnerability reports. Can be a URL (bug bounty platform, form), an email address (<code>mailto:</code>), or a phone number (<code>tel:</code>). You can list multiple Contact fields.</td>
+      </tr>
+      <tr>
+        <td><code>Expires:</code></td>
+        <td><span class="req-badge req-required">Required</span></td>
+        <td>An ISO 8601 datetime after which the file should be considered stale. Prevents outdated contact info being trusted indefinitely. Renew yearly.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Optional Fields</h2>
+
+  <div style="overflow-x:auto">
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><code>Encryption:</code></td><td>A URL pointing to a PGP public key researchers can use to encrypt reports. Useful for sensitive disclosures.</td></tr>
+      <tr><td><code>Acknowledgments:</code></td><td>A URL to a page where you acknowledge researchers who have reported issues.</td></tr>
+      <tr><td><code>Preferred-Languages:</code></td><td>A comma-separated list of language codes you prefer to receive reports in.</td></tr>
+      <tr><td><code>Canonical:</code></td><td>The canonical URL of this security.txt file itself, for verification.</td></tr>
+      <tr><td><code>Policy:</code></td><td>A URL to your vulnerability disclosure policy (scope, responsible disclosure rules, safe harbour).</td></tr>
+      <tr><td><code>Hiring:</code></td><td>A URL to security-related job postings.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>How Researchers Use security.txt</h2>
+  <p>When a security researcher finds a potential vulnerability on your site, their first step is typically to look for a security.txt file. They check <code>/.well-known/security.txt</code> and <code>/security.txt</code>. If they find a valid file, they know exactly who to contact and in what format.</p>
+  <p>Without a security.txt, researchers face a time-consuming search for a security contact: hunting for a <code>security@</code> email address, finding a bug bounty profile, or guessing who to email. Many give up and report elsewhere, report publicly, or simply don't bother at all. A vulnerability that could have been disclosed privately ends up being published or exploited.</p>
+  <p>Automated tools like vulnerability scanners and OSINT frameworks also check for security.txt to understand a target's disclosure policy before testing. A well-written policy field can communicate your safe harbour position — protecting researchers who act in good faith and encouraging more reports.</p>
+
+  <h2>Example security.txt File</h2>
+  <pre># Security contact for example.com
+Contact: mailto:security@example.com
+Contact: https://bugcrowd.com/example
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en, hi
+Policy: https://example.com/security-policy
+Acknowledgments: https://example.com/security/hall-of-fame
+Canonical: https://example.com/.well-known/security.txt</pre>
+
+  <h3>For a domain that doesn't run a bug bounty</h3>
+  <pre>Contact: mailto:security@yourdomain.com
+Expires: 2027-06-01T00:00:00.000Z
+Preferred-Languages: en</pre>
+
+  <h2>PGP Signing (Optional but Recommended)</h2>
+  <p>RFC 9116 allows the security.txt file to be PGP-signed. A signed file lets researchers verify the contact information hasn't been tampered with — important if an attacker compromised your server and changed the contact email to their own address. If you publish a security.txt for a high-value target, consider signing it.</p>
+
+  <div class="callout callout-success">
+    <strong>Set a calendar reminder</strong> for a month before your <code>Expires:</code> date. Update the date and, if using PGP, re-sign the file. An expired security.txt is better than none, but tools will flag it as stale.
+  </div>
+
+  <h2>SecureScanr's security.txt Tools</h2>
+  <p>SecureScanr checks for a valid security.txt at both canonical locations during every scan. It verifies the file is reachable over HTTPS, has a Contact field, and has a non-expired Expires field. For creating and validating your own file, use the <a href="../security-txt.html">SecureScanr security.txt validator and generator</a>.</p>
+
+  <div class="article-cta">
+    <h3>Does your site have a security.txt?</h3>
+    <p>SecureScanr checks for security.txt as part of every scan and helps you generate a valid RFC 9116 compliant file.</p>
+    <a href="../scan.html" class="btn-accent">Check your site's security now →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="../methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="../privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="../terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="../status.html">Status</a>
+  </div>
+</footer>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

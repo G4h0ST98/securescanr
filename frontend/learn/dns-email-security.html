@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete guide to SPF, DKIM, and DMARC — stop email spoofing and domain phishing with step-by-step DNS record setup.">
+  <meta property="og:title" content="SPF, DKIM &amp; DMARC: Complete Email Security Guide — SecureScanr">
+  <meta property="og:description" content="Complete guide to SPF, DKIM, and DMARC — stop email spoofing and domain phishing with step-by-step DNS record setup.">
+  <meta property="og:url" content="https://securescanr.com/learn/dns-email-security.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn/dns-email-security.html">
+  <title>SPF, DKIM &amp; DMARC: Complete Email Security Guide — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    :root { --bg:#0a0b0d; --surface:#111318; --border:#1e2128; --accent:#00d4aa; --danger:#ff4757; --warning:#ffa502; --success:#2ed573; --text:#e8eaf0; --muted:#6b7280; --radius:10px; }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; overflow-x: hidden; font-size:clamp(15px,1.1vw + 0.5rem,18px); }
+    body { overflow-x: hidden; }
+    body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.6; display:flex; flex-direction:column; min-height:100vh; }
+    a { color:var(--accent); text-decoration:none; }
+    nav { position:sticky; top:0; z-index:100; background:rgba(10,11,13,0.88); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); }
+    .nav-inner { max-width:1100px; margin:0 auto; padding:0 24px; height:60px; display:flex; align-items:center; }
+    .nav-logo { font-size:18px; font-weight:700; color:var(--muted); letter-spacing:-.2px; }
+    .logo-accent { color:var(--accent); }
+    .nav-links { display:flex; align-items:center; gap:24px; margin-left:auto; }
+    .nav-links > a { font-size:13px; color:var(--muted); transition:color .15s; }
+    .nav-links > a:hover { color:var(--text); }
+    .nav-cta { background:var(--accent); color:#0a0b0d !important; font-size:12px; font-weight:600; padding:6px 14px; border-radius:6px; transition:opacity .15s !important; }
+    .nav-cta:hover { opacity:.88; }
+    .nav-dropdown { position:relative; }
+    .nav-dropdown-btn { font-size:13px; color:var(--muted); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px; padding:0; font-family:inherit; transition:color .15s; }
+    .nav-dropdown-btn:hover, .nav-dropdown:hover .nav-dropdown-btn { color:var(--text); }
+    .nav-dropdown-btn::after { content:'▾'; font-size:10px; margin-left:2px; }
+    .nav-dropdown::after { content:''; position:absolute; bottom:-8px; left:0; width:100%; height:8px; }
+    .nav-dropdown-menu { display:none; position:absolute; top:100%; left:50%; transform:translateX(-50%); background:rgba(15,20,25,0.85); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:14px 6px 6px; min-width:160px; box-shadow:0 8px 24px rgba(0,0,0,.5); z-index:200; }
+    .nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown .nav-dropdown-menu:hover { display:block; }
+    .nav-dropdown-menu a { display:block; padding:8px 12px; font-size:13px; color:var(--muted); border-radius:6px; text-decoration:none; transition:background .12s,color .12s; }
+    .nav-dropdown-menu a:hover { background:rgba(255,255,255,.05); color:var(--text); }
+    .nav-dropdown-menu a.active-link { color:var(--text); }
+    .nav-hamburger { display:none; background:none; border:none; color:var(--muted); font-size:22px; cursor:pointer; margin-left:auto; }
+    .nav-mobile { display:none; flex-direction:column; border-top:1px solid var(--border); padding:12px 24px 16px; }
+    .nav-mobile a { font-size:14px; color:var(--muted); padding:9px 0; border-bottom:1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom:none; }
+    .nav-mobile.open { display:flex; }
+    @media (max-width:700px) { .nav-links { display:none; } .nav-hamburger { display:block; } }
+
+    .article-wrap { max-width:740px; margin:0 auto; padding:40px 24px 80px; flex:1; }
+    .breadcrumb { font-size:13px; color:var(--muted); margin-bottom:32px; display:flex; align-items:center; gap:6px; }
+    .breadcrumb a { color:var(--muted); }
+    .breadcrumb a:hover { color:var(--accent); text-decoration:none; }
+    .article-meta-row { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+    .sev-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:3px 8px; border-radius:4px; }
+    .sev-important { background:rgba(255,165,2,.12); color:#ffa502; border:1px solid rgba(255,165,2,.25); }
+    .meta-tag { font-size:12px; color:var(--muted); background:var(--surface); border:1px solid var(--border); padding:2px 8px; border-radius:4px; }
+    h1 { font-size:clamp(24px,4vw,36px); font-weight:700; letter-spacing:-.5px; line-height:1.2; margin-bottom:20px; }
+    .article-lead { font-size:16px; color:var(--muted); line-height:1.7; border-left:3px solid var(--accent); padding-left:16px; margin-bottom:40px; }
+    h2 { font-size:20px; font-weight:700; margin:36px 0 12px; }
+    h3 { font-size:16px; font-weight:700; margin:24px 0 8px; color:var(--accent); }
+    p { margin-bottom:16px; }
+    ul,ol { margin:0 0 16px 20px; }
+    li { margin-bottom:6px; }
+    code { font-family:'Space Mono',monospace; font-size:12.5px; background:rgba(0,212,170,.07); color:var(--accent); padding:1px 5px; border-radius:3px; }
+    pre { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:6px; padding:16px 18px; overflow-x:auto; margin:0 0 20px; font-family:'Space Mono',monospace; font-size:12.5px; color:var(--accent); line-height:1.7; }
+    .callout { background:rgba(255,165,2,.07); border-left:3px solid var(--warning); border-radius:0 6px 6px 0; padding:14px 16px; margin:0 0 20px; font-size:14px; }
+    .callout-danger { background:rgba(255,71,87,.07); border-left-color:var(--danger); }
+    .callout-success { background:rgba(46,213,115,.07); border-left-color:var(--success); }
+    .policy-table { width:100%; border-collapse:collapse; margin:0 0 24px; font-size:13.5px; }
+    .policy-table th { background:rgba(255,255,255,.03); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); padding:9px 14px; text-align:left; border-bottom:1px solid var(--border); }
+    .policy-table td { padding:9px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+    .policy-table tr:last-child td { border-bottom:none; }
+    .article-cta { background:linear-gradient(135deg,rgba(0,212,170,.08) 0%,rgba(0,212,170,.03) 100%); border:1px solid rgba(0,212,170,.2); border-radius:var(--radius); padding:28px 32px; text-align:center; margin-top:48px; }
+    .article-cta h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+    .article-cta p  { font-size:14px; color:var(--muted); margin-bottom:20px; }
+    .btn-accent { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#0a0b0d; border-radius:8px; padding:12px 28px; font-size:15px; font-weight:700; text-decoration:none; transition:opacity .15s; }
+    .btn-accent:hover { opacity:.88; color:#0a0b0d; text-decoration:none; }
+    footer { background:var(--surface); border-top:1px solid var(--border); }
+    .footer-bottom { max-width:1100px; margin:0 auto; padding:16px 24px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:12px 16px; font-size:12px; color:var(--muted); }
+    .footer-bottom a { color:var(--muted); }
+    .footer-bottom a:hover { color:var(--text); }
+    .footer-sep { opacity:.4; }
+    footer a { color:var(--muted); }
+    footer a:hover { color:var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is an SPF record and how does it prevent email spoofing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Sender Policy Framework (SPF) record is a DNS TXT record that lists every mail server authorised to send email on behalf of your domain. When a receiving mail server gets a message claiming to be from your domain, it checks the sending IP against your SPF record. If the IP is not listed, the message can be marked as spam or rejected — preventing attackers from spoofing your domain in the From address."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between DKIM and DMARC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DKIM (DomainKeys Identified Mail) adds a cryptographic signature to outgoing emails. Receiving servers verify the signature against a public key in your DNS, proving the message was not altered in transit. DMARC (Domain-based Message Authentication, Reporting and Conformance) builds on SPF and DKIM: it tells receiving servers what to do when authentication fails (none, quarantine, or reject) and where to send aggregate reports. DKIM proves integrity; DMARC enforces policy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does DMARC p=none mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DMARC p=none is a monitoring-only policy. It collects and reports authentication failures but takes no action — spoofed emails still reach recipients' inboxes. It is a safe starting point for understanding your email flows before moving to p=quarantine (moves failures to spam) or p=reject (blocks delivery entirely). Staying on p=none long-term provides no real protection against domain spoofing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I check if my domain has SPF, DKIM, and DMARC configured?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run a free scan at securescanr.com — paste your domain URL and SecureScanr will query your DNS for SPF, DMARC, DKIM (testing 12 common selectors), CAA records, and DNSSEC. Results appear in the DNS Security section with a score impact and specific fix instructions for anything missing or misconfigured."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="../scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="../versus.html">Versus</a>
+          <a href="../generators.html">Generators</a>
+          <a href="../security-txt.html">Security.txt</a>
+          <a href="../api-docs.html">API Docs</a>
+          <a href="../learn.html" class="active-link">Learn</a>
+          <a href="../badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="../plans.html">Plans</a>
+      <a href="../world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="../methodology.html">Methodology</a>
+          <a href="../about.html">About</a>
+          <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="../compliance-report.html">Compliance Report</a>
+          <a href="../status.html">Status</a>
+        </div>
+      </div>
+      <a href="../plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="../scan.html">Scan</a>
+    <a href="../versus.html">Versus</a>
+    <a href="../generators.html">Generators</a>
+    <a href="../security-txt.html">Security.txt</a>
+    <a href="../api-docs.html">API Docs</a>
+    <a href="../learn.html">Learn</a>
+    <a href="../badge.html">Badge</a>
+    <a href="../plans.html">Plans</a>
+    <a href="../world-security-index.html">World Index</a>
+    <a href="../methodology.html">Methodology</a>
+    <a href="../about.html">About</a>
+    <a href="securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="../compliance-report.html">Compliance Report</a>
+    <a href="../status.html">Status</a>
+    <a href="../plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../learn.html">← Learning Center</a>
+    <span>/</span>
+    <span>DNS Email Security Guide</span>
+  </div>
+
+  <div class="article-meta-row">
+    <span class="sev-badge sev-important">Important</span>
+    <span class="meta-tag">DNS</span>
+    <span class="meta-tag">8 min read</span>
+  </div>
+
+  <h1>SPF, DKIM &amp; DMARC: Complete Email Security Guide</h1>
+
+  <p class="article-lead">Without SPF, DKIM, and DMARC, anyone on the internet can send email that appears to come from your domain. Attackers exploit this to run phishing campaigns that impersonate your brand. All three records work together — individually they're partial, together they're powerful.</p>
+
+  <h2>How Email Spoofing Works</h2>
+  <p>The Simple Mail Transfer Protocol (SMTP) was designed in 1982 and has essentially no built-in authentication. Any mail server can claim to be sending on behalf of any domain. The "From" address a user sees in their email client is completely untrusted unless the receiving server has a way to verify it.</p>
+  <p>Email spoofing is used in phishing attacks ("Your bank account has been locked — click here"), business email compromise ("Please wire $50,000 to this account — CEO"), and spam campaigns that damage your domain's reputation. Even if you never send marketing email, attackers can send phishing mail from your domain to your customers' inboxes.</p>
+  <p>SPF, DKIM, and DMARC are DNS-based standards that let receiving mail servers verify whether a message claiming to come from your domain actually did. Without them, there's nothing to verify.</p>
+
+  <h2>SPF — Sender Policy Framework</h2>
+  <p>SPF is a DNS TXT record that lists all the IP addresses and hostnames that are authorised to send email on behalf of your domain. When a receiving mail server gets a message claiming to be from <code>@yourdomain.com</code>, it looks up your SPF record and checks whether the sending server's IP is on the list. If it's not, the receiving server knows the email is suspicious.</p>
+
+  <h3>SPF record syntax</h3>
+  <pre>v=spf1 include:_spf.google.com include:sendgrid.net ip4:203.0.113.5 ~all</pre>
+
+  <ul>
+    <li><code>v=spf1</code> — identifies this as an SPF record</li>
+    <li><code>include:</code> — imports another domain's SPF record (your email provider's)</li>
+    <li><code>ip4:</code> — explicitly authorises an IPv4 address or range</li>
+    <li><code>~all</code> — soft fail: mark unauthorised sources as suspicious but still deliver them</li>
+    <li><code>-all</code> — hard fail: reject unauthorised sources entirely (use this once you're confident)</li>
+    <li><code>+all</code> — allow all (never use this — it negates SPF entirely)</li>
+  </ul>
+
+  <div class="callout">
+    SPF has a 10-DNS-lookup limit. Each <code>include:</code> and <code>a:</code> mechanism counts against this limit. Chains of includes can push you over. Use an SPF flattening tool to consolidate IPs if needed.
+  </div>
+
+  <h3>Where to add it</h3>
+  <p>Add a TXT record to your domain's DNS for the root domain (<code>@</code> or <code>yourdomain.com</code>). Only one SPF record per domain is allowed — if you have multiple, merge them into one.</p>
+
+  <h2>DKIM — DomainKeys Identified Mail</h2>
+  <p>DKIM adds a cryptographic signature to every outgoing email. Your mail server signs each message with a private key. The receiving server looks up your public key in DNS and verifies the signature. If the signature matches, the email hasn't been tampered with and genuinely came from a server that holds your private key.</p>
+  <p>Unlike SPF (which checks the sending server's IP), DKIM survives email forwarding — the signature travels with the message and remains verifiable even after the email has been relayed through other servers.</p>
+
+  <h3>DKIM DNS record</h3>
+  <p>DKIM records are published as TXT records at a specific "selector" subdomain. Your email provider will tell you which selector to use (commonly <code>google</code>, <code>s1</code>, <code>k1</code>, or a custom value). The record name looks like:</p>
+  <pre>selector._domainkey.yourdomain.com</pre>
+  <p>The value contains the public key in a specific format provided by your email service. You don't generate this manually — your email provider (Google Workspace, Microsoft 365, SendGrid, Mailgun etc.) gives you the exact record to add.</p>
+
+  <h3>Multiple selectors</h3>
+  <p>You can have multiple DKIM selectors — one per email sending service. If you send via Google Workspace and SendGrid, you'll have two separate DKIM records, each with a different selector name. This is normal and intentional.</p>
+
+  <h2>DMARC — Domain-based Message Authentication Reporting and Conformance</h2>
+  <p>DMARC ties SPF and DKIM together and tells receiving servers what to do when a message fails both checks. It also enables reporting — you receive daily XML reports from major mail providers showing who is sending email from your domain.</p>
+  <p>DMARC alignment requires that the "From" domain in the email header matches the domain that passed SPF or DKIM. This closes a bypass where an attacker could pass SPF using their own domain but display your domain in the visible From header.</p>
+
+  <h3>DMARC record</h3>
+  <pre>v=DMARC1; p=reject; rua=mailto:dmarc-reports@yourdomain.com; pct=100</pre>
+
+  <h3>DMARC policies (p=)</h3>
+  <table class="policy-table">
+    <thead><tr><th>Policy</th><th>Action</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr><td><code>p=none</code></td><td>Take no action — monitor only. Emails still get delivered.</td><td>Starting out. Collect reports, fix SPF/DKIM issues before enforcing.</td></tr>
+      <tr><td><code>p=quarantine</code></td><td>Mark failing emails as spam.</td><td>Intermediate stage after fixing obvious issues.</td></tr>
+      <tr><td><code>p=reject</code></td><td>Reject failing emails at the server level. They never reach the inbox.</td><td>Final goal once you're confident all legitimate mail passes SPF or DKIM.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-danger">
+    <strong>Don't jump straight to p=reject.</strong> If you have misconfigured SPF or are missing DKIM for a sending service, p=reject will cause your legitimate emails to bounce. Start with p=none, monitor reports for 2–4 weeks, fix issues, then escalate to quarantine, then reject.
+  </div>
+
+  <h2>Recommended Setup Order</h2>
+  <ol>
+    <li><strong>Set up SPF</strong> — list all your email sending services. Use <code>~all</code> (soft fail) initially.</li>
+    <li><strong>Set up DKIM</strong> — generate or obtain keys from each email service you use and add the DNS records.</li>
+    <li><strong>Deploy DMARC with p=none</strong> and a reporting address. Wait 2–4 weeks and review reports.</li>
+    <li><strong>Fix any legitimate sources</strong> not covered by SPF or not signing with DKIM.</li>
+    <li><strong>Change SPF to -all</strong> (hard fail) once you're confident in your source list.</li>
+    <li><strong>Escalate DMARC to p=quarantine</strong>, monitor for a week, then <strong>p=reject</strong>.</li>
+  </ol>
+
+  <h2>Testing Tools</h2>
+  <ul>
+    <li><strong>SecureScanr</strong> — scans SPF, DMARC, and attempts to detect DKIM selectors automatically.</li>
+    <li><code>dig TXT yourdomain.com</code> — check your SPF record from the command line.</li>
+    <li><code>dig TXT _dmarc.yourdomain.com</code> — check your DMARC record.</li>
+    <li>Send a test email to <strong>mail-tester.com</strong> — gives a 10/10 score report for SPF, DKIM, DMARC, and spam checks.</li>
+    <li><strong>MXToolbox</strong> — SPF/DMARC record validator with human-readable output.</li>
+  </ul>
+
+  <div class="callout callout-success">
+    <strong>Domains that never send email still need DMARC.</strong> Attackers love to spoof parked and inactive domains because they have no SPF or DMARC. Add <code>v=spf1 -all</code> and <code>v=DMARC1; p=reject</code> to any domain that doesn't send email.
+  </div>
+
+  <div class="article-cta">
+    <h3>Check your domain's email security</h3>
+    <p>SecureScanr scans your SPF, DMARC, and DKIM records and flags weak policies or missing records with specific fix recommendations.</p>
+    <a href="../scan.html" class="btn-accent">Check your site's security now →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="../methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="../privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="../terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="../status.html">Status</a>
+  </div>
+</footer>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

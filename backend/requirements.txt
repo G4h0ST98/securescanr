@@ -1,0 +1,11 @@
+flask==3.0.3
+flask-cors==4.0.1
+requests==2.32.3
+dnspython==2.6.1
+weasyprint==62.3
+pydyf==0.10.0
+cryptography==42.0.8
+gunicorn==22.0.0
+razorpay
+resend
+reportlab

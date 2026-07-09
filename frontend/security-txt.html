@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate or validate your security.txt file instantly. Free RFC 9116 compliant generator — add Contact, Expires, Policy fields in seconds. No login required.">
+  <meta property="og:title" content="Free security.txt Generator &amp; Validator — RFC 9116 Compliant | SecureScanr">
+  <meta property="og:description" content="Generate or validate your security.txt file instantly. Free RFC 9116 compliant generator — add Contact, Expires, Policy fields in seconds. No login required.">
+  <meta property="og:url" content="https://securescanr.com/security-txt.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/security-txt.html">
+  <title>Free security.txt Generator &amp; Validator — RFC 9116 Compliant | SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --radius:  10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    main { flex: 1; }
+    a { color: var(--accent); text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    code { font-family: 'Space Mono', monospace; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page Header ─────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 60px 24px 48px; text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,170,.1) 0%, transparent 70%);
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px; line-height: 1.15;
+    }
+    .page-sub {
+      margin-top: 10px; font-size: 15px; color: var(--muted);
+      max-width: 540px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── Tabs ────────────────────────────────────────────────────────────── */
+    .tabs-wrap {
+      max-width: 900px; margin: 32px auto 0;
+      padding: 0 24px; display: flex; gap: 6px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 20px; border-radius: 8px; border: 1.5px solid var(--border);
+      background: var(--surface); color: var(--muted);
+      font-size: 13px; font-weight: 600; transition: all .18s;
+    }
+    .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+    .tab-btn.active { background: var(--accent); color: #0a0b0d; border-color: var(--accent); }
+
+    /* ── Panels ──────────────────────────────────────────────────────────── */
+    .panels { max-width: 900px; margin: 20px auto 80px; padding: 0 24px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── Shared card ─────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 16px;
+    }
+    .card-body { padding: 20px; }
+    .card-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted); margin-bottom: 14px;
+    }
+
+    /* ── Mode toggle ─────────────────────────────────────────────────────── */
+    .mode-toggle {
+      display: flex; gap: 8px; margin-bottom: 16px;
+    }
+    .mode-btn {
+      padding: 7px 16px; border-radius: 6px; border: 1.5px solid var(--border);
+      background: none; color: var(--muted); font-size: 13px; font-weight: 600;
+      transition: all .15s;
+    }
+    .mode-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(0,212,170,.08); }
+
+    /* ── Inputs ──────────────────────────────────────────────────────────── */
+    .url-row { display: flex; gap: 10px; align-items: stretch; }
+    .url-input {
+      flex: 1; background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 14px; color: var(--text); outline: none;
+      transition: border-color .15s; font-family: 'Space Mono', monospace;
+    }
+    .url-input:focus { border-color: var(--accent); }
+    .url-input::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .scan-btn {
+      padding: 10px 22px; background: var(--accent); color: #0a0b0d;
+      border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+      white-space: nowrap; transition: opacity .15s;
+    }
+    .scan-btn:hover { opacity: .85; }
+    .scan-btn:disabled { opacity: .4; cursor: not-allowed; }
+    .paste-area {
+      width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 12px 14px;
+      font-size: 13px; font-family: 'Space Mono', monospace; color: var(--text);
+      outline: none; resize: vertical; min-height: 160px; line-height: 1.6;
+      transition: border-color .15s;
+    }
+    .paste-area:focus { border-color: var(--accent); }
+    .paste-area::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .parse-btn-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+    .parse-btn {
+      padding: 9px 20px; background: var(--accent); color: #0a0b0d;
+      border: none; border-radius: 7px; font-size: 13px; font-weight: 700;
+    }
+    .parse-btn:hover { opacity: .85; }
+
+    /* ── Loading spinner ─────────────────────────────────────────────────── */
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(0,212,170,.2); border-top-color: var(--accent);
+      border-radius: 50%; animation: spin .7s linear infinite;
+      vertical-align: middle; margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Status banner ───────────────────────────────────────────────────── */
+    .status-banner {
+      padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+    }
+    .status-banner.good { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); color: var(--success); }
+    .status-banner.warn { background: rgba(255,165,2,.08); border: 1px solid rgba(255,165,2,.25); color: var(--warning); }
+    .status-banner.bad  { background: rgba(255,71,87,.08); border: 1px solid rgba(255,71,87,.25); color: var(--danger); }
+    .status-banner .banner-url { font-size: 12px; font-family: 'Space Mono', monospace; color: var(--muted); font-weight: 400; word-break: break-all; }
+
+    /* ── Field grid ──────────────────────────────────────────────────────── */
+    .fields-grid {
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .field-row {
+      display: grid; grid-template-columns: 170px 36px 1fr;
+      align-items: start; gap: 0;
+      padding: 10px 14px; border-bottom: 1px solid var(--border);
+      transition: background .12s;
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-row:nth-child(even) { background: rgba(255,255,255,.018); }
+    .field-name {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      font-family: 'Space Mono', monospace; padding-top: 1px;
+    }
+    .field-required { font-size: 9px; color: var(--danger); margin-left: 4px; vertical-align: super; }
+    .field-icon { font-size: 15px; padding-top: 1px; }
+    .field-val { font-size: 13px; color: var(--muted); word-break: break-all; line-height: 1.5; }
+    .field-val.present { color: var(--text); }
+    .field-val code { font-size: 12px; color: var(--accent); background: rgba(0,212,170,.07); padding: 1px 5px; border-radius: 3px; }
+    .field-val .multi-val { display: block; }
+    .expiry-warn { color: var(--danger); font-size: 12px; display: block; margin-top: 2px; }
+    .expiry-ok { color: var(--success); font-size: 12px; display: block; margin-top: 2px; }
+
+    /* ── Recommendations ─────────────────────────────────────────────────── */
+    .rec-list { margin-top: 16px; }
+    .rec-list-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .rec-item {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 14px; background: rgba(255,165,2,.05);
+      border: 1px solid rgba(255,165,2,.18); border-radius: 7px;
+      margin-bottom: 8px; font-size: 13px;
+    }
+    .rec-item-icon { color: var(--warning); flex-shrink: 0; margin-top: 1px; }
+    .rec-item-text { color: var(--text); line-height: 1.5; }
+    .rec-item-text strong { color: var(--warning); }
+
+    /* ── Info / warning boxes ────────────────────────────────────────────── */
+    .info-note {
+      margin: 12px 0 0; padding: 10px 14px;
+      background: rgba(0,212,170,.05); border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0; font-size: 12px; color: var(--muted);
+    }
+    .info-note strong { color: var(--accent); }
+    .warn-note {
+      margin: 12px 0 0; padding: 10px 14px;
+      background: rgba(255,71,87,.07); border-left: 3px solid var(--danger);
+      border-radius: 0 6px 6px 0; font-size: 12px; color: #ff8088;
+    }
+    .warn-note strong { color: var(--danger); }
+
+    /* ── Generator ───────────────────────────────────────────────────────── */
+    .gen-layout {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    @media (max-width: 680px) { .gen-layout { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      display: block; margin-bottom: 5px;
+    }
+    .form-label .req { color: var(--danger); margin-left: 2px; }
+    .form-label .hint { color: var(--muted); font-weight: 400; font-size: 11px; }
+    .form-input {
+      width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 7px; padding: 8px 12px;
+      font-size: 13px; font-family: 'Space Mono', monospace; color: var(--text);
+      outline: none; transition: border-color .15s;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; }
+    .form-input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(.6); }
+
+    /* Preview panel */
+    .preview-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .preview-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+    }
+    .preview-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .preview-actions { display: flex; gap: 8px; }
+    .preview-pre {
+      margin: 0; padding: 16px; font-family: 'Space Mono', monospace;
+      font-size: 12px; color: var(--accent); line-height: 1.8;
+      white-space: pre-wrap; word-break: break-all;
+      min-height: 280px; background: rgba(0,212,170,.03);
+    }
+    .preview-footer {
+      padding: 12px 16px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--muted); background: rgba(255,255,255,.012);
+    }
+    .copy-btn {
+      padding: 7px 14px; background: rgba(0,212,170,.12); color: var(--accent);
+      border: 1px solid rgba(0,212,170,.3); border-radius: 6px;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: rgba(0,212,170,.22); }
+    .copy-btn.copied { background: rgba(46,213,115,.15); color: var(--success); border-color: rgba(46,213,115,.3); }
+    .dl-btn {
+      padding: 7px 14px; background: rgba(255,255,255,.05); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      font-size: 12px; font-weight: 600; white-space: nowrap;
+      transition: background .15s;
+    }
+    .dl-btn:hover { background: rgba(255,255,255,.1); }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { background: #111318; border-top: 1px solid rgba(255,255,255,0.08); padding: 0; font-size: 13px; color: var(--muted); }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 14px 24px 18px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+
+    .hidden { display: none !important; }
+
+    /* ── FAQ ─────────────────────────────────────────────────────────────── */
+    .faq-section { padding: 60px 24px 72px; border-top: 1px solid var(--border); }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-title { font-size: clamp(20px, 2.5vw, 28px); font-weight: 700; letter-spacing: -.4px; margin-bottom: 32px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-size: 15px; font-weight: 600; color: var(--text);
+      padding: 18px 0; cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-q::-webkit-details-marker { display: none; }
+    .faq-q::after { content: '+'; font-size: 20px; color: var(--accent); flex-shrink: 0; margin-left: 12px; transition: transform .2s; }
+    details[open] .faq-q::after { content: '−'; }
+    .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; padding-bottom: 18px; }
+    .faq-a code { color: var(--accent); background: rgba(0,212,170,.07); padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+    .faq-a strong { color: var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a security.txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A security.txt file is a standard (RFC 9116) that tells security researchers how to report vulnerabilities on your website. It lives at /.well-known/security.txt and contains contact info, policy links, and an expiry date."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I place my security.txt file?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Place it at /.well-known/security.txt on your web server. It must be served over HTTPS. You can also add a fallback at /security.txt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What fields are required in security.txt?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only two fields are required: Contact (an email or URL where researchers can report issues) and Expires (the date the file expires). All other fields like Policy, Encryption, and Acknowledgments are optional but recommended."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is security.txt mandatory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not legally, but US federal agencies are required to have one. It's considered a security best practice and shows you take vulnerability disclosure seriously."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn" style="color:var(--text)">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html" class="active-link">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <p class="page-eyebrow">Free Tool</p>
+  <h1 class="page-title">Security.txt Generator &amp; Validator</h1>
+  <p class="page-sub">Validate your RFC 9116 security disclosure file or generate one from scratch — no login, instant results.</p>
+</div>
+
+<!-- ── Tabs ─────────────────────────────────────────────────────────────────── -->
+<div class="tabs-wrap">
+  <button class="tab-btn active" onclick="switchTab('validator', this)">🔍 Validator</button>
+  <button class="tab-btn" onclick="switchTab('generator', this)">⚙ Generator</button>
+</div>
+
+<!-- ── Panels ────────────────────────────────────────────────────────────────── -->
+<div class="panels">
+
+  <!-- ═══ VALIDATOR ══════════════════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-validator">
+
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">Input</div>
+
+        <!-- Mode toggle -->
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="mode-url-btn" onclick="setMode('url')">🌐 URL or Domain</button>
+          <button class="mode-btn" id="mode-paste-btn" onclick="setMode('paste')">📋 Paste content</button>
+        </div>
+
+        <!-- URL mode -->
+        <div id="mode-url">
+          <div class="url-row">
+            <input type="text" class="url-input" id="url-input"
+              placeholder="securescanr.com or https://securescanr.com"
+              onkeydown="if(event.key==='Enter') runValidate()">
+            <button class="scan-btn" id="scan-btn" onclick="runValidate()">Check</button>
+          </div>
+          <div class="info-note" style="margin-top:12px">
+            <strong>How it works:</strong> We fetch <code>/.well-known/security.txt</code> directly from your domain. If blocked by CORS, we fall back to the SecureScanr scanner for presence detection.
+          </div>
+        </div>
+
+        <!-- Paste mode -->
+        <div id="mode-paste" class="hidden">
+          <textarea class="paste-area" id="paste-input"
+            placeholder="Paste your security.txt content here&#10;&#10;Contact: mailto:security@example.com&#10;Expires: 2027-01-01T00:00:00.000Z&#10;Policy: https://example.com/security-policy"></textarea>
+          <div class="parse-btn-row">
+            <button class="parse-btn" onclick="runParsePaste()">Analyse</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-section" class="hidden">
+
+      <!-- Status banner -->
+      <div id="status-banner" class="status-banner"></div>
+
+      <!-- Fields grid card -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">Field Analysis</div>
+          <div class="fields-grid" id="fields-grid"></div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div id="rec-section" class="hidden">
+        <div class="rec-list">
+          <div class="rec-list-title">Recommendations</div>
+          <div id="rec-items"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-msg" class="hidden" style="text-align:center;padding:32px 0;color:var(--muted);font-size:14px">
+      <span class="spinner"></span>Fetching security.txt…
+    </div>
+
+    <!-- RFC note -->
+    <div class="info-note" style="margin-top:20px">
+      <strong>RFC 9116</strong> — security.txt is an internet standard for disclosing how to report security vulnerabilities. It should live at <code>/.well-known/security.txt</code> (preferred) or <code>/security.txt</code>.
+      <strong>Contact</strong> and <strong>Expires</strong> are required fields. All others are optional but recommended.
+    </div>
+  </div>
+
+  <!-- ═══ GENERATOR ══════════════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-generator">
+
+    <div class="gen-layout">
+
+      <!-- Form -->
+      <div>
+        <div class="card">
+          <div class="card-body">
+            <div class="card-title">Required Fields</div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-contact">
+                Contact <span class="req">*</span>
+                <span class="hint">— email (mailto:) or URL</span>
+              </label>
+              <input type="text" class="form-input" id="g-contact"
+                placeholder="mailto:security@example.com"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-expires">
+                Expires <span class="req">*</span>
+                <span class="hint">— renew before this date</span>
+              </label>
+              <input type="date" class="form-input" id="g-expires" oninput="updatePreview()">
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div class="card-body">
+            <div class="card-title">Optional Fields</div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-encryption">
+                Encryption
+                <span class="hint">— URL to your PGP public key</span>
+              </label>
+              <input type="text" class="form-input" id="g-encryption"
+                placeholder="https://example.com/pgp-key.txt"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-policy">
+                Policy
+                <span class="hint">— URL to your security policy</span>
+              </label>
+              <input type="text" class="form-input" id="g-policy"
+                placeholder="https://example.com/security-policy"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-acknowledgments">
+                Acknowledgments
+                <span class="hint">— URL to your hall of fame page</span>
+              </label>
+              <input type="text" class="form-input" id="g-acknowledgments"
+                placeholder="https://example.com/security-thanks"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-canonical">
+                Canonical
+                <span class="hint">— canonical URL of this file</span>
+              </label>
+              <input type="text" class="form-input" id="g-canonical"
+                placeholder="https://example.com/.well-known/security.txt"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="g-hiring">
+                Hiring
+                <span class="hint">— URL to security roles page</span>
+              </label>
+              <input type="text" class="form-input" id="g-hiring"
+                placeholder="https://example.com/careers/security"
+                oninput="updatePreview()">
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label" for="g-langs">
+                Preferred-Languages
+                <span class="hint">— comma-separated language codes</span>
+              </label>
+              <input type="text" class="form-input" id="g-langs"
+                placeholder="en"
+                value="en"
+                oninput="updatePreview()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div>
+        <div class="preview-card">
+          <div class="preview-header">
+            <span class="preview-title">security.txt preview</span>
+            <div class="preview-actions">
+              <button class="copy-btn" id="copy-gen-btn" onclick="copyGenerated()">⎘ Copy</button>
+              <button class="dl-btn" onclick="downloadGenerated()">⬇ Download</button>
+            </div>
+          </div>
+          <pre class="preview-pre" id="gen-preview"># Generated by securescanr.com
+</pre>
+          <div class="preview-footer">
+            Place at <code style="color:var(--accent)">/.well-known/security.txt</code> on your web server.
+            Renew before the Expires date — expired files are flagged by scanners.
+          </div>
+        </div>
+
+        <div class="info-note" style="margin-top:12px">
+          <strong>Best practice:</strong> Set Expires to exactly 1 year from today. Add a calendar reminder to renew it before then. The file must be served over HTTPS.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /panels -->
+
+</main>
+
+<!-- ── FAQ ───────────────────────────────────────────────────────────────────── -->
+<section class="faq-section" aria-labelledby="faq-heading">
+  <div class="faq-inner">
+    <h2 id="faq-heading" class="faq-title">Frequently Asked Questions</h2>
+    <details class="faq-item">
+      <summary class="faq-q">What is a security.txt file?</summary>
+      <div class="faq-a">A security.txt file is a standard (RFC 9116) that tells security researchers how to report vulnerabilities on your website. It lives at <code>/.well-known/security.txt</code> and contains contact info, policy links, and an expiry date.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q">Where should I place my security.txt file?</summary>
+      <div class="faq-a">Place it at <code>/.well-known/security.txt</code> on your web server. It must be served over HTTPS. You can also add a fallback at <code>/security.txt</code>.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q">What fields are required in security.txt?</summary>
+      <div class="faq-a">Only two fields are required: <strong>Contact</strong> (an email or URL where researchers can report issues) and <strong>Expires</strong> (the date the file expires). All other fields like Policy, Encryption, and Acknowledgments are optional but recommended.</div>
+    </details>
+    <details class="faq-item">
+      <summary class="faq-q">Is security.txt mandatory?</summary>
+      <div class="faq-a">Not legally, but US federal agencies are required to have one. It's considered a security best practice and shows you take vulnerability disclosure seriously.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = 'https://api.securescanr.com';
+
+  function el(id) { return document.getElementById(id); }
+  function toggleNav() { el('nav-mobile').classList.toggle('open'); }
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    el(`panel-${id}`).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Validator: mode toggle ─────────────────────────────────────────────────
+  let currentMode = 'url';
+
+  function setMode(mode) {
+    currentMode = mode;
+    el('mode-url').classList.toggle('hidden', mode !== 'url');
+    el('mode-paste').classList.toggle('hidden', mode !== 'paste');
+    el('mode-url-btn').classList.toggle('active', mode === 'url');
+    el('mode-paste-btn').classList.toggle('active', mode === 'paste');
+    el('results-section').classList.add('hidden');
+    el('loading-msg').classList.add('hidden');
+  }
+
+  // ── security.txt parser ────────────────────────────────────────────────────
+  function parseSecurityTxt(raw) {
+    const fields = {
+      contact: [], expires: null, encryption: null, policy: null,
+      acknowledgments: null, canonical: [], hiring: [], preferredLanguages: null,
+    };
+
+    for (const line of raw.split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const colon = trimmed.indexOf(':');
+      if (colon < 1) continue;
+      const key = trimmed.slice(0, colon).trim().toLowerCase();
+      const value = trimmed.slice(colon + 1).trim();
+      switch (key) {
+        case 'contact':               fields.contact.push(value); break;
+        case 'expires':               fields.expires = value; break;
+        case 'encryption':            fields.encryption = value; break;
+        case 'policy':                fields.policy = value; break;
+        case 'acknowledgments':       fields.acknowledgments = value; break;
+        case 'canonical':             fields.canonical.push(value); break;
+        case 'hiring':                fields.hiring.push(value); break;
+        case 'preferred-languages':   fields.preferredLanguages = value; break;
+      }
+    }
+    return fields;
+  }
+
+  // ── Validator: display results ─────────────────────────────────────────────
+  function displayResults(fields, sourceUrl, notFoundMsg) {
+    el('results-section').classList.remove('hidden');
+    el('loading-msg').classList.add('hidden');
+
+    // Status banner
+    const banner = el('status-banner');
+    if (notFoundMsg) {
+      banner.className = 'status-banner bad';
+      banner.innerHTML = `<span>✗</span><div><div>${notFoundMsg}</div>${sourceUrl ? `<div class="banner-url">${escHtml(sourceUrl)}</div>` : ''}</div>`;
+    } else if (isExpired(fields.expires)) {
+      banner.className = 'status-banner warn';
+      banner.innerHTML = `<span>⚠</span><div><div>security.txt found but <strong>Expires date is in the past</strong> — file needs renewal</div>${sourceUrl ? `<div class="banner-url">${escHtml(sourceUrl)}</div>` : ''}</div>`;
+    } else {
+      banner.className = 'status-banner good';
+      banner.innerHTML = `<span>✓</span><div><div>security.txt found and valid</div>${sourceUrl ? `<div class="banner-url">${escHtml(sourceUrl)}</div>` : ''}</div>`;
+    }
+
+    // Fields grid
+    const grid = el('fields-grid');
+    grid.innerHTML = '';
+
+    const FIELDS_DEF = [
+      { key: 'contact',           label: 'Contact',             required: true,  values: () => fields.contact },
+      { key: 'expires',           label: 'Expires',             required: true,  values: () => fields.expires ? [fields.expires] : [] },
+      { key: 'encryption',        label: 'Encryption',          required: false, values: () => fields.encryption ? [fields.encryption] : [] },
+      { key: 'policy',            label: 'Policy',              required: false, values: () => fields.policy ? [fields.policy] : [] },
+      { key: 'acknowledgments',   label: 'Acknowledgments',     required: false, values: () => fields.acknowledgments ? [fields.acknowledgments] : [] },
+      { key: 'canonical',         label: 'Canonical',           required: false, values: () => fields.canonical },
+      { key: 'hiring',            label: 'Hiring',              required: false, values: () => fields.hiring },
+      { key: 'preferredLanguages',label: 'Preferred-Languages', required: false, values: () => fields.preferredLanguages ? [fields.preferredLanguages] : [] },
+    ];
+
+    const recommendations = [];
+
+    for (const def of FIELDS_DEF) {
+      const vals = def.values();
+      const present = vals.length > 0;
+      const row = document.createElement('div');
+      row.className = 'field-row';
+
+      let valHtml = '';
+      if (!present) {
+        valHtml = '<span style="color:var(--muted);font-style:italic">Not present</span>';
+        if (!def.required) {
+          recommendations.push(def);
+        }
+      } else if (def.key === 'expires') {
+        const v = vals[0];
+        const expiredFlag = isExpired(v);
+        const daysLeft = daysUntil(v);
+        valHtml = `<code>${escHtml(v)}</code>`;
+        if (expiredFlag) {
+          valHtml += `<span class="expiry-warn">⚠ Expired — renew immediately</span>`;
+        } else if (daysLeft !== null && daysLeft < 30) {
+          valHtml += `<span class="expiry-warn">⚠ Expires in ${daysLeft} day${daysLeft !== 1 ? 's' : ''} — renew soon</span>`;
+        } else if (daysLeft !== null) {
+          valHtml += `<span class="expiry-ok">✓ ${daysLeft} days remaining</span>`;
+        }
+      } else {
+        valHtml = vals.map(v => `<span class="multi-val"><code>${escHtml(v)}</code></span>`).join('');
+      }
+
+      row.innerHTML = `
+        <div class="field-name">${escHtml(def.label)}${def.required ? '<span class="field-required">*</span>' : ''}</div>
+        <div class="field-icon">${present ? '<span style="color:var(--success)">✓</span>' : '<span style="color:var(--border)" style="color:var(--muted)">–</span>'}</div>
+        <div class="field-val ${present ? 'present' : ''}">${valHtml}</div>`;
+      grid.appendChild(row);
+    }
+
+    // Recommendations
+    const recSection = el('rec-section');
+    const recItems = el('rec-items');
+    recItems.innerHTML = '';
+
+    const REC_TEXT = {
+      encryption:       { title: 'Add Encryption', desc: 'Publish a PGP public key and link it here so reporters can send encrypted vulnerability reports.' },
+      policy:           { title: 'Add Policy',      desc: 'Link to your vulnerability disclosure policy so reporters know the rules of engagement.' },
+      acknowledgments:  { title: 'Add Acknowledgments', desc: 'A page thanking researchers who have responsibly disclosed issues builds goodwill.' },
+      canonical:        { title: 'Add Canonical',   desc: 'The canonical URL of this file helps tools and researchers locate the authoritative copy.' },
+      hiring:           { title: 'Add Hiring',      desc: 'Link to security job openings to attract talent from the researcher community.' },
+      preferredLanguages: { title: 'Add Preferred-Languages', desc: 'Specify which language(s) you prefer reports in (e.g. "en") to reduce language barriers.' },
+    };
+
+    if (recommendations.length > 0) {
+      recommendations.forEach(def => {
+        const r = REC_TEXT[def.key];
+        if (!r) return;
+        const item = document.createElement('div');
+        item.className = 'rec-item';
+        item.innerHTML = `<span class="rec-item-icon">💡</span><div class="rec-item-text"><strong>${r.title}:</strong> ${r.desc}</div>`;
+        recItems.appendChild(item);
+      });
+      recSection.classList.remove('hidden');
+    } else {
+      recSection.classList.add('hidden');
+    }
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function isExpired(dateStr) {
+    if (!dateStr) return false;
+    try { return new Date(dateStr) < new Date(); } catch { return false; }
+  }
+
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    try {
+      const diff = new Date(dateStr) - new Date();
+      return Math.floor(diff / 86400000);
+    } catch { return null; }
+  }
+
+  function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function normalizeDomain(raw) {
+    raw = raw.trim();
+    if (!raw) return null;
+    if (!raw.startsWith('http://') && !raw.startsWith('https://')) raw = 'https://' + raw;
+    try {
+      const u = new URL(raw);
+      return u.origin; // e.g. https://securescanr.com
+    } catch { return null; }
+  }
+
+  // ── Validator: URL mode ────────────────────────────────────────────────────
+  async function runValidate() {
+    const raw = el('url-input').value.trim();
+    if (!raw) return;
+    const origin = normalizeDomain(raw);
+    if (!origin) {
+      alert('Please enter a valid domain or URL.');
+      return;
+    }
+
+    el('results-section').classList.add('hidden');
+    el('loading-msg').classList.remove('hidden');
+    el('scan-btn').disabled = true;
+
+    let rawContent = null;
+    let foundUrl = null;
+
+    // Try fetching the file directly (CORS permitting)
+    for (const path of ['/.well-known/security.txt', '/security.txt']) {
+      try {
+        const resp = await fetch(origin + path, { signal: AbortSignal.timeout(8000) });
+        if (resp.ok) {
+          const text = await resp.text();
+          if (text.includes('Contact:')) {
+            rawContent = text;
+            foundUrl = origin + path;
+            break;
+          }
+        }
+      } catch (_) {
+        // CORS or network — try next path then fall back to API
+      }
+    }
+
+    if (rawContent) {
+      const fields = parseSecurityTxt(rawContent);
+      displayResults(fields, foundUrl, null);
+    } else {
+      // Fall back to SecureScanr scanner for presence detection
+      try {
+        el('loading-msg').querySelector('span.spinner').nextSibling.textContent = 'Direct fetch blocked — checking via scanner…';
+        const resp = await fetch(`${API_BASE}/api/scan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: origin }),
+          signal: AbortSignal.timeout(30000),
+        });
+        const data = await resp.json();
+        const secTxt = data.security_txt;
+
+        if (secTxt && secTxt.present) {
+          // File exists but we couldn't read it — show limited info
+          el('loading-msg').classList.add('hidden');
+          el('results-section').classList.remove('hidden');
+          const banner = el('status-banner');
+          banner.className = 'status-banner warn';
+          banner.innerHTML = `<span>⚠</span><div><div>security.txt detected but could not be read directly (CORS restriction)</div><div class="banner-url">${escHtml(secTxt.url || origin + '/.well-known/security.txt')}</div></div>`;
+          const grid = el('fields-grid');
+          grid.innerHTML = '<div class="field-row" style="grid-template-columns:1fr"><div class="field-val">Visit the file URL above and paste its contents using <strong>Paste content</strong> mode for full field analysis.</div></div>';
+          el('rec-section').classList.add('hidden');
+        } else {
+          displayResults({ contact: [], expires: null, encryption: null, policy: null, acknowledgments: null, canonical: [], hiring: [], preferredLanguages: null }, origin, 'No security.txt found at /.well-known/security.txt or /security.txt');
+        }
+      } catch (e) {
+        el('loading-msg').classList.add('hidden');
+        el('results-section').classList.remove('hidden');
+        el('status-banner').className = 'status-banner bad';
+        el('status-banner').innerHTML = `<span>✗</span><div>Could not reach scanner. Check your connection or try paste mode.</div>`;
+        el('fields-grid').innerHTML = '';
+        el('rec-section').classList.add('hidden');
+      }
+    }
+
+    el('scan-btn').disabled = false;
+    el('loading-msg').classList.add('hidden');
+  }
+
+  // ── Validator: paste mode ──────────────────────────────────────────────────
+  function runParsePaste() {
+    const raw = el('paste-input').value.trim();
+    if (!raw) return;
+    const fields = parseSecurityTxt(raw);
+    const missing = [];
+    if (fields.contact.length === 0) missing.push('Contact');
+    if (!fields.expires) missing.push('Expires');
+    const notFoundMsg = missing.length > 0 ? `Missing required field(s): ${missing.join(', ')}` : null;
+    displayResults(fields, null, notFoundMsg);
+  }
+
+  // ── Generator ──────────────────────────────────────────────────────────────
+  function updatePreview() {
+    const lines = [];
+    lines.push('# Generated by securescanr.com');
+    lines.push('# Place this file at /.well-known/security.txt');
+    lines.push('');
+
+    const contact = el('g-contact').value.trim();
+    const expires = el('g-expires').value.trim();
+    const encryption = el('g-encryption').value.trim();
+    const policy = el('g-policy').value.trim();
+    const ack = el('g-acknowledgments').value.trim();
+    const canonical = el('g-canonical').value.trim();
+    const hiring = el('g-hiring').value.trim();
+    const langs = el('g-langs').value.trim();
+
+    if (contact) lines.push(`Contact: ${contact}`);
+    if (expires) lines.push(`Expires: ${expires}T00:00:00.000Z`);
+    if (encryption) lines.push(`Encryption: ${encryption}`);
+    if (policy) lines.push(`Policy: ${policy}`);
+    if (ack) lines.push(`Acknowledgments: ${ack}`);
+    if (canonical) lines.push(`Canonical: ${canonical}`);
+    if (hiring) lines.push(`Hiring: ${hiring}`);
+    if (langs) lines.push(`Preferred-Languages: ${langs}`);
+
+    el('gen-preview').textContent = lines.join('\n');
+  }
+
+  function copyGenerated() {
+    const text = el('gen-preview').textContent;
+    const btn = el('copy-gen-btn');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function downloadGenerated() {
+    const text = el('gen-preview').textContent;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+    a.download = 'security.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  (function init() {
+    // Default Expires = 1 year from today
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
+    el('g-expires').value = d.toISOString().slice(0, 10);
+    updatePreview();
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

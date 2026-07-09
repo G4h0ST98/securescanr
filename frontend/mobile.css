@@ -1,0 +1,570 @@
+/* SecureScanr — Mobile Responsive CSS
+   Loaded on every page. All rules live inside @media blocks only.
+   768px: tablets & large phones | 480px: small phones (≥390px).  */
+
+/* ─── 768px ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+
+  /* ── General section / page spacing ──────────────────────────────────── */
+  section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .page-header {
+    padding-top: 48px;
+    padding-bottom: 36px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* ── Hero (index.html — full-viewport hero) ──────────────────────────── */
+  #hero {
+    min-height: 80vh;
+    padding: 60px 16px 44px;
+  }
+
+  .hero-chips {
+    gap: 8px;
+    margin-top: 32px;
+  }
+
+  /* ── Scan page ───────────────────────────────────────────────────────── */
+  #results-state {
+    padding: 0 12px 40px;
+  }
+
+  /* Grade hero: scan.html / report.html */
+  .grade-hero {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .grade-hero .grade-badge {
+    width: 90px;
+    height: 90px;
+  }
+
+  .grade-hero .grade-letter {
+    font-size: 54px;
+  }
+
+  .grade-hero .grade-score {
+    font-size: 11px;
+  }
+
+  /* Grade actions: make buttons full-width when stacked */
+  .grade-actions {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .btn-pdf,
+  .btn-share {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* Share link */
+  .share-link-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .share-link-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Score bar: let it fill available width */
+  .score-bar-wrap {
+    max-width: 100%;
+  }
+
+  /* Module cards */
+  .module-card {
+    padding: 12px;
+  }
+
+  .module-card-stat {
+    font-size: 16px;
+  }
+
+  /* Collapsible section headers */
+  .section-hdr {
+    padding: 12px 14px;
+  }
+
+  /* Result tables */
+  .result-table td,
+  .result-table th {
+    padding: 8px 10px;
+  }
+
+  /* TLS info-row: let label and value stack */
+  .info-row {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  /* Pro gating unlock row */
+  .unlock-row {
+    max-width: 100%;
+  }
+
+  /* ── Versus page ─────────────────────────────────────────────────────── */
+  .compare-form {
+    padding: 0 8px;
+    margin-top: 20px;
+  }
+
+  .btn-compare {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Comparison table cells — readable on narrow screens */
+  .cmp-cell {
+    min-width: 80px;
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  /* ── Plans page ──────────────────────────────────────────────────────── */
+  .plans-section {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 48px;
+  }
+
+  .ots-strip {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 40px;
+  }
+
+  .ots-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ── Generators page ─────────────────────────────────────────────────── */
+  .tabs-wrap {
+    padding: 0 12px;
+    gap: 4px;
+  }
+
+  .gen-panels {
+    padding: 0 12px;
+    margin-bottom: 48px;
+  }
+
+  /* Output bar: copy button below the code on narrow viewports */
+  .output-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .output-bar .output-code {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .output-bar .copy-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ── PDF / API-key modal ─────────────────────────────────────────────── */
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-box {
+    padding: 22px 16px;
+    max-width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .btn-cancel {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .btn-download {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* ── Dashboard (Pro & Agency) ────────────────────────────────────────── */
+  .page-wrap {
+    padding: 36px 16px 56px;
+  }
+
+  .key-entry-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .manual-key-input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .btn-primary-sm {
+    width: 100%;
+  }
+
+  /* Agency API-key display row */
+  .key-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .key-actions {
+    width: 100%;
+  }
+
+  .btn-icon {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Stats grid: 2 columns on medium-small screens */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* ── API docs ────────────────────────────────────────────────────────── */
+  .base-url-bar {
+    flex-wrap: wrap;
+    font-size: 11px;
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  /* ── World Security Index controls ──────────────────────────────────── */
+  .stats-bar {
+    padding: 0 12px;
+    gap: 6px;
+  }
+
+  /* ── Halloffame / HOF hero padding ───────────────────────────────────── */
+  .hero {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* ── Badge page ──────────────────────────────────────────────────────── */
+  .preview-card {
+    padding: 24px 16px;
+  }
+
+  .domain-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .preview-btn {
+    width: 100%;
+  }
+
+  /* Badge display row: wrap label + badge */
+  .badge-display-row {
+    flex-wrap: wrap;
+  }
+
+  .badge-display-label {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  /* ── Content / article pages ─────────────────────────────────────────── */
+  .content-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .page-inner {
+    padding: 0 4px;
+  }
+
+  /* ── Learn / article layout ──────────────────────────────────────────── */
+  .article-wrap {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    padding: 0.5rem 16px 48px;
+  }
+
+  .article-hero {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* pre / code blocks: constrain width and wrap long lines (e.g. curl commands) */
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+
+  /* directive-table (SecurityHeaders alternative comparison table) */
+  .directive-table {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ── Scan again / ghost button ───────────────────────────────────────── */
+  .scan-again .btn-ghost {
+    width: 100%;
+  }
+
+  /* ── Footer: single-column fallback for any page missing it ─────────── */
+  .footer-inner {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+
+  .footer-right {
+    text-align: center;
+  }
+
+  .footer-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* ── Simulator card ──────────────────────────────────────────────────── */
+  .simulator-body.open {
+    padding: 14px;
+  }
+
+}
+
+/* ─── 480px: small phones (390px – 480px) ────────────────────────────────── */
+@media (max-width: 480px) {
+
+  /* ── Tighter section spacing ─────────────────────────────────────────── */
+  section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .page-header {
+    padding-top: 36px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* ── Hero ────────────────────────────────────────────────────────────── */
+  #hero {
+    padding: 48px 14px 36px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+
+  /* ── Scan results ────────────────────────────────────────────────────── */
+  #results-state {
+    padding: 0 10px 36px;
+  }
+
+  .grade-hero {
+    padding: 16px 12px;
+  }
+
+  .grade-hero .grade-badge {
+    width: 76px;
+    height: 76px;
+  }
+
+  .grade-hero .grade-letter {
+    font-size: 44px;
+  }
+
+  /* Keep module grid at 2 columns on small phones */
+  .module-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+
+  .module-card {
+    padding: 10px;
+  }
+
+  .module-card-stat {
+    font-size: 14px;
+  }
+
+  /* Loading stage labels */
+  .stage-item {
+    font-size: 9px;
+  }
+
+  .stage-check {
+    font-size: 12px;
+  }
+
+  /* Result table: smaller cells */
+  .result-table td,
+  .result-table th {
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  /* TLS info-label: stack above value */
+  .info-label {
+    width: 100%;
+    padding-top: 0;
+    margin-bottom: 2px;
+    flex-shrink: unset;
+  }
+
+  /* ── Plans ───────────────────────────────────────────────────────────── */
+  .plan-card {
+    padding: 24px 16px 20px;
+  }
+
+  /* OTS card: vertical stack */
+  .ots-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 22px 14px;
+    gap: 16px;
+  }
+
+  .ots-left {
+    width: 100%;
+  }
+
+  /* ── Versus comparison table ─────────────────────────────────────────── */
+  .cmp-table td,
+  .cmp-table th {
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+
+  .cmp-cell {
+    font-size: 10px;
+    padding: 3px 5px;
+    min-width: 60px;
+  }
+
+  /* ── Score table (methodology) ───────────────────────────────────────── */
+  .score-table td,
+  .score-table th {
+    padding: 7px 8px;
+    font-size: 12px;
+  }
+
+  /* ── Methodology grade table ─────────────────────────────────────────── */
+  .grade-table {
+    gap: 4px;
+  }
+
+  .grade-table .grade-cell {
+    min-width: 52px;
+    padding: 8px 5px;
+  }
+
+  /* ── Free tools grid (index.html): restore column layout at 480px ───── */
+  /* Overrides the row layout set in index.html's inline 480px block.     */
+  .tool-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tool-icon {
+    margin-bottom: 10px;
+    flex-shrink: 0;
+  }
+
+  /* ── Generators ──────────────────────────────────────────────────────── */
+  .gen-panels {
+    padding: 0 8px;
+  }
+
+  .tab-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* ── Dashboard / agency ──────────────────────────────────────────────── */
+  .page-wrap {
+    padding: 28px 14px 48px;
+  }
+
+  .card {
+    padding: 18px 14px;
+  }
+
+  /* Stats grid: single column on very small phones */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-card {
+    padding: 18px 16px;
+  }
+
+  /* Key display: smaller font to fit on one line */
+  .key-display {
+    font-size: 11px;
+    letter-spacing: 0;
+    padding: 10px 12px;
+  }
+
+  /* ── CTA buttons ─────────────────────────────────────────────────────── */
+  .btn-upgrade {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-ghost {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* ── Footer ──────────────────────────────────────────────────────────── */
+  footer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .footer-bottom {
+    gap: 6px 12px;
+  }
+
+  /* ── Article / content wrap ──────────────────────────────────────────── */
+  .content-wrap {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .article-wrap {
+    padding: 0.5rem 14px 40px;
+  }
+
+}

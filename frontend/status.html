@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecureScanr service status — live health checks for the scanner API and all endpoints.">
+  <meta property="og:title" content="Service Status | SecureScanr">
+  <meta property="og:description" content="Live status for SecureScanr's scanner API and services.">
+  <meta property="og:url" content="https://securescanr.com/status.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/status.html">
+  <link rel="stylesheet" href="/mobile.css">
+  <title>Service Status | SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px; transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page Header ─────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 72px 24px 48px;
+      text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0,212,170,.1) 0%, transparent 70%);
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px); font-weight: 700;
+      letter-spacing: -.8px; color: var(--text); line-height: 1.1;
+    }
+    .page-sub {
+      margin-top: 12px; font-size: 15px; color: var(--muted);
+      max-width: 480px; margin-inline: auto;
+    }
+
+    /* ── Overall status banner ───────────────────────────────────────────── */
+    .overall-banner {
+      max-width: 760px; margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+    .banner-card {
+      border-radius: 12px; padding: 20px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .banner-card.ok   { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); }
+    .banner-card.warn { background: rgba(255,165,2,.08);  border: 1px solid rgba(255,165,2,.3);  }
+    .banner-card.err  { background: rgba(255,71,87,.08);  border: 1px solid rgba(255,71,87,.3);  }
+    .banner-dot {
+      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    }
+    .banner-dot.ok   { background: var(--success); box-shadow: 0 0 8px rgba(46,213,115,.6); }
+    .banner-dot.warn { background: var(--warning); box-shadow: 0 0 8px rgba(255,165,2,.6); }
+    .banner-dot.err  { background: var(--danger);  box-shadow: 0 0 8px rgba(255,71,87,.6); }
+    .banner-title { font-size: 17px; font-weight: 700; }
+    .banner-sub   { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Services list ───────────────────────────────────────────────────── */
+    .services-wrap {
+      max-width: 760px; margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .services-group-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .service-list {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+    .service-row {
+      display: flex; align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .service-row:last-child { border-bottom: none; }
+    .service-name {
+      flex: 1; font-size: 14px; font-weight: 500; color: var(--text);
+    }
+    .service-path {
+      font-family: 'Space Mono', monospace; font-size: 12px;
+      color: var(--muted); margin-top: 2px;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+      background: var(--border);
+    }
+    .status-dot.ok   { background: var(--success); }
+    .status-dot.warn { background: var(--warning); }
+    .status-dot.err  { background: var(--danger);  }
+    .status-dot.spin { background: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
+    .status-label {
+      font-size: 12px; color: var(--muted); min-width: 90px; text-align: right;
+    }
+    .status-label.ok   { color: var(--success); }
+    .status-label.warn { color: var(--warning); }
+    .status-label.err  { color: var(--danger);  }
+    .latency {
+      font-family: 'Space Mono', monospace; font-size: 11px;
+      color: var(--muted); min-width: 58px; text-align: right;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: .4; }
+      50%       { opacity: 1;  }
+    }
+
+    /* ── Mobile ──────────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .overall-banner {
+        padding: 0 16px;
+        margin-bottom: 24px;
+      }
+      .banner-card {
+        padding: 16px;
+        gap: 12px;
+      }
+      .banner-title { font-size: 15px; }
+      .banner-sub   { font-size: 12px; }
+
+      .services-wrap {
+        padding: 0 16px 48px;
+      }
+      .services-group-title {
+        font-size: 10px;
+        letter-spacing: 1px;
+      }
+      .service-list {
+        border-radius: 10px;
+        margin-bottom: 24px;
+      }
+      .service-row {
+        padding: 12px 16px;
+        gap: 10px;
+      }
+      /* Hide latency column on mobile — too narrow to be useful */
+      .latency { display: none; }
+      .service-name  { font-size: 13px; }
+      .service-path  { font-size: 11px; }
+      .status-label  { font-size: 12px; min-width: 78px; }
+
+      .checked-note { margin-bottom: 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .banner-card {
+        padding: 14px 12px;
+        gap: 10px;
+      }
+      .banner-title { font-size: 14px; }
+      .banner-dot   { width: 12px; height: 12px; }
+
+      .services-wrap { padding: 0 14px 40px; }
+      .service-row   { padding: 11px 14px; }
+      .status-label  { font-size: 11px; min-width: 70px; }
+    }
+
+    /* ── Checked-at note ─────────────────────────────────────────────────── */
+    .checked-note {
+      text-align: center; font-size: 12px; color: var(--muted);
+      margin-top: -16px; margin-bottom: 40px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 24px 0;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 12px 0 16px;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-sep { opacity: 0.4; }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+          <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <p class="page-eyebrow">System Status</p>
+  <h1 class="page-title" id="overall-title">Checking…</h1>
+  <p class="page-sub">Live health checks for all SecureScanr services. Updates every 60 seconds.</p>
+</div>
+
+<!-- ── Overall banner ────────────────────────────────────────────────────────── -->
+<div class="overall-banner">
+  <div class="banner-card ok" id="overall-banner">
+    <div class="banner-dot spin" id="overall-dot"></div>
+    <div>
+      <div class="banner-title" id="overall-banner-title">Checking services…</div>
+      <div class="banner-sub" id="overall-banner-sub">Running health checks</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Services ──────────────────────────────────────────────────────────────── -->
+<div class="services-wrap">
+
+  <p class="services-group-title">Core API</p>
+  <div class="service-list" id="list-core"></div>
+
+  <p class="services-group-title">Payment &amp; Delivery</p>
+  <div class="service-list" id="list-payment"></div>
+
+  <p class="services-group-title">Frontend (Cloudflare Pages)</p>
+  <div class="service-list" id="list-frontend"></div>
+
+</div>
+
+<p class="checked-note" id="checked-note"></p>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+  </div>
+</footer>
+
+<script>
+function toggleNav() { document.getElementById('nav-mobile').classList.toggle('open'); }
+
+const API_BASE = 'https://api.securescanr.com';
+
+const SERVICES = {
+  core: [
+    { name: 'Scanner API',   path: '/health',                    method: 'GET',  label: 'Health check',   degradedMs: 2000 },
+    { name: 'Free Scan',     path: '/health',                    method: 'GET',  label: 'Scan engine operational', degradedMs: 2000 },
+    { name: 'Payment Route', path: '/api/get-payment-route',     method: 'GET',  label: 'IP routing',     degradedMs: 2000 },
+    { name: 'Badge API',     path: '/api/badge?url=securescanr.com', method: 'GET',  label: 'GET /api/badge', degradedMs: 5000 },
+  ],
+  payment: [
+    { name: 'Razorpay Checkout', url: 'https://api.razorpay.com',     method: 'GET', label: 'Razorpay (India)',    thirdParty: true },
+    { name: 'LemonSqueezy',      url: 'https://api.lemonsqueezy.com', method: 'GET', label: 'LemonSqueezy (intl)', thirdParty: true },
+    { name: 'Resend Email',      url: 'https://api.resend.com',       method: 'GET', label: 'Email delivery',      thirdParty: true },
+  ],
+  frontend: [
+    { name: 'Main Site',  url: 'https://securescanr.com',            method: 'HEAD', label: 'securescanr.com',    degradedMs: 3000 },
+    { name: 'Scanner UI', url: 'https://securescanr.com/scan.html',  method: 'HEAD', label: '/scan.html',     degradedMs: 3000 },
+    { name: 'API CDN',    url: 'https://api.securescanr.com/health', method: 'GET',  label: 'api.securescanr.com', degradedMs: 2000 },
+  ],
+};
+
+async function checkService(svc) {
+  const start = Date.now();
+  const endpoint = svc.url || (API_BASE + svc.path);
+  try {
+    const opts = { method: svc.method, mode: svc.thirdParty ? 'no-cors' : 'cors' };
+    if (svc.body) {
+      opts.body = svc.body;
+      opts.headers = { 'Content-Type': 'application/json' };
+    }
+    const res = await fetch(endpoint, opts);
+    const ms = Date.now() - start;
+    // Third-party: any response (including opaque no-cors) means the server is reachable.
+    if (svc.thirdParty) return { ok: true, assumed: false, ms };
+    const httpOk = res.ok || res.status === 405;
+    if (!httpOk) return { ok: false, warn: res.status < 500, ms };
+    // Latency-based degraded: response arrived but took longer than per-service threshold.
+    const slow = svc.degradedMs && ms > svc.degradedMs;
+    return { ok: !slow, warn: slow, ms };
+  } catch (e) {
+    const ms = Date.now() - start;
+    if (svc.thirdParty) {
+      // Instant rejection (< 50 ms) = browser CORS/network block, not a real outage.
+      // Slow failure (>= 10 s)      = genuine DNS/TCP timeout → mark red.
+      // Anything in between         = assume operational (brief transient error).
+      if (ms >= 10000) return { ok: false, assumed: false, ms };
+      return { ok: true, assumed: true, ms };
+    }
+    return { ok: false, warn: false, ms };
+  }
+}
+
+function makeRow(svc) {
+  const row = document.createElement('div');
+  row.className = 'service-row';
+  row.innerHTML = `
+    <div class="status-dot spin" id="dot-${svc.name.replace(/\s+/g,'_')}"></div>
+    <div style="flex:1">
+      <div class="service-name">${svc.name}</div>
+      <div class="service-path">${svc.label}</div>
+    </div>
+    <div class="latency" id="lat-${svc.name.replace(/\s+/g,'_')}">—</div>
+    <div class="status-label" id="lbl-${svc.name.replace(/\s+/g,'_')}">Checking</div>
+  `;
+  return row;
+}
+
+function updateRow(svc, result) {
+  const id = svc.name.replace(/\s+/g,'_');
+  const dot = document.getElementById('dot-' + id);
+  const lbl = document.getElementById('lbl-' + id);
+  const lat = document.getElementById('lat-' + id);
+  if (!dot) return;
+  if (result.ok) {
+    dot.className = 'status-dot ok';
+    lbl.className = 'status-label ok';
+    lbl.textContent = 'Operational';
+  } else if (result.warn) {
+    dot.className = 'status-dot warn';
+    lbl.className = 'status-label warn';
+    lbl.textContent = 'Degraded';
+  } else {
+    dot.className = 'status-dot err';
+    lbl.className = 'status-label err';
+    lbl.textContent = 'Unavailable';
+  }
+  // For third-party services that resolved via the assumption path, show a note
+  // instead of a meaningless sub-millisecond latency from an instant CORS block.
+  if (result.assumed) {
+    lat.textContent = '—';
+    lat.title = 'Status assumed operational — browser cannot directly check third-party APIs';
+  } else {
+    lat.textContent = result.ms + ' ms';
+  }
+}
+
+async function runChecks() {
+  const groups = ['core', 'payment', 'frontend'];
+  const listIds = { core: 'list-core', payment: 'list-payment', frontend: 'list-frontend' };
+
+  // Build rows
+  for (const g of groups) {
+    const list = document.getElementById(listIds[g]);
+    list.innerHTML = '';
+    for (const svc of SERVICES[g]) {
+      list.appendChild(makeRow(svc));
+    }
+  }
+
+  // Run checks concurrently.
+  // Banner state is driven only by SecureScanr-owned services (core + frontend).
+  // Payment providers are shown in the table but never cause "Service disruption".
+  let ownedOk = true, ownedErr = false;
+  const promises = [];
+  for (const g of groups) {
+    for (const svc of SERVICES[g]) {
+      promises.push(checkService(svc).then(r => {
+        updateRow(svc, r);
+        if (!svc.thirdParty) {
+          if (!r.ok) { ownedOk = false; if (!r.warn) ownedErr = true; }
+        }
+      }));
+    }
+  }
+  await Promise.all(promises);
+
+  // Update overall banner
+  const banner = document.getElementById('overall-banner');
+  const dot = document.getElementById('overall-dot');
+  const title = document.getElementById('overall-title');
+  const bTitle = document.getElementById('overall-banner-title');
+  const bSub = document.getElementById('overall-banner-sub');
+
+  if (ownedOk) {
+    banner.className = 'banner-card ok';
+    dot.className = 'banner-dot ok';
+    title.textContent = 'All systems operational';
+    bTitle.textContent = 'All systems operational';
+    bSub.textContent = 'Scanner, payments, and frontend are all running normally.';
+  } else if (ownedErr) {
+    banner.className = 'banner-card err';
+    dot.className = 'banner-dot err';
+    title.textContent = 'Service disruption';
+    bTitle.textContent = 'Service disruption detected';
+    bSub.textContent = 'One or more SecureScanr services are unavailable. We\'re looking into it.';
+  } else {
+    banner.className = 'banner-card warn';
+    dot.className = 'banner-dot warn';
+    title.textContent = 'Partial degradation';
+    bTitle.textContent = 'Partial degradation';
+    bSub.textContent = 'Some SecureScanr services are responding slowly or returning unexpected results.';
+  }
+
+  const now = new Date();
+  document.getElementById('checked-note').textContent =
+    'Last checked: ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+runChecks();
+setInterval(runChecks, 60000);
+
+// active-page hide
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

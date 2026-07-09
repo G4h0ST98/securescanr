@@ -1,0 +1,21 @@
+name: Refresh World Security Index
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Every Monday at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger World Index refresh
+        run: |
+          curl -X POST https://api.webaudit.in/api/admin/refresh-world-index \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --fail \
+            --silent \
+            --show-error \
+            --max-time 30 \
+            --retry 3 \
+            --retry-delay 10

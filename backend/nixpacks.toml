@@ -1,0 +1,19 @@
+# Railway build config — installs WeasyPrint's system dependencies via Nix.
+# WeasyPrint requires Cairo, Pango, and GLib for PDF rendering.
+
+[phases.setup]
+nixPkgs = [
+  "cairo",
+  "pango",
+  "glib",
+  "gobject-introspection",
+  "libffi",
+  "shared-mime-info",
+  "gdk-pixbuf",
+]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120 --preload"

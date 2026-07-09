@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shared SecureScanr security report — HTTP headers, TLS, DNS, cookies, and more.">
+  <title>Security Report — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --radius:  10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    code { font-family: 'Space Mono', 'SFMono-Regular', Consolas, monospace; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Shared-report banner ─────────────────────────────────────────────── */
+    .report-banner {
+      background: linear-gradient(135deg, rgba(0,212,170,.07) 0%, rgba(0,212,170,.03) 100%);
+      border-bottom: 1px solid rgba(0,212,170,.2);
+      padding: 10px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .report-banner strong { color: var(--accent); }
+
+    /* ── Results area ─────────────────────────────────────────────────────── */
+    #report-content { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
+
+    /* ── Grade hero ─────────────────────────────────────────────────────── */
+    .grade-hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 28px;
+      padding: 28px 32px;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+    .grade-badge {
+      flex-shrink: 0;
+      width: 120px; height: 120px;
+      border: 3px solid;
+      border-radius: 12px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .grade-letter { font-family: 'Space Mono', monospace; font-size: 72px; font-weight: 700; line-height: 1; }
+    .grade-score  { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; margin-top: 4px; opacity: .85; }
+    .grade-ap, .grade-a  { border-color: #2ed573; color: #2ed573; box-shadow: 0 0 24px rgba(46,213,115,.3); }
+    .grade-b             { border-color: #00d4aa; color: #00d4aa; box-shadow: 0 0 24px rgba(0,212,170,.3); }
+    .grade-c             { border-color: #ffa502; color: #ffa502; box-shadow: 0 0 24px rgba(255,165,2,.3); }
+    .grade-d             { border-color: #ff6b35; color: #ff6b35; box-shadow: 0 0 24px rgba(255,107,53,.3); }
+    .grade-f             { border-color: #ff4757; color: #ff4757; box-shadow: 0 0 24px rgba(255,71,87,.3); }
+    .grade-info { flex: 1; min-width: 180px; }
+    .grade-scanned-url { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--text); word-break: break-all; margin-bottom: 4px; font-weight: 700; }
+    .grade-context { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .grade-summary-text { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .score-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; max-width: 260px; }
+    .score-bar { height: 100%; border-radius: 2px; }
+
+    /* ── Module cards ─────────────────────────────────────────────────────── */
+    .module-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 12px; margin-top: 16px;
+    }
+    .module-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px;
+      border-left: 3px solid var(--border);
+    }
+    .module-card.status-good   { border-left-color: var(--success); }
+    .module-card.status-warn   { border-left-color: var(--warning); }
+    .module-card.status-danger { border-left-color: var(--danger); }
+    .module-card-icon  { font-size: 22px; margin-bottom: 8px; }
+    .module-card-name  { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .module-card-stat  { font-size: 18px; font-weight: 700; margin-top: 4px; }
+    .module-card-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .stat-good   { color: var(--success); }
+    .stat-warn   { color: var(--warning); }
+    .stat-danger { color: var(--danger); }
+
+    /* ── Detail sections ──────────────────────────────────────────────────── */
+    .detail-sections { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .detail-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .section-hdr {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 20px; cursor: pointer; user-select: none;
+      border-bottom: 1px solid transparent;
+      transition: background .15s;
+    }
+    .section-hdr:hover { background: rgba(255,255,255,.03); }
+    .section-hdr.open  { border-bottom-color: var(--border); }
+    .section-hdr-icon  { font-size: 18px; }
+    .section-hdr-title { font-size: 15px; font-weight: 600; flex: 1; }
+    .section-issues-chip { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; border: 1px solid; }
+    .chip-danger { background: rgba(255,71,87,.1); color: var(--danger); border-color: rgba(255,71,87,.3); }
+    .chip-warn   { background: rgba(255,165,2,.1);  color: var(--warning); border-color: rgba(255,165,2,.3); }
+    .chip-good   { background: rgba(46,213,115,.1); color: var(--success); border-color: rgba(46,213,115,.3); }
+    .toggle-caret { font-size: 10px; color: var(--muted); transition: transform .2s; }
+    .toggle-caret.open { transform: rotate(180deg); }
+    .section-body { display: none; }
+    .section-body.open { display: block; overflow-x: auto; }
+
+    /* ── Tables ───────────────────────────────────────────────────────────── */
+    .result-table { width: 100%; border-collapse: collapse; }
+    .result-table th {
+      background: rgba(255,255,255,.03);
+      font-size: 11px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .5px;
+      padding: 10px 16px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 13.5px; }
+    .result-table tr:last-child td { border-bottom: none; }
+    .result-table tr:hover td { background: rgba(255,255,255,.02); }
+    .hdr-name { font-weight: 600; font-size: 13px; }
+
+    /* Severity chip */
+    .sev-chip { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+    .sev-critical  { background: rgba(255,71,87,.15);  color: #ff6b7a; }
+    .sev-important { background: rgba(255,165,2,.15);  color: #ffa502; }
+    .sev-minor     { background: rgba(0,212,170,.12);  color: var(--accent); }
+
+    /* Status badge */
+    .status-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 4px; white-space: nowrap; }
+    .s-good     { background: rgba(46,213,115,.12);  color: var(--success); }
+    .s-missing  { background: rgba(255,71,87,.12);   color: var(--danger); }
+    .s-weak     { background: rgba(255,165,2,.12);   color: var(--warning); }
+    .s-invalid  { background: rgba(255,165,2,.12);   color: var(--warning); }
+    .s-insecure { background: rgba(255,71,87,.12);   color: var(--danger); }
+
+    /* Points chip */
+    .pts-chip { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; font-family: 'Space Mono', monospace; }
+    .pts-bad  { background: rgba(255,71,87,.15);   color: var(--danger); }
+    .pts-ok   { background: rgba(46,213,115,.12);  color: var(--success); }
+
+    .dim { color: var(--muted); font-size: 13px; margin-top: 2px; }
+    .note-weak { color: var(--warning); font-size: 12.5px; margin-top: 3px; }
+    .header-val { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); word-break: break-all; }
+    .fix-row { margin-top: 6px; display: flex; align-items: flex-start; gap: 6px; }
+    .fix-code {
+      flex: 1; display: block;
+      background: rgba(0,212,170,.06); border-left: 3px solid var(--accent);
+      padding: 6px 10px; font-size: 11.5px; color: var(--accent);
+      word-break: break-all; border-radius: 0 4px 4px 0;
+    }
+    .copy-btn {
+      flex-shrink: 0; height: 30px; padding: 0 10px;
+      background: rgba(0,212,170,.1); color: var(--accent);
+      border: 1px solid rgba(0,212,170,.3); border-radius: 4px;
+      font-size: 12px; font-weight: 600;
+      transition: background .15s;
+    }
+    .copy-btn:hover { background: rgba(0,212,170,.2); }
+    .copy-btn.copied { background: rgba(46,213,115,.15); color: var(--success); border-color: rgba(46,213,115,.3); }
+
+    /* TLS specific */
+    .info-grid { display: flex; flex-direction: column; }
+    .info-row { display: flex; padding: 9px 16px; border-bottom: 1px solid var(--border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-size: 11px; font-weight: 600; color: var(--muted); width: 130px; flex-shrink: 0; text-transform: uppercase; letter-spacing: .3px; padding-top: 2px; }
+    .info-val   { font-size: 13.5px; color: var(--text); }
+    .info-val.mono { font-family: 'Space Mono', monospace; font-size: 12px; }
+    .info-val.ok     { color: var(--success); font-weight: 600; }
+    .info-val.warn   { color: var(--warning); font-weight: 600; }
+    .info-val.danger { color: var(--danger);  font-weight: 600; }
+    .section-sub-hdr { padding: 8px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); background: rgba(255,255,255,.02); border-bottom: 1px solid var(--border); }
+    .deduction-list { padding: 12px 16px; }
+    .deduction-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13.5px; border-bottom: 1px dashed var(--border); }
+    .deduction-item:last-child { border-bottom: none; }
+    .tls-error-box { margin: 16px; padding: 14px 16px; background: rgba(255,71,87,.08); border-left: 4px solid var(--danger); border-radius: 6px; color: #ff8088; font-size: 13.5px; }
+    .tls-ok-box    { margin: 16px; padding: 14px 16px; background: rgba(46,213,115,.08); border-left: 4px solid var(--success); border-radius: 6px; color: #2ed573; font-size: 13.5px; }
+
+    /* Cookie */
+    .flag-ok  { color: var(--success); font-weight: 600; font-size: 13px; }
+    .flag-bad { color: var(--danger);  font-weight: 600; font-size: 13px; }
+    .issue-list { margin: 4px 0 0 14px; font-size: 12px; color: var(--danger); opacity: .85; }
+
+    /* ── CTA section ──────────────────────────────────────────────────────── */
+    .report-cta-section {
+      margin-top: 40px;
+      background: linear-gradient(135deg, rgba(0,212,170,.08) 0%, rgba(0,212,170,.03) 100%);
+      border: 1px solid rgba(0,212,170,.2);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+    }
+    .report-cta-section h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .report-cta-section p  { font-size: 14px; color: var(--muted); margin-bottom: 20px; max-width: 420px; margin-left: auto; margin-right: auto; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #0a0b0d;
+      border: none; border-radius: 8px;
+      padding: 13px 28px; font-size: 15px; font-weight: 700;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-cta:hover { opacity: .88; color: #0a0b0d; }
+
+    /* ── Error / Loading states ───────────────────────────────────────────── */
+    #loading-state, #error-state { max-width: 600px; margin: 80px auto; padding: 0 24px; text-align: center; }
+    .loading-ring { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+    .error-box { background: rgba(255,71,87,.08); border: 1px solid rgba(255,71,87,.3); border-left: 3px solid var(--danger); border-radius: var(--radius); padding: 20px 24px; text-align: left; }
+    .error-box h3 { font-size: 16px; color: var(--danger); margin-bottom: 6px; }
+    .error-box p  { font-size: 13px; color: var(--muted); }
+    .btn-scan { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; background: var(--accent); color: #0a0b0d; border: none; border-radius: 7px; padding: 10px 20px; font-size: 14px; font-weight: 700; text-decoration: none; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { background: #111318; border-top: 1px solid rgba(255,255,255,0.08); padding: 0; font-size: 13px; color: var(--muted); margin-top: auto; }
+    .footer-bottom { width: 100%; max-width: 1100px; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; text-align: center; font-size: 12px; color: var(--muted); }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: .4; }
+
+    /* Utils */
+    .hidden { display: none !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 700px) {
+      .module-grid { grid-template-columns: repeat(2, 1fr); }
+      .grade-hero  { flex-direction: column; align-items: flex-start; gap: 18px; }
+    }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Shared report banner ──────────────────────────────────────────────────── -->
+<div class="report-banner">
+  <strong>Shared Report</strong> — Generated by SecureScanr · View-only snapshot
+</div>
+
+<!-- ── States ────────────────────────────────────────────────────────────────── -->
+<div id="loading-state">
+  <div class="loading-ring"></div>
+  <p style="color:var(--muted);font-size:14px">Loading security report…</p>
+</div>
+
+<div id="error-state" class="hidden">
+  <div class="error-box">
+    <h3 id="error-title">Report Not Found</h3>
+    <p id="error-msg">This report may have expired or the link is invalid.</p>
+    <a href="scan.html" class="btn-scan">Run a new scan →</a>
+  </div>
+</div>
+
+<div id="report-content" class="hidden">
+  <div id="grade-hero" class="grade-hero"></div>
+  <div id="module-cards" class="module-grid" style="margin-top:16px"></div>
+  <div id="detail-sections" class="detail-sections"></div>
+  <div class="report-cta-section">
+    <h3>Scan your own site</h3>
+    <p>Get an instant security report for any domain — no login required. PDF export for client reports with Pro.</p>
+    <a href="scan.html" class="btn-cta">Scan now — it's free →</a>
+  </div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  const API_BASE = (
+    location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+  ) ? 'http://localhost:5000' : 'https://api.securescanr.com';
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  function esc(v) {
+    if (v == null) return '—';
+    return String(v)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function show(id) { document.getElementById(id).classList.remove('hidden'); }
+  function hide(id) { document.getElementById(id).classList.add('hidden'); }
+  function el(id)   { return document.getElementById(id); }
+
+  function gradeCls(g) {
+    return { 'A+': 'grade-ap', A: 'grade-a', B: 'grade-b', C: 'grade-c', D: 'grade-d', F: 'grade-f' }[g] || 'grade-f';
+  }
+  function gradeColor(g) {
+    return { 'A+': '#2ed573', A: '#2ed573', B: '#00d4aa', C: '#ffa502', D: '#ff6b35', F: '#ff4757' }[g] || '#ff4757';
+  }
+  function statusBadge(s) {
+    const m = { good:['s-good','✓ Good'], missing:['s-missing','✗ Missing'], weak:['s-weak','⚠ Weak'], invalid:['s-invalid','⚠ Invalid'], insecure:['s-insecure','✗ Insecure'] };
+    const [cls, label] = m[s] || ['s-weak', esc(s)];
+    return `<span class="status-badge ${cls}">${label}</span>`;
+  }
+  function sevChip(sev) {
+    const cls = { critical:'sev-critical', important:'sev-important', minor:'sev-minor' }[sev] || '';
+    return cls ? `<span class="sev-chip ${cls}">${esc(sev)}</span>` : '';
+  }
+  function ptsChip(n) {
+    if (n > 0) return `<span class="pts-chip pts-bad">−${n} pts</span>`;
+    return `<span class="pts-chip pts-ok">+0</span>`;
+  }
+  function fixBox(text) {
+    return `<div class="fix-row">
+      <code class="fix-code">${esc(text)}</code>
+      <button class="copy-btn" onclick="copyFix(this)" title="Copy">⎘</button>
+    </div>`;
+  }
+  function flag(ok, trueLabel, falseLabel) {
+    return ok
+      ? `<span class="flag-ok">✓ ${esc(trueLabel || 'Yes')}</span>`
+      : `<span class="flag-bad">✗ ${esc(falseLabel || 'No')}</span>`;
+  }
+  function issueChip(n) {
+    if (n === 0) return '<span class="section-issues-chip chip-good">All good</span>';
+    if (n <= 2)  return `<span class="section-issues-chip chip-warn">${n} issue${n>1?'s':''}</span>`;
+    return `<span class="section-issues-chip chip-danger">${n} issue${n>1?'s':''}</span>`;
+  }
+  function copyFix(btn) {
+    const code = btn.previousElementSibling.textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = '✓'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘'; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = code; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ── Section scaffold ────────────────────────────────────────────────────────
+  function makeSection(id, icon, title, chipHtml, bodyHtml, startOpen) {
+    const div = document.createElement('div');
+    div.className = 'detail-section';
+    div.id = id;
+    div.innerHTML = `
+      <div class="section-hdr${startOpen?' open':''}" onclick="toggleSection('${id}')">
+        <span class="section-hdr-icon">${icon}</span>
+        <span class="section-hdr-title">${esc(title)}</span>
+        ${chipHtml}
+        <span class="toggle-caret${startOpen?' open':''}">▼</span>
+      </div>
+      <div class="section-body${startOpen?' open':''}">${bodyHtml}</div>`;
+    return div;
+  }
+  function toggleSection(id) {
+    const sec  = el(id);
+    const hdr  = sec.querySelector('.section-hdr');
+    const body = sec.querySelector('.section-body');
+    const car  = sec.querySelector('.toggle-caret');
+    const open = body.classList.toggle('open');
+    hdr.classList.toggle('open', open);
+    car.classList.toggle('open', open);
+  }
+
+  // ── Grade hero ──────────────────────────────────────────────────────────────
+  function renderGradeHero(data) {
+    const g = data.grade, s = data.score;
+    const color = gradeColor(g);
+    const scanDate = data.created_at
+      ? new Date(data.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '—';
+    const expDate = data.expires_at
+      ? new Date(data.expires_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+      : '—';
+
+    el('grade-hero').innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:8px">
+        <div class="grade-badge ${gradeCls(g)}">
+          <div class="grade-letter">${esc(g)}</div>
+          <div class="grade-score">${s} / 100</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;max-width:130px">Most sites score D or F. That's normal.</div>
+      </div>
+      <div class="grade-info">
+        <div class="grade-scanned-url">${esc(data.final_url || data.url)}</div>
+        <div class="grade-context">Scanned ${esc(scanDate)} · Link expires ${esc(expDate)} · SecureScanr</div>
+        <div class="grade-summary-text">${esc(data.summary ? data.summary.split('|')[0].trim() : '')}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar" style="width:${s}%;background:${color}"></div>
+        </div>
+      </div>`;
+  }
+
+  // ── Module cards ────────────────────────────────────────────────────────────
+  function renderModuleCards(data) {
+    const headers = data.headers  || {};
+    const tls     = data.tls      || {};
+    const dns     = data.dns      || {};
+    const ck      = data.cookies  || {};
+    const co      = data.cross_origin || {};
+
+    const hIssues  = Object.values(headers).filter(h => h.status !== 'good').length;
+    const tlsOk    = tls.supported && (!tls.deductions || tls.deductions.length === 0);
+    const tlsProto = (tls.connection || {}).protocol || '—';
+    const tlsDays  = (tls.certificate || {}).days_remaining;
+    const tlsSub   = tls.supported ? `${tlsProto}${tlsDays != null ? ' · ' + tlsDays + 'd' : ''}` : 'No HTTPS';
+    const dnsIssues = ((dns.spf || {}).status !== 'good' ? 1 : 0) + ((dns.dmarc || {}).status !== 'good' ? 1 : 0);
+    const ckIssues  = (ck.cookies || []).filter(c => c.deduction > 0).length;
+    const ckCount   = ck.count || (ck.cookies || []).length;
+    const coHeaders = co.headers || {};
+    const coIssues  = Object.values(coHeaders).filter(h => h.status !== 'good').length;
+
+    function cardStatus(n) { return n === 0 ? 'status-good' : (n <= 2 ? 'status-warn' : 'status-danger'); }
+    function statCls(n)    { return n === 0 ? 'stat-good'   : (n <= 2 ? 'stat-warn'   : 'stat-danger'); }
+
+    function card(icon, name, statusCls, statCls, stat, sub) {
+      return `<div class="module-card ${statusCls}">
+        <div class="module-card-icon">${icon}</div>
+        <div class="module-card-name">${name}</div>
+        <div class="module-card-stat ${statCls}">${stat}</div>
+        <div class="module-card-sub">${sub}</div>
+      </div>`;
+    }
+
+    el('module-cards').innerHTML = `
+      ${card('🔒','Headers',    cardStatus(hIssues),   statCls(hIssues),
+             hIssues===0?'All good':`${hIssues} issue${hIssues>1?'s':''}`,
+             hIssues===0?'6/6 present':`${6-hIssues}/6 present`)}
+      ${card('🛡','TLS / SSL', tlsOk?'status-good':'status-danger',
+             tlsOk?'stat-good':'stat-danger',
+             tlsOk?'Passed':(tls.supported?'Issues found':'No HTTPS'),
+             tlsSub)}
+      ${card('📡','DNS',       cardStatus(dnsIssues), statCls(dnsIssues),
+             dnsIssues===0?'All good':`${dnsIssues} issue${dnsIssues>1?'s':''}`,
+             'SPF &amp; DMARC')}
+      ${card('🍪','Cookies',   cardStatus(ckIssues),  statCls(ckIssues),
+             ckCount===0?'No cookies':(ckIssues===0?'All secure':`${ckIssues} insecure`),
+             `${ckCount} cookie${ckCount!==1?'s':''}`)}
+      ${card('🔗','Cross-Origin', cardStatus(coIssues), statCls(coIssues),
+             coIssues===0?'All set':`${coIssues} issue${coIssues>1?'s':''}`,
+             'COOP · COEP · CORP')}`;
+  }
+
+  // ── HTTP Headers section ────────────────────────────────────────────────────
+  function renderHeadersSection(headers) {
+    if (!headers) return makeSection('section-headers','🔒','HTTP Security Headers','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const issues = Object.values(headers).filter(h => h.status !== 'good').length;
+    const rows = Object.entries(headers).map(([name, info]) => {
+      const { status, deduction, severity, explanation, fix, value, note } = info;
+      return `<tr>
+        <td class="hdr-name">${esc(name)}${sevChip(severity)}</td>
+        <td style="white-space:nowrap">${statusBadge(status)}</td>
+        <td style="white-space:nowrap">${ptsChip(deduction)}</td>
+        <td>
+          <p class="dim">${esc(explanation)}</p>
+          ${value ? `<code class="header-val">${esc(value)}</code>` : ''}
+          ${note  ? `<p class="note-weak">${esc(note)}</p>` : ''}
+          ${fix ? fixBox(fix) : ''}
+        </td>
+      </tr>`;
+    }).join('');
+
+    const body = `<table class="result-table">
+      <thead><tr>
+        <th style="width:24%">Header</th><th style="width:12%">Status</th>
+        <th style="width:10%">Impact</th><th>Details &amp; Fix</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+    return makeSection('section-headers','🔒','HTTP Security Headers', issueChip(issues), body, issues > 0);
+  }
+
+  // ── TLS section ─────────────────────────────────────────────────────────────
+  function renderTLSSection(tls) {
+    if (!tls) return makeSection('section-tls','🛡','TLS / SSL Certificate','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const issues = (tls.deductions || []).length;
+
+    if (!tls.supported) {
+      return makeSection('section-tls','🛡','TLS / SSL Certificate', issueChip(1),
+        `<div class="tls-error-box"><strong>HTTPS not available.</strong> ${esc(tls.error || 'The server did not respond to HTTPS.')} All traffic is transmitted in plaintext.</div>`,
+        true);
+    }
+    if (tls.error && !tls.certificate) {
+      return makeSection('section-tls','🛡','TLS / SSL Certificate', issueChip(1),
+        `<div class="tls-error-box"><strong>TLS Error:</strong> ${esc(tls.error)}</div>`, true);
+    }
+
+    const cert = tls.certificate || {};
+    const conn = tls.connection  || {};
+    const days = cert.days_remaining;
+    let daysClass = 'ok', daysLabel = `${days} days`;
+    if (cert.is_expired)              { daysClass = 'danger'; daysLabel = 'EXPIRED'; }
+    else if (days != null && days < 30) { daysClass = 'warn'; daysLabel = `${days} days (renew soon)`; }
+
+    const deductionRows = (tls.deductions || []).length
+      ? (tls.deductions || []).map(d =>
+          `<div class="deduction-item">
+            <span style="color:var(--danger);font-size:16px">⚠</span>
+            <span>${esc(d.reason)}</span>
+            <span class="pts-chip pts-bad" style="margin-left:auto">−${d.points} pts</span>
+          </div>`).join('')
+      : `<div class="deduction-item"><span style="color:var(--success)">✓</span><span>No TLS issues detected</span></div>`;
+
+    const sanHtml = (cert.san || []).map(s => `<code style="margin-right:6px;font-size:12px">${esc(s)}</code>`).join('') || '—';
+
+    const body = `
+      <div class="section-sub-hdr">Certificate</div>
+      <div class="info-grid">
+        <div class="info-row"><span class="info-label">Subject</span><span class="info-val">${esc(cert.subject)}</span></div>
+        <div class="info-row"><span class="info-label">Issuer</span><span class="info-val">${esc(cert.issuer)}</span></div>
+        <div class="info-row"><span class="info-label">Valid From</span><span class="info-val">${esc((cert.valid_from||'').slice(0,10))}</span></div>
+        <div class="info-row"><span class="info-label">Valid Until</span><span class="info-val ${daysClass}">${esc((cert.valid_until||'').slice(0,10))}</span></div>
+        <div class="info-row"><span class="info-label">Days Remaining</span><span class="info-val ${daysClass}">${esc(daysLabel)}</span></div>
+        <div class="info-row"><span class="info-label">Self-Signed</span><span class="info-val ${cert.is_self_signed?'danger':'ok'}">${cert.is_self_signed?'Yes — untrusted':'No'}</span></div>
+      </div>
+      <div class="info-row" style="padding:10px 16px;border-bottom:1px solid var(--border)"><span class="info-label">SANs</span><span class="info-val">${sanHtml}</span></div>
+      <div class="section-sub-hdr">Connection</div>
+      <div class="info-grid">
+        <div class="info-row"><span class="info-label">Protocol</span><span class="info-val mono">${esc(conn.protocol)}</span></div>
+        <div class="info-row"><span class="info-label">Cipher Suite</span><span class="info-val mono">${esc(conn.cipher)}</span></div>
+        <div class="info-row"><span class="info-label">Key Bits</span><span class="info-val">${esc(conn.bits)}</span></div>
+      </div>
+      <div class="section-sub-hdr">Assessment</div>
+      <div class="deduction-list">${deductionRows}</div>`;
+
+    return makeSection('section-tls','🛡','TLS / SSL Certificate', issueChip(issues), body, issues > 0);
+  }
+
+  // ── DNS section ─────────────────────────────────────────────────────────────
+  function renderDNSSection(dns) {
+    if (!dns) return makeSection('section-dns','📡','DNS Email Security','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const spf   = dns.spf   || {};
+    const dmarc = dns.dmarc || {};
+    const issues = (spf.status !== 'good' ? 1 : 0) + (dmarc.status !== 'good' ? 1 : 0);
+
+    function recordRow(label, rec) {
+      const policy = rec.policy_strength
+        ? `${esc(rec.policy)} <span style="color:var(--muted);font-size:12px">(${esc(rec.policy_strength)})</span>`
+        : (rec.policy ? esc(rec.policy) : '');
+      return `<tr>
+        <td style="font-weight:700;font-size:14px;white-space:nowrap">${esc(label)}</td>
+        <td style="white-space:nowrap">${statusBadge(rec.status||'missing')}<br>${ptsChip(rec.deduction||0)}</td>
+        <td>
+          <p class="dim">${esc(rec.explanation)}</p>
+          ${rec.record ? `<code class="header-val">${esc(rec.record)}</code>` : ''}
+          ${policy ? `<p style="margin-top:4px;font-size:13px">Policy: <strong>${policy}</strong></p>` : ''}
+          ${rec.fix ? fixBox(rec.fix) : ''}
+        </td>
+      </tr>`;
+    }
+
+    const body = `<table class="result-table">
+      <thead><tr>
+        <th style="width:10%">Record</th><th style="width:14%">Status</th><th>Details &amp; Fix</th>
+      </tr></thead>
+      <tbody>${recordRow('SPF', spf)}${recordRow('DMARC', dmarc)}</tbody>
+    </table>`;
+
+    return makeSection('section-dns','📡','DNS Email Security', issueChip(issues), body, issues > 0);
+  }
+
+  // ── Cookies section ─────────────────────────────────────────────────────────
+  function renderCookiesSection(ck) {
+    if (!ck) return makeSection('section-cookies','🍪','Cookie Security','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const cookies = ck.cookies || [];
+    const issues  = cookies.filter(c => c.deduction > 0).length;
+
+    if (cookies.length === 0) {
+      return makeSection('section-cookies','🍪','Cookie Security',
+        '<span class="section-issues-chip chip-good">No cookies</span>',
+        '<p class="dim" style="padding:16px">No cookies were set by this page.</p>', false);
+    }
+
+    const rows = cookies.map(c => {
+      const samesite = c.samesite || '';
+      const samesiteOk = ['strict','lax'].includes(samesite.toLowerCase());
+      const issueList = (c.issues || []).length
+        ? `<ul class="issue-list">${c.issues.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>` : '';
+      return `<tr>
+        <td><code style="font-size:13px;font-weight:700">${esc(c.name)}</code></td>
+        <td style="white-space:nowrap">${statusBadge(c.status||'good')}<br>${ptsChip(c.deduction||0)}</td>
+        <td>${flag(c.secure,'Yes','No')}</td>
+        <td>${flag(c.httponly,'Yes','No')}</td>
+        <td>${flag(samesiteOk, samesite||'Yes', samesite||'Not set')}</td>
+        <td>${issueList}</td>
+      </tr>`;
+    }).join('');
+
+    const body = `<table class="result-table">
+      <thead><tr>
+        <th style="width:18%">Cookie</th><th style="width:13%">Status</th>
+        <th style="width:9%">Secure</th><th style="width:10%">HttpOnly</th>
+        <th style="width:12%">SameSite</th><th>Issues</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+    return makeSection('section-cookies','🍪','Cookie Security', issueChip(issues), body, issues > 0);
+  }
+
+  // ── Cross-Origin section ─────────────────────────────────────────────────────
+  function renderCrossOriginSection(co) {
+    if (!co) return makeSection('section-cross-origin','🔗','Cross-Origin Isolation','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const headers = co.headers || {};
+    const issues  = Object.values(headers).filter(h => h.status !== 'good').length;
+
+    const rows = Object.entries(headers).map(([name, info]) => {
+      const { status, deduction, severity, explanation, fix, value } = info;
+      return `<tr>
+        <td class="hdr-name">${esc(name)}${sevChip(severity)}</td>
+        <td style="white-space:nowrap">${statusBadge(status)}</td>
+        <td style="white-space:nowrap">${ptsChip(deduction)}</td>
+        <td>
+          <p class="dim">${esc(explanation)}</p>
+          ${value ? `<code class="header-val">${esc(value)}</code>` : ''}
+          ${fix ? fixBox(fix) : ''}
+        </td>
+      </tr>`;
+    }).join('');
+
+    const body = `<table class="result-table">
+      <thead><tr>
+        <th style="width:28%">Header</th><th style="width:12%">Status</th>
+        <th style="width:10%">Impact</th><th>Details &amp; Fix</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+    return makeSection('section-cross-origin','🔗','Cross-Origin Isolation', issueChip(issues), body, issues > 0);
+  }
+
+  // ── Render all ──────────────────────────────────────────────────────────────
+  function renderReport(data) {
+    renderGradeHero(data);
+    renderModuleCards(data);
+
+    const container = el('detail-sections');
+    container.innerHTML = '';
+    container.appendChild(renderHeadersSection(data.headers));
+    container.appendChild(renderTLSSection(data.tls));
+    container.appendChild(renderDNSSection(data.dns));
+    container.appendChild(renderCookiesSection(data.cookies));
+    container.appendChild(renderCrossOriginSection(data.cross_origin));
+
+    // Set page title to scanned domain
+    const host = (data.final_url || data.url || '').replace(/^https?:\/\//, '').split('/')[0];
+    if (host) document.title = `${host} — Security Report · SecureScanr`;
+  }
+
+  // ── Fetch and show ──────────────────────────────────────────────────────────
+  (async function () {
+    const params = new URLSearchParams(window.location.search);
+    const shareId = params.get('id');
+
+    if (!shareId) {
+      hide('loading-state');
+      el('error-title').textContent = 'No Report ID';
+      el('error-msg').textContent   = 'The URL is missing a report ID. Check the link and try again.';
+      show('error-state');
+      return;
+    }
+
+    try {
+      const res  = await fetch(`${API_BASE}/api/share/${encodeURIComponent(shareId)}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      hide('loading-state');
+      renderReport(data);
+      show('report-content');
+    } catch (err) {
+      hide('loading-state');
+      const expired = /expired|not found/i.test(err.message || '');
+      el('error-title').textContent = expired ? 'Report Expired' : 'Could Not Load Report';
+      el('error-msg').textContent   = expired
+        ? 'This shared report has expired (links are valid for 7 days). Run a fresh scan below.'
+        : (err.message || 'Something went wrong. Please try again.');
+      show('error-state');
+    }
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

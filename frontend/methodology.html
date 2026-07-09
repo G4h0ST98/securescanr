@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn how SecureScanr calculates your A-F security grade. Covers HTTP headers, TLS, DNS, cookies, CORS — 20+ checks explained with scoring weights and fix guidance.">
+  <meta property="og:title" content="SecureScanr Methodology — How We Score Website Security">
+  <meta property="og:description" content="Learn how SecureScanr calculates your A-F security grade. Covers HTTP headers, TLS, DNS, cookies, CORS — 20+ checks explained with scoring weights and fix guidance.">
+  <meta property="og:url" content="https://securescanr.com/methodology.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/methodology.html">
+  <title>SecureScanr Methodology — How We Score Website Security</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page header ─────────────────────────────────────────────────────── */
+    .page-header {
+      padding: 50px 24px 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(0,212,170,.08) 0%, transparent 70%);
+    }
+    .page-inner { max-width: 760px; margin: 0 auto; }
+    .page-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700; letter-spacing: -.8px;
+    }
+    .page-sub { margin-top: 10px; font-size: 16px; color: var(--muted); }
+
+    /* ── Content ─────────────────────────────────────────────────────────── */
+    .content-wrap {
+      max-width: 760px; margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .content-section {
+      padding: 32px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 32px;
+    }
+    .content-section h2 {
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 14px; letter-spacing: -.3px;
+    }
+    .content-section p {
+      font-size: 15px; color: var(--muted);
+      margin-bottom: 14px; line-height: 1.7;
+    }
+    .content-section p strong { color: var(--text); }
+
+    /* ── Grade display ───────────────────────────────────────────────────── */
+    .grade-table { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0 8px; }
+    .grade-cell {
+      flex: 1; min-width: 86px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 12px; text-align: center;
+    }
+    .grade-letter {
+      font-family: 'Space Mono', monospace;
+      font-size: 30px; font-weight: 700; line-height: 1; margin-bottom: 7px;
+    }
+    .grade-range { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+    .g-a { color: #2ed573; border-color: rgba(46,213,115,.25); }
+    .g-b { color: #00d4aa; border-color: rgba(0,212,170,.25); }
+    .g-c { color: #ffa502; border-color: rgba(255,165,2,.25); }
+    .g-d { color: #ff6b35; border-color: rgba(255,107,53,.25); }
+    .g-f { color: #ff4757; border-color: rgba(255,71,87,.25); }
+
+    /* ── Module header ───────────────────────────────────────────────────── */
+    .module-hdr {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .module-icon { font-size: 22px; }
+    .module-title { font-size: 18px; font-weight: 700; flex: 1; }
+    .module-cap {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px; font-weight: 700;
+      color: var(--muted); white-space: nowrap;
+    }
+
+    /* ── Score table ─────────────────────────────────────────────────────── */
+    .score-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .score-table th {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; color: var(--muted);
+      padding: 8px 12px; text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.025);
+    }
+    .score-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+    .score-table tr:last-child td { border-bottom: none; }
+    .score-table tr:hover td { background: rgba(255,255,255,.02); }
+    .finding-name { color: var(--text); }
+    .finding-note { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    /* ── Chips ───────────────────────────────────────────────────────────── */
+    .sev {
+      display: inline-block; font-size: 9.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .4px;
+      padding: 2px 7px; border-radius: 3px; white-space: nowrap;
+    }
+    .sev-critical  { background: rgba(255,71,87,.15);  color: #ff4757; }
+    .sev-important { background: rgba(255,165,2,.15);  color: #ffa502; }
+    .sev-minor     { background: rgba(0,212,170,.12);  color: #00d4aa; }
+
+    .ded {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px; font-weight: 700; white-space: nowrap;
+    }
+    .ded-critical  { color: #ff4757; }
+    .ded-important { color: #ffa502; }
+    .ded-minor     { color: #00d4aa; }
+
+    /* ── Note box ────────────────────────────────────────────────────────── */
+    .note-box {
+      background: rgba(0,212,170,.04);
+      border: 1px solid rgba(0,212,170,.15);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      font-size: 14px; color: var(--muted); line-height: 1.75;
+    }
+    .note-box strong { color: var(--text); }
+
+    /* ── Per-cookie note ─────────────────────────────────────────────────── */
+    .inline-note {
+      font-size: 13.5px; color: var(--muted);
+      margin-bottom: 14px; line-height: 1.6;
+    }
+    .inline-note strong { color: var(--text); }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer {
+      background: #111318;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 0;
+      font-size: 13px; color: var(--muted);
+    }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 12px 0 16px;
+      border-top: 1px solid var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: 0.4; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does SecureScanr calculate a website's security score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SecureScanr starts every site at 100 and deducts points for missing or misconfigured security controls. Critical headers like Content-Security-Policy and HSTS each deduct 20 points if absent. Important headers (X-Frame-Options, X-Content-Type-Options) deduct 10 points each. Minor headers (Referrer-Policy, Permissions-Policy) deduct 5 points each. TLS, DNS, cookie, and cross-origin findings each carry their own deductions. The final score maps to a letter grade."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What do the letter grades A+, A, B, C, D, F mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Grades map directly to score ranges: A+ is 90–100, A is 80–89, B is 70–79, C is 60–69, D is 50–59, and F is anything below 50. A score of 90+ means all critical and important headers are in place with no significant TLS or DNS issues. Most production sites without a security hardening pass score between 50 and 70 (D to B range)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does a missing Content-Security-Policy affect the score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A missing CSP deducts 20 points — the largest single deduction on the platform. A CSP that is present but uses unsafe-inline or unsafe-eval deducts 10 points instead, since it provides partial protection. HSTS missing is also a 20-point deduction. Addressing these two headers alone can move a site from an F or D grade up to a C or B."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are TLS and DNS issues included in the security score?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. An expired TLS certificate deducts 30 points; certificates expiring within 14 days deduct 20 points; within 30 days deduct 10 points; within 60 days deduct 5 points. Self-signed certificates deduct 20 points. DNS deductions include: no SPF record (-5), weak SPF (-3), no DMARC (-5), DMARC p=none (-3), DKIM undetected (-2), no CAA record (-2), and no DNSSEC (-3). These stack with header deductions toward the final score."
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn" style="color:var(--text)">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html" class="active-link">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="page-inner">
+    <p class="page-label">Methodology</p>
+    <h1 class="page-title">How we score.</h1>
+    <p class="page-sub">Transparent, reproducible scoring. No black boxes.</p>
+  </div>
+</div>
+
+<!-- ── Content ───────────────────────────────────────────────────────────────── -->
+<div class="content-wrap">
+
+  <!-- Scoring overview -->
+  <div class="content-section" style="border-top:none;margin-top:28px">
+    <div style="background:rgba(255,165,2,.06);border:1px solid rgba(255,165,2,.2);border-left:3px solid #ffa502;border-radius:0 8px 8px 0;padding:14px 18px;font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:24px">
+      <strong style="color:#ffa502">Scope: web security hardening maturity</strong><br>
+      SecureScanr measures whether a site has deployed standard defensive HTTP controls — headers, TLS configuration, DNS email security, and cookie hygiene. It is <strong style="color:var(--text)">not</strong> a penetration test, exploit validator, or vulnerability management tool. A high score means good baseline hardening; it does not guarantee the absence of application-layer vulnerabilities such as SQL injection, broken authentication, IDOR, or business logic flaws.
+    </div>
+    <h2>Scoring overview</h2>
+    <p>
+      Every scan starts at <strong>100 points</strong>. Points are deducted for each
+      missing, misconfigured, or weak security control. The final score maps to a
+      letter grade. Scores are capped at a minimum of 0.
+    </p>
+    <p>
+      Each finding is assigned a severity — Critical, Important, or Minor — which
+      determines how many points are lost. Critical findings have an outsized impact
+      on the grade; Minor findings are noted but do not sink a score on their own.
+    </p>
+    <div class="grade-table">
+      <div class="grade-cell">
+        <div class="grade-letter g-a">A+</div>
+        <div class="grade-range">90 – 100</div>
+      </div>
+      <div class="grade-cell">
+        <div class="grade-letter g-a">A</div>
+        <div class="grade-range">80 – 89</div>
+      </div>
+      <div class="grade-cell">
+        <div class="grade-letter g-b">B</div>
+        <div class="grade-range">70 – 79</div>
+      </div>
+      <div class="grade-cell">
+        <div class="grade-letter g-c">C</div>
+        <div class="grade-range">60 – 69</div>
+      </div>
+      <div class="grade-cell">
+        <div class="grade-letter g-d">D</div>
+        <div class="grade-range">50 – 59</div>
+      </div>
+      <div class="grade-cell">
+        <div class="grade-letter g-f">F</div>
+        <div class="grade-range">0 – 49</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin:20px 0 0">
+      <div style="flex:1;min-width:180px;background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#ff4757;margin-bottom:6px">Critical</div>
+        <div style="font-size:13.5px;color:var(--muted)">Actively exploitable — missing control enables a known attack class (XSS, MITM, session hijacking).</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:rgba(255,165,2,.06);border:1px solid rgba(255,165,2,.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#ffa502;margin-bottom:6px">Important</div>
+        <div style="font-size:13.5px;color:var(--muted)">Weakens an existing defense — reduces protection depth or is exploitable in combination with other flaws.</div>
+      </div>
+      <div style="flex:1;min-width:180px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:14px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#00d4aa;margin-bottom:6px">Minor</div>
+        <div style="font-size:13.5px;color:var(--muted)">Best-practice gap — recommended by security standards but not directly exploitable on its own.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTTP Security Headers -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">🔒</span>
+      <span class="module-title">HTTP Security Headers</span>
+      <span class="module-cap">MAX −81 PTS</span>
+    </div>
+    <p class="inline-note">
+      When a header is <strong>present but misconfigured</strong> (weak value), its severity
+      is downgraded one level and the deduction is halved vs. the missing case.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="finding-name">Content-Security-Policy missing</div>
+          </td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−20 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">CSP present but weakened</div>
+            <div class="finding-note">unsafe-inline, unsafe-eval, or wildcard (*) in script-src</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Strict-Transport-Security missing</div>
+          </td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−20 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">HSTS max-age too short</div>
+            <div class="finding-note">max-age below 6 months (15 768 000 s)</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">X-Frame-Options missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">X-Frame-Options invalid value</div>
+            <div class="finding-note">Must be DENY or SAMEORIGIN; CSP frame-ancestors is an accepted equivalent</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">X-Content-Type-Options missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">X-Content-Type-Options wrong value</div>
+            <div class="finding-note">Must be exactly nosniff</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Referrer-Policy missing</div></td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Referrer-Policy unsafe value</div>
+            <div class="finding-note">Present but value not in the safe list — may expose URL parameters to third parties</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Permissions-Policy missing</div></td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">CORS wildcard (Access-Control-Allow-Origin: *)</div>
+            <div class="finding-note">Allows any origin to read responses — risk to authenticated endpoints</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Server header exposes version number</div>
+            <div class="finding-note">e.g. nginx/1.24.0 — lets attackers target known CVEs</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−3 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">X-Powered-By header present</div>
+            <div class="finding-note">Discloses server-side technology stack</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−3 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- TLS/SSL -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">🛡</span>
+      <span class="module-title">TLS / SSL Certificate</span>
+      <span class="module-cap">MAX −70 PTS</span>
+    </div>
+    <p class="inline-note">
+      Expiry, self-signed, cipher, and protocol deductions are <strong>independent and cumulative</strong>
+      (worst case: expired −30 + self-signed −20 + deprecated protocol −10 + weak cipher −10 = −70).
+      Connection-error paths (SSLError, unreachable) are mutually exclusive with each other and with
+      the certificate/cipher checks — only one applies per scan.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="finding-name">Certificate expired</div></td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−30 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Expires within 14 days</div></td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−20 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Expires within 30 days</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Expires within 60 days</div></td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">Self-signed certificate</div></td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−20 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Deprecated TLS protocol in use</div>
+            <div class="finding-note">SSLv2, SSLv3, TLSv1, TLSv1.1 — stacks independently with cipher and expiry deductions</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Weak cipher suite in use</div>
+            <div class="finding-note">RC4, DES, 3DES, NULL, EXPORT, ANON — stacks independently with protocol and expiry deductions</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−10 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">TLS handshake or certificate verification failed</div>
+            <div class="finding-note">SSLError or cert verification error — no other TLS deductions applied in this path</div>
+          </td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−15 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">HTTPS not reachable on port 443</div>
+            <div class="finding-note">Connection refused, timed out, or unreachable — no other TLS deductions applied in this path</div>
+          </td>
+          <td><span class="sev sev-critical">Critical</span></td>
+          <td><span class="ded ded-critical">−20 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- DNS Email Security -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">📡</span>
+      <span class="module-title">DNS Email Security &amp; Certificate Security</span>
+      <span class="module-cap">MAX −15 PTS</span>
+    </div>
+    <p class="inline-note">
+      <strong>Domain normalization:</strong> DNS records are always queried at the <strong>apex domain</strong>.
+      If you scan <code style="font-size:12px;color:var(--accent)">www.example.com</code>, SecureScanr resolves
+      DNS for <code style="font-size:12px;color:var(--accent)">example.com</code> — SPF, DMARC, DKIM, CAA,
+      and DNSSEC records live at the apex, not on the <code style="font-size:12px;color:var(--accent)">www</code> subdomain.
+      Subdomains are stripped automatically so the scan always reflects your domain's actual email security posture.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="finding-name">SPF record missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−3 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">SPF record invalid or multiple records</div>
+            <div class="finding-note">RFC 7208 permits exactly one SPF TXT record per domain</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−3 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">SPF weak policy</div>
+            <div class="finding-note">+all or ?all allow any sender to pass SPF</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−3 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">DMARC record missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">DMARC policy set to none</div>
+            <div class="finding-note">p=none monitors but takes no enforcement action</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−3 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">DMARC policy unknown or invalid</div>
+            <div class="finding-note">Any p= value other than none / quarantine / reject — treated the same as a missing DMARC record</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">DKIM not detected</div>
+            <div class="finding-note">Checked against 12 common selectors; custom selectors may not be found</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">CAA records missing</div>
+            <div class="finding-note">No Certification Authority Authorization records restrict certificate issuance</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">DNSSEC not enabled</div>
+            <div class="finding-note">Checked via DS records at the domain registrar</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−3 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Cookie Security -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">🍪</span>
+      <span class="module-title">Cookie Security</span>
+      <span class="module-cap">PER COOKIE · UNCAPPED</span>
+    </div>
+    <p class="inline-note">
+      Deductions apply <strong>per insecure cookie</strong>. A page with many insecure
+      cookies can accumulate significant point loss. SameSite issues are reported
+      but do not currently affect the score.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="finding-name">Secure flag missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td><div class="finding-name">HttpOnly flag missing</div></td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−5 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">SameSite=None or SameSite missing</div>
+            <div class="finding-note">Reported as a finding; no point deduction applied in current scoring</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor" style="color:var(--muted)">0 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Cross-Origin Isolation -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">🔗</span>
+      <span class="module-title">Cross-Origin Isolation</span>
+      <span class="module-cap">MAX −6 PTS</span>
+    </div>
+    <p class="inline-note">
+      These are modern, emerging headers not yet universally deployed.
+      All three are scored as <strong>Minor</strong> — their absence is noted but
+      does not materially impact the overall grade.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="finding-name">Cross-Origin-Opener-Policy missing</div>
+            <div class="finding-note">Weak value (unsafe-none): −1 pt</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Cross-Origin-Embedder-Policy missing</div>
+            <div class="finding-note">Weak value (unsafe-none): −1 pt</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Cross-Origin-Resource-Policy missing</div>
+            <div class="finding-note">Weak value (cross-origin): −1 pt</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Page Analysis -->
+  <div class="content-section">
+    <div class="module-hdr">
+      <span class="module-icon">📄</span>
+      <span class="module-title">Page Analysis</span>
+      <span class="module-cap">MAX −6 PTS</span>
+    </div>
+    <p class="inline-note">
+      Checks performed by parsing the HTML body of the response. Each finding is
+      <strong>binary</strong> — deducted once regardless of how many instances exist.
+    </p>
+    <div style="overflow-x:auto"><table class="score-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Finding</th>
+          <th style="width:20%">Severity</th>
+          <th>Deduction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="finding-name">Mixed content detected</div>
+            <div class="finding-note">HTTP resources loaded on an HTTPS page (scripts, images, iframes)</div>
+          </td>
+          <td><span class="sev sev-important">Important</span></td>
+          <td><span class="ded ded-important">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Subresource Integrity (SRI) missing</div>
+            <div class="finding-note">External scripts or stylesheets loaded without an integrity= attribute</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="finding-name">Base tag present</div>
+            <div class="finding-note">&lt;base href&gt; can be hijacked to redirect relative links to a malicious domain</div>
+          </td>
+          <td><span class="sev sev-minor">Minor</span></td>
+          <td><span class="ded ded-minor">−2 pts</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Standards & limitations -->
+  <div class="content-section">
+    <h2>Standards &amp; limitations</h2>
+    <div class="note-box">
+      Scores are based on industry standards including the
+      <strong>OWASP Secure Headers Project</strong> and the
+      <strong>Mozilla Web Security Guidelines</strong>.
+      SecureScanr does not replace a full manual penetration test.
+      A high score indicates good baseline hygiene, not the absence of
+      vulnerabilities — application-layer issues such as SQL injection,
+      broken authentication, and business logic flaws are outside the scope
+      of this automated tool.
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html" style="color:var(--accent)">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+  function toggleNav() {
+    document.getElementById('nav-mobile').classList.toggle('open');
+  }
+
+  // ── Particle network ───────────────────────────────────────────────────────
+  (function() {
+    const N = 28, LINK = 120, ATTRACT = 150, LINK2 = LINK * LINK;
+    const cv = document.createElement('canvas');
+    cv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
+    document.body.insertBefore(cv, document.body.firstChild);
+    const ctx = cv.getContext('2d');
+    let W = cv.width = window.innerWidth, H = cv.height = window.innerHeight;
+    window.addEventListener('resize', () => { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; });
+    let mx = W / 2, my = H / 2;
+    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    const pts = Array.from({ length: N }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
+    }));
+    function tick() {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        const cdx = mx - p.x, cdy = my - p.y;
+        const cd = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
+        if (cd < ATTRACT) {
+          const f = ((ATTRACT - cd) / ATTRACT) * 0.03;
+          p.vx += cdx / cd * f; p.vy += cdy / cd * f;
+        }
+        p.vx *= 0.98; p.vy *= 0.98;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
+        if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+      }
+      ctx.lineWidth = 1;
+      for (let i = 0; i < N; i++) {
+        for (let j = i + 1; j < N; j++) {
+          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < LINK2) {
+            const alpha = ((1 - Math.sqrt(d2) / LINK) * 0.12).toFixed(3);
+            ctx.strokeStyle = `rgba(0,212,170,${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      ctx.fillStyle = 'rgba(0,212,170,0.4)';
+      for (const p of pts) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5, 0, 6.283);
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+</script>
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

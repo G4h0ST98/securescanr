@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18205859589"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18205859589');
+</script>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SecureScanr Learning Center — in-depth guides on CSP, HSTS, TLS, DNS email security, and more. Free resources for developers and pentesters.">
+  <meta property="og:title" content="Learning Center — SecureScanr Web Security Guides">
+  <meta property="og:description" content="In-depth security guides: CSP, HSTS, clickjacking, SPF/DMARC/DKIM, TLS, and security.txt. Written for developers and pentesters.">
+  <meta property="og:url" content="https://securescanr.com/learn.html">
+  <meta property="og:image" content="https://securescanr.com/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <link rel="canonical" href="https://securescanr.com/learn.html">
+  <title>Learning Center — SecureScanr</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg:      #0a0b0d;
+      --surface: #111318;
+      --border:  #1e2128;
+      --accent:  #00d4aa;
+      --danger:  #ff4757;
+      --warning: #ffa502;
+      --success: #2ed573;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --radius:  10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
+    body { overflow-x: hidden; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,11,13,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center;
+    }
+    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
+    .logo-accent { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
+    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .nav-links > a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #0a0b0d !important;
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px; border-radius: 6px;
+      transition: opacity .15s !important;
+    }
+    .nav-cta:hover { opacity: .88; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      font-size: 13px; color: var(--muted); background: none; border: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px;
+      padding: 0; font-family: inherit; transition: color .15s;
+    }
+    .nav-dropdown-btn:hover,
+    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
+    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
+    .nav-dropdown::after {
+      content: ''; position: absolute; bottom: -8px; left: 0;
+      width: 100%; height: 8px;
+    }
+    .nav-dropdown-menu {
+      display: none; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
+      z-index: 200;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown-menu a {
+      display: block; padding: 8px 12px; font-size: 13px;
+      color: var(--muted); border-radius: 6px; text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a.active-link { color: var(--text); }
+    .nav-hamburger {
+      display: none; background: none; border: none;
+      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    }
+    .nav-mobile {
+      display: none; flex-direction: column;
+      border-top: 1px solid var(--border); padding: 12px 24px 16px;
+    }
+    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile.open { display: flex; }
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* ── Page header ─────────────────────────────────────────────────────── */
+    .page-hero {
+      padding: 64px 24px 48px;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,170,.08) 0%, transparent 70%);
+      text-align: center;
+    }
+    .page-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700; letter-spacing: -.5px; line-height: 1.2;
+    }
+    .page-sub {
+      margin-top: 12px; font-size: 15px; color: var(--muted);
+      max-width: 520px; margin-left: auto; margin-right: auto;
+    }
+
+    /* ── Article grid ────────────────────────────────────────────────────── */
+    .learn-grid-wrap {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .learn-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 0;
+    }
+    @media (max-width: 900px) { .learn-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .learn-grid { grid-template-columns: 1fr; } }
+
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: border-color .18s, transform .18s;
+      text-decoration: none;
+    }
+    .article-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .article-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 10px;
+    }
+    .article-icon { font-size: 28px; line-height: 1; }
+    .sev-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .5px; padding: 3px 8px; border-radius: 4px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .sev-critical  { background: rgba(255,71,87,.12);  color: #ff6b7a; border: 1px solid rgba(255,71,87,.25); }
+    .sev-important { background: rgba(255,165,2,.12);  color: #ffa502; border: 1px solid rgba(255,165,2,.25); }
+    .sev-minor     { background: rgba(0,212,170,.10);  color: var(--accent); border: 1px solid rgba(0,212,170,.25); }
+
+    .article-title {
+      font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.3;
+    }
+    .article-desc {
+      font-size: 13.5px; color: var(--muted); line-height: 1.5;
+      flex: 1;
+    }
+    .article-meta {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: var(--muted);
+    }
+    .article-read-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      margin-top: auto;
+    }
+    .article-read-link:hover { color: var(--text); }
+
+    /* ── CTA banner ──────────────────────────────────────────────────────── */
+    .learn-cta {
+      background: linear-gradient(135deg, rgba(0,212,170,.08) 0%, rgba(0,212,170,.03) 100%);
+      border: 1px solid rgba(0,212,170,.2);
+      border-radius: var(--radius);
+      padding: 32px; text-align: center;
+      margin: 0 24px 60px; max-width: 1100px;
+      margin-left: auto; margin-right: auto;
+    }
+    .learn-cta h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .learn-cta p  { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .btn-accent {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #0a0b0d;
+      border: none; border-radius: 8px;
+      padding: 12px 28px; font-size: 15px; font-weight: 700;
+      text-decoration: none; transition: opacity .15s;
+    }
+    .btn-accent:hover { opacity: .88; color: #0a0b0d; }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { background: var(--surface); border-top: 1px solid var(--border); margin-top: auto; }
+    .footer-bottom {
+      max-width: 1100px; margin: 0 auto;
+      padding: 16px 24px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: center; gap: 12px 16px;
+      font-size: 12px; color: var(--muted);
+    }
+    .footer-bottom a { color: var(--muted); }
+    .footer-bottom a:hover { color: var(--text); }
+    .footer-sep { opacity: .4; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--text); }
+  </style>
+  <link rel="stylesheet" href="/mobile.css">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
+    <div class="nav-links">
+      <a href="scan.html">Scan</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">Tools</button>
+        <div class="nav-dropdown-menu">
+          <a href="versus.html">Versus</a>
+          <a href="generators.html">Generators</a>
+          <a href="security-txt.html">Security.txt</a>
+          <a href="api-docs.html">API Docs</a>
+          <a href="learn.html" class="active-link">Learn</a>
+          <a href="badge.html">Badge</a>
+        </div>
+      </div>
+      <a href="plans.html">Plans</a>
+      <a href="world-security-index.html">World Index</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-btn">More</button>
+        <div class="nav-dropdown-menu">
+          <a href="methodology.html">Methodology</a>
+          <a href="about.html">About</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="compliance-report.html">Compliance Report</a>
+          <a href="status.html">Status</a>
+        </div>
+      </div>
+      <a href="plans.html" class="nav-cta">Get API access →</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.getElementById('nav-mobile').classList.toggle('open')" aria-label="Menu">☰</button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="scan.html">Scan</a>
+    <a href="versus.html">Versus</a>
+    <a href="generators.html">Generators</a>
+    <a href="security-txt.html">Security.txt</a>
+    <a href="api-docs.html">API Docs</a>
+    <a href="learn.html">Learn</a>
+    <a href="badge.html">Badge</a>
+    <a href="plans.html">Plans</a>
+    <a href="world-security-index.html">World Index</a>
+    <a href="methodology.html">Methodology</a>
+    <a href="about.html">About</a>
+    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+    <a href="compliance-report.html">Compliance Report</a>
+    <a href="status.html">Status</a>
+    <a href="plans.html">Get API access →</a>
+  </div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="page-eyebrow">Learning Center</div>
+  <h1 class="page-title">Web Security Guides</h1>
+  <p class="page-sub">Practical, in-depth articles covering every security check SecureScanr runs — written for developers and pentesters.</p>
+</div>
+
+<!-- ── Article grid ──────────────────────────────────────────────────────────── -->
+<div class="learn-grid-wrap">
+  <div class="learn-grid">
+
+    <a href="learn/content-security-policy.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">🛡</span>
+        <span class="sev-badge sev-critical">Critical</span>
+      </div>
+      <div class="article-title">Content Security Policy (CSP) Complete Guide</div>
+      <div class="article-desc">Stop XSS attacks at the browser level — learn every CSP directive, nonce-based policies, and real-world examples.</div>
+      <div class="article-meta">
+        <span>8 min read</span>
+        <span>·</span>
+        <span>Headers</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+    <a href="learn/hsts.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">🔒</span>
+        <span class="sev-badge sev-critical">Critical</span>
+      </div>
+      <div class="article-title">HTTP Strict Transport Security (HSTS) Guide</div>
+      <div class="article-desc">Force HTTPS permanently, avoid SSL stripping attacks, and get on the browser preload list safely.</div>
+      <div class="article-meta">
+        <span>6 min read</span>
+        <span>·</span>
+        <span>Headers</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+    <a href="learn/x-frame-options.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">🖼</span>
+        <span class="sev-badge sev-important">Important</span>
+      </div>
+      <div class="article-title">Preventing Clickjacking with X-Frame-Options</div>
+      <div class="article-desc">Understand clickjacking attacks, DENY vs SAMEORIGIN, and when to use CSP frame-ancestors instead.</div>
+      <div class="article-meta">
+        <span>5 min read</span>
+        <span>·</span>
+        <span>Headers</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+    <a href="learn/dns-email-security.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">📡</span>
+        <span class="sev-badge sev-important">Important</span>
+      </div>
+      <div class="article-title">SPF, DKIM &amp; DMARC: Complete Email Security Guide</div>
+      <div class="article-desc">Stop domain spoofing and phishing — set up SPF, DKIM selectors, and DMARC policies in the right order.</div>
+      <div class="article-meta">
+        <span>8 min read</span>
+        <span>·</span>
+        <span>DNS</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+    <a href="learn/tls-ssl-guide.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">🛡</span>
+        <span class="sev-badge sev-critical">Critical</span>
+      </div>
+      <div class="article-title">TLS/SSL Security: What to Check and Why</div>
+      <div class="article-desc">TLS 1.0/1.1 are broken — learn which versions, cipher suites, and cert configurations to look for.</div>
+      <div class="article-meta">
+        <span>6 min read</span>
+        <span>·</span>
+        <span>TLS</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+    <a href="learn/security-txt-guide.html" class="article-card">
+      <div class="article-card-top">
+        <span class="article-icon">📄</span>
+        <span class="sev-badge sev-minor">Minor</span>
+      </div>
+      <div class="article-title">security.txt: The RFC 9116 Standard Explained</div>
+      <div class="article-desc">Make it easy for security researchers to report vulnerabilities — set up security.txt in 5 minutes.</div>
+      <div class="article-meta">
+        <span>5 min read</span>
+        <span>·</span>
+        <span>Disclosure</span>
+      </div>
+      <span class="article-read-link">Read guide →</span>
+    </a>
+
+  </div>
+</div>
+
+<!-- ── CTA ────────────────────────────────────────────────────────────────────── -->
+<div class="learn-cta">
+  <h3>See how your site scores right now</h3>
+  <p>Run a free scan and get an instant security report covering all the topics above — no login required.</p>
+  <a href="scan.html" class="btn-accent">Check your site's security now →</a>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-bottom">
+    <span>© 2026 SecureScanr</span>
+    <span class="footer-sep">·</span>
+    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+    <span class="footer-sep">·</span>
+    <a href="methodology.html">Methodology</a>
+    <span class="footer-sep">·</span>
+    <a href="privacy.html">Privacy</a>
+    <span class="footer-sep">·</span>
+    <a href="terms.html">Terms</a>
+    <span class="footer-sep">·</span>
+    <a href="refund.html">Refund</a>
+    <span class="footer-sep">·</span>
+    <a href="status.html">Status</a>
+  </div>
+</footer>
+
+<script>
+(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+</script>
+</body>
+</html>

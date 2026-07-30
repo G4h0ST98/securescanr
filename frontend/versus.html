@@ -26,319 +26,664 @@
   <link rel="canonical" href="https://securescanr.com/versus.html">
   <title>Website Security Comparison Tool — Compare Two Sites Side by Side | SecureScanr</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
     :root {
-      --bg:      #0a0b0d;
-      --surface: #111318;
-      --border:  #1e2128;
-      --accent:  #00d4aa;
-      --danger:  #ff4757;
-      --warning: #ffa502;
-      --success: #2ed573;
-      --text:    #e8eaf0;
-      --muted:   #6b7280;
-      --radius:  10px;
+      /* ── Design tokens (see DESIGN.md) ── */
+      --ink:       #050607;
+      --ink-2:     #0b0d10;
+      --accent:    #00e5b0;
+      --accent-dk: #00d4aa;
+      --red:       #ff4d5e;
+      --amber:     #ffb020;
+      --orange:    #ff7a45;
+      --text:      #eceee9;
+      --muted:     #8a8f98;
+      --muted-2:   #565b64;
+      --line:      rgba(236,238,233,.14);
+      --line-soft: rgba(236,238,233,.07);
+      --ease-out:  cubic-bezier(.16, 1, .3, 1);
+
+      /* ── Legacy aliases — the render JS emits inline var() references
+            against these names. Keep them mapped, never remove. ── */
+      --bg:      var(--ink);
+      --surface: var(--ink-2);
+      --border:  var(--line-soft);
+      --danger:  var(--red);
+      --warning: var(--amber);
+      --success: var(--accent);
+      --radius:  0px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
-    body { overflow-x: hidden; }
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      font-size: clamp(15px, 1.05vw + .5rem, 18px);
+      scrollbar-width: thin;
+      scrollbar-color: #1c1f24 var(--ink);
+    }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: #1c1f24; border-radius: 99px; border: 2px solid var(--ink); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-dk); }
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--bg);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--ink);
       color: var(--text);
-      font-size: 15px;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      line-height: 1.55;
+      /* `clip`, not `hidden`: overflow-x:hidden turns body into a scroll
+         container, which silently kills every position:sticky on the page. */
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column; min-height: 100vh;
     }
     main { flex: 1; }
-    a { color: var(--accent); text-decoration: none; }
+    a { color: inherit; text-decoration: none; }
     button { cursor: pointer; font-family: inherit; }
-    code { font-family: 'Space Mono', monospace; }
+    code, .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+    ::selection { background: var(--accent); color: var(--ink); }
 
-    /* ── Nav ─────────────────────────────────────────────────────────────── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,11,13,0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+    /* ── Film grain ──────────────────────────────────────────────────────── */
+    .grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      pointer-events: none; z-index: 2000;
+      opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain-shift 900ms steps(4) infinite;
     }
+    @keyframes grain-shift {
+      0%   { transform: translate(0,0); }
+      25%  { transform: translate(-2%,3%); }
+      50%  { transform: translate(3%,-2%); }
+      75%  { transform: translate(-3%,-3%); }
+      100% { transform: translate(0,0); }
+    }
+
+
+    /* ── Nav (shared component — identical on every page) ─────────────────
+       Scoped to `body > header` on purpose: the results ledger uses <header>
+       elements for its block titles, and an unscoped rule fixed-positions
+       every one of them into the corner. */
+    body > header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      mix-blend-mode: difference;
+    }
+    body > header::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(5,6,7,.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+      opacity: 0; transition: opacity .3s var(--ease-out);
+      pointer-events: none;
+    }
+    body > header.docked { mix-blend-mode: normal; }
+    body > header.docked::before { opacity: 1; }
     .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 24px; height: 60px;
-      display: flex; align-items: center;
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 22px clamp(20px, 4vw, 56px);
+      color: #fff;
+      position: relative; z-index: 1;
     }
-    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
-    .logo-accent { color: var(--accent); }
-    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
-    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
-    .nav-links > a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--accent); color: #0a0b0d !important;
-      font-size: 12px; font-weight: 600;
-      padding: 6px 14px; border-radius: 6px;
-      transition: opacity .15s !important;
+    .nav-logo { font-weight: 700; font-size: 17px; letter-spacing: -.3px; }
+    .nav-logo sup { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; opacity: .55; margin-left: 6px; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: clamp(18px, 2.6vw, 36px); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .nav-links a { position: relative; opacity: .72; transition: opacity .2s; }
+    .nav-links a:hover, .nav-links a[aria-current="page"] { opacity: 1; }
+    .nav-links a::after {
+      content: ''; position: absolute; left: 0; bottom: -4px;
+      width: 100%; height: 1px; background: #fff;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .35s var(--ease-out);
     }
-    .nav-cta:hover { opacity: .88; }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .nav-links a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
     .nav-dropdown { position: relative; }
     .nav-dropdown-btn {
-      font-size: 13px; color: var(--muted); background: none; border: none;
-      cursor: pointer; display: flex; align-items: center; gap: 4px;
-      padding: 0; font-family: inherit; transition: color .15s;
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: inherit;
+      opacity: .72; transition: opacity .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      line-height: inherit;
     }
-    .nav-dropdown-btn:hover,
-    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
-    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
-    .nav-dropdown::after {
-      content: ''; position: absolute; bottom: -8px; left: 0;
-      width: 100%; height: 8px;
+    .nav-dropdown-btn::after {
+      content: '+'; font-size: 12px; opacity: .6;
+      transition: transform .3s var(--ease-out);
     }
+    .nav-dropdown:hover .nav-dropdown-btn,
+    .nav-dropdown:focus-within .nav-dropdown-btn { opacity: 1; }
+    .nav-dropdown-btn[data-open] { opacity: 1; }
+    .nav-dropdown:hover .nav-dropdown-btn::after,
+    .nav-dropdown:focus-within .nav-dropdown-btn::after { transform: rotate(45deg); }
+    .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 18px; }
     .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5);
-      z-index: 200;
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      min-width: 200px; padding: 8px;
+      background: var(--ink-2); border: 1px solid var(--line);
+      box-shadow: 0 24px 64px rgba(0,0,0,.6);
+      opacity: 0; visibility: hidden;
+      transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), visibility 0s .25s;
     }
     .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      opacity: 1; visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      transition-delay: 0s;
+    }
     .nav-dropdown-menu a {
-      display: block; padding: 8px 12px; font-size: 13px;
-      color: var(--muted); border-radius: 6px; text-decoration: none;
-      transition: background .12s, color .12s;
+      display: block; padding: 10px 12px;
+      font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); opacity: 1; white-space: nowrap;
+      transition: background .18s, color .18s;
     }
-    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a::after { display: none; }
+    .nav-dropdown-menu a:hover { background: var(--accent); color: var(--ink); }
     .nav-dropdown-menu a.active-link { color: var(--text); }
-    .nav-hamburger {
-      display: none; background: none; border: none;
-      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    .nav-cta { color: var(--accent); opacity: 1; }
+    .nav-cta::after { background: var(--accent); }
+    .nav-burger {
+      display: none; background: none; border: none; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 2px; color: #fff; text-transform: uppercase;
     }
-    .nav-mobile {
-      display: none; flex-direction: column;
-      border-top: 1px solid var(--border); padding: 12px 24px 16px;
-    }
-    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
-    .nav-mobile a:last-child { border-bottom: none; }
-    .nav-mobile.open { display: flex; }
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
       .nav-links { display: none; }
-      .nav-hamburger { display: block; }
+      .nav-burger { display: block; }
+    }
+    #nav-mobile {
+      position: fixed; inset: 0; z-index: 1500;
+      background: var(--ink);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 88px clamp(24px, 8vw, 80px) 40px;
+      overflow-y: auto;
+      visibility: hidden; opacity: 0;
+      transition: opacity .35s ease, visibility 0s .35s;
+    }
+    #nav-mobile.open { visibility: visible; opacity: 1; transition: opacity .35s ease; }
+    #nav-mobile .menu-scroll { width: 100%; margin: auto 0; }
+    #nav-mobile a {
+      font-size: clamp(22px, 5.4vw, 34px); font-weight: 600; letter-spacing: -.6px;
+      padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+      color: var(--text); display: flex; justify-content: space-between; align-items: baseline;
+    }
+    #nav-mobile a .mono { font-size: 11px; color: var(--muted); letter-spacing: 2px; }
+    #nav-mobile a.menu-sub {
+      font-size: clamp(15px, 3.6vw, 20px); font-weight: 500;
+      color: var(--muted); padding: 8px 0;
+    }
+    #nav-mobile a.menu-sub:hover { color: var(--text); }
+    #nav-mobile .menu-group {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 400;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2);
+      margin: 24px 0 6px;
+    }
+    #menu-close {
+      position: absolute; top: 24px; right: 24px;
+      background: none; border: 1px solid var(--line); border-radius: 99px;
+      color: var(--text); font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 2px; padding: 8px 16px; cursor: pointer;
     }
 
-    /* ── Hero ────────────────────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════════════════════════════════
+       THE DUEL — this page's own composition.
+       Not scan.html's left-aligned stack: the viewport is split down the
+       middle by a live seam, one site per half, and everything is arranged
+       symmetrically around that axis. The seam is the page's spine and it
+       carries through into the results as a diverging ledger.
+       ══════════════════════════════════════════════════════════════════════ */
     #hero {
-      padding: 56px 24px 48px;
-      text-align: center;
-      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,212,170,.1) 0%, transparent 70%);
-      min-height: calc(100vh - 60px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      min-height: min(100svh, 860px);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 96px 0 clamp(28px, 4vh, 52px);
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--line-soft);
+      scroll-margin-top: 70px;
     }
-    .hero-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
-    }
-    .hero-title {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700; letter-spacing: -.8px; line-height: 1.15;
-    }
-    .hero-sub { margin-top: 10px; font-size: 15px; color: var(--muted); }
 
-    /* ── Compare Form ────────────────────────────────────────────────────── */
-    .compare-form {
-      margin-top: 36px;
-      max-width: 860px; margin-left: auto; margin-right: auto;
-      padding: 0 24px;
+    .duel-head { text-align: center; padding: 0 clamp(20px, 4vw, 56px); }
+    .hero-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex; align-items: center; gap: 12px;
     }
-    .versus-inputs {
-      display: grid;
-      grid-template-columns: 1fr 48px 1fr;
-      gap: 0; align-items: center;
+    .hero-kicker::before, .hero-kicker::after { content: ''; width: 28px; height: 1px; background: var(--accent); }
+    .duel-title {
+      margin-top: 18px;
+      font-size: clamp(30px, 4.6vw, 64px);
+      line-height: 1.02; font-weight: 700; letter-spacing: -.035em;
+      text-transform: uppercase;
     }
+    /* the one serif moment — the human line cutting through the machine */
+    .duel-title em {
+      display: block; font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic; font-weight: 400; text-transform: none;
+      letter-spacing: -.01em; color: var(--muted);
+      font-size: clamp(26px, 3.8vw, 54px); margin-top: 4px;
+    }
+    .duel-title em b { color: var(--accent); font-weight: 400; }
+    .accent-dot { color: var(--accent); }
+
+    /* ── The split ───────────────────────────────────────────────────────── */
+    .duel-grid {
+      margin-top: clamp(28px, 4vh, 54px);
+      display: grid; grid-template-columns: 1fr 1px 1fr;
+      align-items: stretch;
+    }
+    .seam { background: var(--line-soft); position: relative; }
+    /* the VS sits ON the axis, rotated square — the badge is the pivot the
+       whole layout mirrors around */
+    .seam-vs {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 62px; height: 62px;
+      background: var(--ink); border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+    }
+    .seam-vs span {
+      transform: rotate(-45deg);
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+      letter-spacing: 2px; color: var(--muted);
+    }
+
+    .side {
+      position: relative; overflow: hidden;
+      padding: clamp(26px, 4vh, 46px) clamp(20px, 4vw, 56px);
+      display: flex; flex-direction: column; justify-content: center;
+      transition: background .4s var(--ease-out);
+    }
+    .side-a { align-items: flex-end; text-align: right; }
+    .side-b { align-items: flex-start; }
+    /* a half lights up when it has focus — the two sides visibly compete */
+    .side:focus-within { background: rgba(0,229,176,.035); }
+    /* hollow A / B filling the outer half of each side — the corner marker.
+       Fully inside its half: bleeding it off the edge just read as clipping. */
+    .side-mark {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: clamp(96px, 11vw, 168px); font-weight: 700; line-height: .8;
+      letter-spacing: -.06em;
+      color: transparent; -webkit-text-stroke: 1px rgba(236,238,233,.07);
+      pointer-events: none; user-select: none; z-index: 0;
+    }
+    .side-a .side-mark { left: clamp(20px, 4vw, 56px); }
+    .side-b .side-mark { right: clamp(20px, 4vw, 56px); }
+    .side-inner { position: relative; z-index: 1; width: 100%; max-width: 480px; }
+    .side-b .side-inner { margin-right: auto; }
+    .side-a .side-inner { margin-left: auto; }
+    .side-label {
+      display: block; margin-bottom: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2);
+    }
+    .side-label b { color: var(--accent); font-weight: 400; }
     .url-box {
-      background: var(--surface); border: 1.5px solid var(--border);
-      border-radius: var(--radius); padding: 6px 6px 6px 16px;
-      display: flex; gap: 8px; align-items: center;
-      transition: border-color .18s;
+      background: var(--ink-2); border: 1px solid var(--line);
+      padding: 15px 18px; display: flex; align-items: center;
+      transition: border-color .25s var(--ease-out), box-shadow .25s var(--ease-out);
     }
-    .url-box:focus-within { border-color: var(--accent); }
+    .url-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(0,229,176,.25); }
     .url-box input {
-      flex: 1; background: none; border: none; outline: none;
-      color: var(--text); font-size: 14px;
-      font-family: 'Space Mono', monospace;
+      flex: 1; min-width: 0;
+      background: transparent; border: none; outline: none;
+      color: var(--text); font-size: 15px;
+      font-family: 'JetBrains Mono', monospace; letter-spacing: -.2px;
     }
-    .url-box input::placeholder { color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 13px; }
-    .vs-divider {
-      text-align: center; font-family: 'Space Mono', monospace;
-      font-size: 13px; font-weight: 700; color: var(--accent);
-      background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.25);
-      border-radius: 6px; padding: 6px 0; margin: 0 8px;
+    .side-a .url-box input { text-align: right; }
+    .url-box input::placeholder { color: var(--muted-2); }
+    .side-hint {
+      margin-top: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
     }
-    .compare-submit-row { margin-top: 16px; text-align: center; }
+    .side-hint button {
+      background: none; border: none; padding: 0; color: var(--muted-2);
+      font: inherit; border-bottom: 1px solid var(--line-soft);
+      transition: color .2s, border-color .2s;
+    }
+    .side-hint button:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Below the split: the trigger straddles the axis ─────────────────── */
+    .duel-foot {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line-soft);
+      padding: clamp(22px, 3.4vh, 34px) clamp(20px, 4vw, 56px) 0;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
     .btn-compare {
-      background: var(--accent); color: #0a0b0d;
-      border: none; border-radius: 8px;
-      padding: 12px 32px; font-size: 15px; font-weight: 700;
-      display: inline-flex; align-items: center; gap: 8px;
-      transition: transform .15s, box-shadow .15s;
+      background: var(--accent); color: var(--ink);
+      border: none; border-radius: 99px;
+      padding: 15px 38px; font-size: 14px; font-weight: 700; letter-spacing: -.2px;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: box-shadow .3s var(--ease-out), opacity .2s;
+      white-space: nowrap;
     }
-    .btn-compare:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(0,212,170,.35);
-    }
-    .btn-compare:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-compare:hover:not(:disabled) { box-shadow: 0 10px 36px rgba(0,229,176,.32); }
+    .btn-compare:disabled { opacity: .45; cursor: not-allowed; }
     .btn-spinner {
       width: 15px; height: 15px;
-      border: 2px solid rgba(10,11,13,.3); border-top-color: #0a0b0d;
+      border: 2px solid rgba(5,6,7,.3); border-top-color: var(--ink);
       border-radius: 50%; animation: spin .7s linear infinite;
     }
+    .hero-proof {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
+      text-align: center;
+    }
+    .hero-proof span { color: var(--muted); }
+    .hero-proof a { color: var(--muted); border-bottom: 1px solid var(--line); }
+
+    /* preset match-ups — reads as a card of fixtures, not a chip row */
+    .fixtures {
+      margin: clamp(22px, 3.4vh, 36px) auto 0;
+      padding: 0 clamp(20px, 4vw, 56px);
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    }
+    .fixture {
+      background: transparent; border: 1px solid var(--line-soft);
+      padding: 7px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted-2);
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .fixture:hover { color: var(--text); border-color: var(--accent); background: var(--ink-2); }
 
     /* ── Loading ─────────────────────────────────────────────────────────── */
     #loading-state {
-      max-width: 500px; margin: 60px auto; padding: 0 24px; text-align: center;
+      max-width: 900px; margin: 0 auto; width: 100%;
+      padding: clamp(60px, 12vh, 120px) clamp(20px, 4vw, 56px);
+      text-align: center; scroll-margin-top: 80px;
     }
-    .loading-dots span {
-      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent); margin: 0 3px;
-      animation: bounce .8s ease-in-out infinite;
+    #loading-state > p {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 11px !important; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--accent) !important; margin-bottom: 26px !important;
     }
-    .loading-dots span:nth-child(2) { animation-delay: .15s; }
-    .loading-dots span:nth-child(3) { animation-delay: .3s; }
-    @keyframes bounce {
-      0%, 80%, 100% { transform: scale(0.8); opacity: .5; }
-      40% { transform: scale(1.2); opacity: 1; }
+    .load-race { display: flex; align-items: center; gap: 0; justify-content: center; }
+    .load-lane { flex: 1; max-width: 300px; height: 1px; background: var(--line); overflow: hidden; position: relative; }
+    .load-lane::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: lane 1.3s linear infinite;
+    }
+    .load-lane.rtl::after { animation-direction: reverse; }
+    @keyframes lane { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+    .load-vs {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; color: var(--muted-2); padding: 0 18px;
     }
 
     /* ── Error ───────────────────────────────────────────────────────────── */
-    #error-state { max-width: 640px; margin: 40px auto; padding: 0 24px; }
+    #error-state {
+      max-width: 720px; margin: 0 auto; width: 100%;
+      padding: clamp(50px, 10vh, 100px) clamp(20px, 4vw, 56px);
+      scroll-margin-top: 80px;
+    }
     .error-box {
-      background: rgba(255,71,87,.08); border: 1px solid rgba(255,71,87,.3);
-      border-left: 3px solid var(--danger); border-radius: var(--radius);
-      padding: 20px 24px;
+      background: var(--ink-2);
+      border: 1px solid rgba(255,77,94,.3);
+      border-left: 2px solid var(--red);
+      padding: 24px 26px;
     }
-    .error-box h3 { font-size: 15px; color: var(--danger); margin-bottom: 4px; }
-    .error-box p  { font-size: 13px; color: var(--muted); }
+    .error-box h3 {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--red);
+      margin-bottom: 8px;
+    }
+    .error-box p { font-size: 14px; color: var(--muted); }
+    .error-box button {
+      margin-top: 18px !important;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px !important;
+      letter-spacing: 2px; text-transform: uppercase;
+      background: transparent !important; color: var(--red) !important;
+      border: 1px solid rgba(255,77,94,.5) !important; border-radius: 0 !important;
+      padding: 11px 20px !important;
+      transition: background .2s, color .2s;
+    }
+    .error-box button:hover { background: var(--red) !important; color: var(--ink) !important; }
 
-    /* ── Results ─────────────────────────────────────────────────────────── */
-    #results-state { max-width: 1100px; margin: 0 auto; padding: 24px 24px 60px; }
-
-    /* Grade headers */
-    .versus-header {
-      display: grid; grid-template-columns: 1fr 48px 1fr;
-      gap: 12px; align-items: stretch; margin-bottom: 20px;
-    }
-    .versus-grade-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 24px 20px;
-      display: flex; align-items: center; gap: 16px;
-      animation: popIn .35s cubic-bezier(.34,1.56,.64,1);
-    }
-    .versus-grade-card.winner { border-color: var(--success); box-shadow: 0 0 24px rgba(46,213,115,.15); }
-    .versus-grade-card.loser  { border-color: rgba(255,71,87,.3); opacity: .9; }
-    .grade-badge-sm {
-      flex-shrink: 0; width: 80px; height: 80px;
-      border: 2.5px solid; border-radius: 10px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-    }
-    .grade-letter-sm { font-family: 'Space Mono', monospace; font-size: 44px; font-weight: 700; line-height: 1; }
-    .grade-score-sm  { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; margin-top: 2px; }
-    .grade-ap,.grade-a { border-color:#2ed573;color:#2ed573;box-shadow:0 0 16px rgba(46,213,115,.25); }
-    .grade-b { border-color:#00d4aa;color:#00d4aa;box-shadow:0 0 16px rgba(0,212,170,.25); }
-    .grade-c { border-color:#ffa502;color:#ffa502;box-shadow:0 0 16px rgba(255,165,2,.25); }
-    .grade-d { border-color:#ff6b35;color:#ff6b35;box-shadow:0 0 16px rgba(255,107,53,.25); }
-    .grade-f { border-color:#ff4757;color:#ff4757;box-shadow:0 0 16px rgba(255,71,87,.25); }
-    .grade-card-info { flex: 1; min-width: 0; }
-    .grade-card-url { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text); word-break: break-all; font-weight: 700; margin-bottom: 2px; }
-    .grade-card-label { font-size: 12px; color: var(--muted); }
-    .winner-ribbon { font-size: 11px; font-weight: 700; color: var(--success); margin-top: 4px; }
-    .vs-mid {
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700;
-      color: var(--accent);
+    /* ══════════════════════════════════════════════════════════════════════
+       RESULTS — the seam becomes a scoreline, then a diverging ledger.
+       Every check is one row: the name sits ON the axis and each site's
+       verdict pushes outward from it, so the loser's bar is literally longer.
+       ══════════════════════════════════════════════════════════════════════ */
+    #results-state {
+      max-width: 1240px; margin: 0 auto; width: 100%;
+      padding: clamp(40px, 7vh, 76px) clamp(20px, 4vw, 56px) clamp(70px, 12vh, 130px);
+      scroll-margin-top: 70px;
     }
 
-    /* Winner banner */
-    .winner-banner {
-      border-radius: var(--radius); padding: 16px 24px;
-      text-align: center; margin-bottom: 20px;
-      font-size: 15px; font-weight: 600;
+    /* Scoreline */
+    .scoreline {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: clamp(16px, 3vw, 40px);
+      animation: fadeUp .45s var(--ease-out);
     }
-    .winner-banner.win-a { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); color: var(--success); }
-    .winner-banner.win-b { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); color: var(--success); }
-    .winner-banner.tie   { background: rgba(107,114,128,.08); border: 1px solid rgba(107,114,128,.2); color: var(--muted); }
+    .sl-side { min-width: 0; }
+    .sl-side.a { text-align: right; }
+    .sl-host {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: .5px; color: var(--muted);
+      word-break: break-all; margin-bottom: 6px;
+    }
+    .sl-score {
+      font-size: clamp(66px, 10vw, 132px); font-weight: 700;
+      line-height: .86; letter-spacing: -.055em;
+      font-variant-numeric: tabular-nums;
+    }
+    .sl-score small { font-size: .22em; font-weight: 500; letter-spacing: 0; opacity: .45; margin-left: .1em; }
+    .sl-meta { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+    .sl-side.a .sl-meta { justify-content: flex-end; }
+    .sl-grade {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      border: 1px solid; padding: 5px 11px;
+    }
+    .sl-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+    }
+    .sl-side.lead .sl-tag { color: var(--accent); }
+    .grade-ap, .grade-a { border-color: var(--accent);    color: var(--accent); }
+    .grade-b            { border-color: var(--accent-dk); color: var(--accent-dk); }
+    .grade-c            { border-color: var(--amber);     color: var(--amber); }
+    .grade-d            { border-color: var(--orange);    color: var(--orange); }
+    .grade-f            { border-color: var(--red);       color: var(--red); }
+    .sl-axis {
+      align-self: stretch; width: 1px; background: var(--line-soft);
+      position: relative; min-height: 130px;
+    }
+    .sl-axis::after {
+      content: 'VS';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: var(--ink); padding: 8px 0;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; color: var(--muted-2);
+      writing-mode: vertical-rl;
+    }
 
-    /* Comparison sections */
-    .cmp-section {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
+    /* Gap meter — one bar, centre-origin, leaning toward the winner */
+    .gap-meter { margin-top: 30px; }
+    .gap-track {
+      position: relative; height: 3px; background: var(--line-soft);
     }
-    .cmp-section-hdr {
-      padding: 12px 20px; font-size: 13px; font-weight: 700;
-      background: rgba(255,255,255,.02); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 8px;
+    .gap-track::before {
+      content: ''; position: absolute; left: 50%; top: -5px; bottom: -5px;
+      width: 1px; background: var(--line);
     }
-    .cmp-table { width: 100%; border-collapse: collapse; }
-    .cmp-table th {
-      padding: 9px 16px; font-size: 11px; font-weight: 600;
-      color: var(--muted); text-transform: uppercase; letter-spacing: .5px;
-      text-align: left; border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,.01);
+    .gap-fill {
+      position: absolute; top: 0; bottom: 0;
+      background: var(--accent); box-shadow: 0 0 14px rgba(0,229,176,.5);
+      transition: width .9s var(--ease-out);
     }
-    .cmp-table th.col-site { text-align: center; }
-    .cmp-table td {
-      padding: 9px 16px; border-bottom: 1px solid var(--border);
-      font-size: 13px; vertical-align: middle;
+    .gap-caption {
+      margin-top: 12px;
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
     }
-    .cmp-table tr:last-child td { border-bottom: none; }
-    .cmp-table .col-check { font-weight: 600; color: var(--text); width: 26%; }
-    .cmp-table .col-site  { text-align: center; width: 37%; }
-    .cmp-cell {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 5px 12px; border-radius: 6px;
-      font-size: 13px; font-weight: 500; min-width: 120px;
+    .gap-verdict { color: var(--accent); }
+    .gap-verdict strong { font-weight: 700; letter-spacing: 1px; text-transform: none; }
+    .gap-verdict.tie { color: var(--muted); }
+
+    /* Diverging ledger */
+    .ledger { margin-top: clamp(40px, 6vh, 70px); }
+    .led-block { margin-bottom: 34px; }
+    .led-block-hdr {
+      display: flex; align-items: center; gap: 14px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--line-soft);
+      margin-bottom: 4px;
     }
-    .cell-win  { background: rgba(46,213,115,.12); color: var(--success); }
-    .cell-lose { background: rgba(255,71,87,.1);   color: var(--danger); }
-    .cell-tie  { background: rgba(107,114,128,.1); color: var(--muted); }
-    .cell-na   { background: rgba(107,114,128,.06); color: var(--muted); font-size: 12px; }
-    .pts-delta { font-family: 'Space Mono', monospace; font-size: 11px; opacity: .75; }
+    .led-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 2px; color: var(--accent);
+    }
+    .led-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; font-weight: 500;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--text);
+    }
+    .led-count {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+    }
+    .led-row {
+      display: grid; grid-template-columns: 1fr minmax(150px, 210px) 1fr;
+      align-items: center;
+      border-bottom: 1px solid var(--line-soft);
+      transition: background .2s;
+    }
+    .led-row:hover { background: rgba(236,238,233,.02); }
+    .led-check {
+      text-align: center; padding: 13px 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: .5px; color: var(--text);
+      border-left: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft);
+      align-self: stretch; display: flex; align-items: center; justify-content: center;
+    }
+    .led-cell {
+      display: flex; align-items: center; gap: 12px;
+      padding: 13px 4px; min-width: 0;
+    }
+    .led-cell.a { flex-direction: row-reverse; }   /* pushes outward, leftward */
+    .led-verdict {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: .5px; white-space: nowrap;
+    }
+    .led-bar { height: 2px; flex-shrink: 0; transition: width .6s var(--ease-out); }
+    .led-pts {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      font-variant-numeric: tabular-nums; opacity: .7; white-space: nowrap;
+    }
+    .v-win  .led-verdict, .v-win  .led-pts { color: var(--accent); }
+    .v-win  .led-bar { background: var(--accent); }
+    .v-lose .led-verdict, .v-lose .led-pts { color: var(--red); }
+    .v-lose .led-bar { background: var(--red); }
+    .v-tie  .led-verdict, .v-tie  .led-pts { color: var(--muted); }
+    .v-tie  .led-bar { background: var(--line); }
+
+    /* Compare again */
+    .again { margin-top: 46px; text-align: center; }
+    .again button {
+      background: transparent; border: none;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted); padding: 4px 2px 5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      transition: color .2s, border-color .2s;
+    }
+    .again button:hover { color: var(--text); border-color: var(--text); }
 
     /* ── Footer ──────────────────────────────────────────────────────────── */
-    footer { background: #111318; border-top: 1px solid rgba(255,255,255,0.08); padding: 0; font-size: 13px; color: var(--muted); }
-    .footer-bottom {
-      max-width: 1100px; margin: 0 auto;
-      padding: 14px 24px 18px;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
-      font-size: 12px; color: var(--muted);
+    footer { border-top: 1px solid var(--line-soft); padding: 44px clamp(20px, 4vw, 56px) 30px; margin-top: auto; }
+    .foot-grid {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px;
+      padding-bottom: 34px;
     }
-    .footer-bottom a { color: var(--muted); }
-    .footer-bottom a:hover { color: var(--text); }
-    .footer-sep { opacity: 0.4; }
+    .foot-logo { font-weight: 700; font-size: 17px; }
+    .foot-logo span { color: var(--accent); }
+    .foot-tag { margin-top: 8px; font-size: 12.5px; color: var(--muted-2); max-width: 26ch; }
+    .foot-col h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2); margin-bottom: 14px; font-weight: 400; }
+    .foot-col a { display: block; font-size: 13.5px; color: var(--muted); padding: 4px 0; transition: color .2s; }
+    .foot-col a:hover { color: var(--text); }
+    .foot-bottom {
+      max-width: 1240px; margin: 0 auto;
+      border-top: 1px solid var(--line-soft); padding-top: 20px;
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px;
+      color: var(--muted-2); text-transform: uppercase;
+    }
+    .foot-bottom a { color: var(--muted-2); }
+    .foot-bottom a:hover { color: var(--text); }
+    @media (max-width: 820px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
 
-    /* Utils */
+    /* ── Utils ───────────────────────────────────────────────────────────── */
     .hidden { display: none !important; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(.93); }
-      to   { opacity: 1; transform: scale(1); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+    /* ── Responsive ──────────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .led-row { grid-template-columns: 1fr minmax(120px, 160px) 1fr; }
+      .led-verdict, .led-check { font-size: 10px; }
+      .led-bar { display: none; }   /* the bars stop reading below this width */
+    }
+    @media (max-width: 700px) {
+      /* the split collapses into a stack, but the axis survives as the rule
+         between the two halves so the head-to-head reading holds */
+      .duel-grid { grid-template-columns: 1fr; }
+      .seam { height: 1px; width: 100%; margin: 4px 0; }
+      .seam-vs { width: 50px; height: 50px; }
+      .side { padding: 26px clamp(20px, 5vw, 40px); align-items: stretch !important; text-align: left !important; }
+      .side-a .url-box input { text-align: left; }
+      .side-inner { max-width: none; }
+      .side-mark { font-size: 130px; opacity: .8; }
+      .side-a .side-mark { left: auto; right: -10px; }
+      .btn-compare { width: 100%; justify-content: center; }
+      .duel-foot { padding-left: clamp(20px, 5vw, 40px); padding-right: clamp(20px, 5vw, 40px); }
+
+      /* results: rows unfold — check name on top, the two verdicts beneath */
+      .scoreline { grid-template-columns: 1fr; gap: 22px; }
+      .sl-side.a { text-align: left; }
+      .sl-side.a .sl-meta { justify-content: flex-start; }
+      .sl-axis { width: 100%; height: 1px; min-height: 0; }
+      .sl-axis::after { writing-mode: horizontal-tb; padding: 0 10px; }
+      /* one verdict per line: at 390px two columns of nowrap mono clipped the
+         B side against the gutter */
+      .led-row { grid-template-columns: 1fr; padding: 8px 0; }
+      /* order:-1 lifts the check name above its own pair — without it grid
+         auto-placement drops the label between A and B, where it reads as a
+         heading for the wrong row */
+      .led-check {
+        order: -1; grid-column: 1 / -1; border: none; justify-content: flex-start;
+        padding: 8px 0 6px; color: var(--muted-2); letter-spacing: 2px; text-transform: uppercase; font-size: 9.5px;
+      }
+      .led-cell { padding: 4px 0; gap: 10px; }
+      .led-cell.a { flex-direction: row; }
+      .led-cell.a, .led-cell.b { justify-content: flex-start; }
+      .led-cell .led-pts { margin-left: auto; }   /* points align on the right gutter */
+      /* the split is gone, so each verdict states which corner it belongs to */
+      .led-cell::before {
+        font-family: 'JetBrains Mono', monospace; font-size: 9px;
+        letter-spacing: 2px; color: var(--muted-2);
+      }
+      .led-cell.a::before { content: 'A'; }
+      .led-cell.b::before { content: 'B'; }
     }
 
-    @media (max-width: 700px) {
-      .versus-inputs { grid-template-columns: 1fr; }
-      .vs-divider { margin: 8px 0; padding: 6px; }
-      .versus-header { grid-template-columns: 1fr; }
-      .vs-mid { display: none; }
-      .cmp-table .col-check { width: 30%; }
-      .cmp-table .col-site  { width: 35%; }
-      .cmp-cell { min-width: 80px; font-size: 12px; padding: 4px 8px; }
+    /* ── Reduced motion ──────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .grain, .load-lane::after { animation: none; }
+      * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
     }
   </style>
   <script type="application/ld+json">
@@ -387,107 +732,146 @@
 </head>
 <body>
 
+<div class="grain" aria-hidden="true"></div>
+
 <!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
-<nav>
+<header>
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
-    <div class="nav-links">
+    <a href="index.html" class="nav-logo">Secure<span style="opacity:.6">Scanr</span><sup>EST. 2026</sup></a>
+    <nav class="nav-links" aria-label="Primary">
       <a href="scan.html">Scan</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn" style="color:var(--text)">Tools</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true" data-open>Tools</button>
         <div class="nav-dropdown-menu">
           <a href="versus.html" class="active-link">Versus</a>
           <a href="generators.html">Generators</a>
           <a href="security-txt.html">Security.txt</a>
           <a href="api-docs.html">API Docs</a>
           <a href="learn.html">Learn</a>
-    <a href="badge.html">Badge</a>
+          <a href="badge.html">Badge</a>
         </div>
       </div>
       <a href="plans.html">Plans</a>
       <a href="world-security-index.html">World Index</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">More</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true">More</button>
         <div class="nav-dropdown-menu">
           <a href="methodology.html">Methodology</a>
           <a href="about.html">About</a>
-          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
           <a href="compliance-report.html">Compliance Report</a>
           <a href="status.html">Status</a>
         </div>
       </div>
-      <a href="plans.html" class="nav-cta">Get API access →</a>
-    </div>
-    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+      <a href="plans.html" class="nav-cta">API Access →</a>
+    </nav>
+    <button class="nav-burger" onclick="toggleNav()" aria-label="Open menu">Menu +</button>
   </div>
-  <div class="nav-mobile" id="nav-mobile">
-    <a href="scan.html">Scan</a>
-    <a href="versus.html">Versus</a>
-    <a href="generators.html">Generators</a>
-    <a href="security-txt.html">Security.txt</a>
-    <a href="api-docs.html">API Docs</a>
-    <a href="learn.html">Learn</a>
-    <a href="badge.html">Badge</a>
-    <a href="plans.html">Plans</a>
-    <a href="world-security-index.html">World Index</a>
-    <a href="methodology.html">Methodology</a>
-    <a href="about.html">About</a>
-    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
-    <a href="compliance-report.html">Compliance Report</a>
-    <a href="status.html">Status</a>
-    <a href="plans.html">Get API access →</a>
+</header>
+
+<div id="nav-mobile" role="dialog" aria-label="Menu">
+  <button id="menu-close" onclick="toggleNav()">Close ×</button>
+  <div class="menu-scroll">
+    <a href="scan.html">Scan <span class="mono">01</span></a>
+    <a href="plans.html">Plans <span class="mono">02</span></a>
+    <a href="world-security-index.html">World Index <span class="mono">03</span></a>
+    <h4 class="menu-group">Tools</h4>
+    <a class="menu-sub" href="versus.html">Versus</a>
+    <a class="menu-sub" href="generators.html">Generators</a>
+    <a class="menu-sub" href="security-txt.html">Security.txt</a>
+    <a class="menu-sub" href="api-docs.html">API Docs</a>
+    <a class="menu-sub" href="learn.html">Learn</a>
+    <a class="menu-sub" href="badge.html">Badge</a>
+    <h4 class="menu-group">More</h4>
+    <a class="menu-sub" href="methodology.html">Methodology</a>
+    <a class="menu-sub" href="about.html">About</a>
+    <a class="menu-sub" href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
+    <a class="menu-sub" href="compliance-report.html">Compliance Report</a>
+    <a class="menu-sub" href="status.html">Status</a>
   </div>
-</nav>
+</div>
 
 <main>
 
-<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<!-- ── The duel ─────────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <p class="hero-eyebrow">Versus Mode</p>
-  <h1 class="hero-title">Compare two sites side by side.</h1>
-  <p class="hero-sub">Head-to-head security audit — see who wins on headers, TLS, DNS, and more.</p>
+  <div class="duel-head">
+    <p class="hero-kicker">Versus mode</p>
+    <h1 class="duel-title">
+      Two sites in<span class="accent-dot">.</span>
+      <em>One walks out with the <b>better grade</b>.</em>
+    </h1>
+  </div>
 
-  <form class="compare-form" id="compare-form" autocomplete="off">
-    <div class="versus-inputs">
-      <div class="url-box">
-        <input type="text" id="url-a" placeholder="first-site.com" spellcheck="false" autocapitalize="none">
-      </div>
-      <div class="vs-divider">VS</div>
-      <div class="url-box">
-        <input type="text" id="url-b" placeholder="second-site.com" spellcheck="false" autocapitalize="none">
+  <form class="duel-grid" id="compare-form" autocomplete="off">
+    <div class="side side-a">
+      <span class="side-mark" aria-hidden="true">A</span>
+      <div class="side-inner">
+        <span class="side-label"><b>A</b> · Left corner</span>
+        <div class="url-box">
+          <input type="text" id="url-a" placeholder="your-site.com" spellcheck="false" autocapitalize="none" aria-label="First website URL">
+        </div>
+        <p class="side-hint">Usually yours</p>
       </div>
     </div>
-    <div class="compare-submit-row">
+
+    <div class="seam" aria-hidden="true">
+      <div class="seam-vs"><span>VS</span></div>
+    </div>
+
+    <div class="side side-b">
+      <span class="side-mark" aria-hidden="true">B</span>
+      <div class="side-inner">
+        <span class="side-label"><b>B</b> · Right corner</span>
+        <div class="url-box">
+          <input type="text" id="url-b" placeholder="their-site.com" spellcheck="false" autocapitalize="none" aria-label="Second website URL">
+        </div>
+        <p class="side-hint">The one to beat</p>
+      </div>
+    </div>
+
+    <div class="duel-foot">
       <button type="submit" class="btn-compare" id="compare-btn">
-        <span id="btn-label">Compare →</span>
+        <span id="btn-label">Run the duel →</span>
         <span id="btn-spinner" class="btn-spinner hidden"></span>
       </button>
+      <p class="hero-proof">Two live scans, run in parallel <span>·</span> 14 dimensions each <span>·</span> nothing stored <span>·</span> <a href="methodology.html">How we grade</a></p>
     </div>
   </form>
+
+  <div class="fixtures">
+    <button type="button" class="fixture" onclick="loadFixture('cloudflare.com','github.com')">Cloudflare vs GitHub</button>
+    <button type="button" class="fixture" onclick="loadFixture('stripe.com','paypal.com')">Stripe vs PayPal</button>
+    <button type="button" class="fixture" onclick="loadFixture('mozilla.org','google.com')">Mozilla vs Google</button>
+  </div>
 </section>
 
 <!-- ── Loading ───────────────────────────────────────────────────────────────── -->
 <div id="loading-state" class="hidden">
-  <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Scanning both sites in parallel…</p>
-  <div class="loading-dots"><span></span><span></span><span></span></div>
+  <p>Both sides under scan…</p>
+  <div class="load-race">
+    <div class="load-lane"></div>
+    <span class="load-vs">VS</span>
+    <div class="load-lane rtl"></div>
+  </div>
 </div>
 
 <!-- ── Error ─────────────────────────────────────────────────────────────────── -->
 <div id="error-state" class="hidden">
   <div class="error-box">
-    <h3>Scan failed</h3>
+    <h3>Duel called off</h3>
     <p id="error-msg">Something went wrong. Check both URLs and try again.</p>
-    <button onclick="resetVersus()" style="margin-top:12px;background:var(--danger);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer">Try Again</button>
+    <button onclick="resetVersus()">Try again</button>
   </div>
 </div>
 
 <!-- ── Results ───────────────────────────────────────────────────────────────── -->
 <div id="results-state" class="hidden">
-  <div class="versus-header" id="versus-header"></div>
+  <div id="versus-header"></div>
   <div id="winner-banner"></div>
-  <div id="cmp-sections"></div>
-  <div style="text-align:center;margin-top:24px">
-    <button onclick="resetVersus()" style="background:transparent;border:1.5px solid var(--border);color:var(--muted);border-radius:8px;padding:10px 22px;font-size:14px;font-weight:500;cursor:pointer;transition:all .18s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">← Compare Another Pair</button>
+  <div id="cmp-sections" class="ledger"></div>
+  <div class="again">
+    <button onclick="resetVersus()">← Set up another duel</button>
   </div>
 </div>
 
@@ -495,18 +879,39 @@
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <div class="footer-bottom">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">Secure<span>Scanr</span></div>
+      <p class="foot-tag">Free website security scanner. Fourteen dimensions, one grade, every fix included.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="scan.html">Scan</a>
+      <a href="versus.html">Versus</a>
+      <a href="generators.html">Generators</a>
+      <a href="security-txt.html">Security.txt</a>
+      <a href="badge.html">Badge</a>
+    </div>
+    <div class="foot-col">
+      <h4>Resources</h4>
+      <a href="methodology.html">Methodology</a>
+      <a href="learn.html">Learning Center</a>
+      <a href="api-docs.html">API Docs</a>
+      <a href="world-security-index.html">World Index</a>
+      <a href="halloffame.html">Hall of Fame</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="plans.html">Plans</a>
+      <a href="compliance-report.html">Compliance</a>
+      <a href="status.html">Status</a>
+      <a href="mailto:hello@securescanr.com">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
     <span>© 2026 SecureScanr</span>
-    <span class="footer-sep">·</span>
-    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
-    <span class="footer-sep">·</span>
-    <a href="methodology.html">Methodology</a>
-    <span class="footer-sep">·</span>
-    <a href="terms.html">Terms</a>
-    <span class="footer-sep">·</span>
-    <a href="refund.html">Refund</a>
-    <span class="footer-sep">·</span>
-    <a href="status.html">Status</a>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refund.html">Refund</a></span>
   </div>
 </footer>
 
@@ -532,8 +937,12 @@
   function gradeCls(g) {
     return { 'A+': 'grade-ap', A: 'grade-a', B: 'grade-b', C: 'grade-c', D: 'grade-d', F: 'grade-f' }[g] || 'grade-f';
   }
-  function gradeColor(g) {
-    return { 'A+': '#2ed573', A: '#2ed573', B: '#00d4aa', C: '#ffa502', D: '#ff6b35', F: '#ff4757' }[g] || '#ff4757';
+
+  /* preset match-ups — fills both corners, doesn't auto-run */
+  function loadFixture(a, b) {
+    el('url-a').value = a;
+    el('url-b').value = b;
+    el('url-b').focus();
   }
 
   // ── Scan ──────────────────────────────────────────────────────────────────
@@ -595,70 +1004,60 @@
     const winner = sA > sB ? 'a' : (sB > sA ? 'b' : 'tie');
     const displayA = (dA.final_url || urlA).replace(/^https?:\/\//, '');
     const displayB = (dB.final_url || urlB).replace(/^https?:\/\//, '');
-
-    // Grade header
-    el('versus-header').innerHTML = `
-      ${gradeCard(dA, displayA, winner === 'a', winner === 'b')}
-      <div class="vs-mid">VS</div>
-      ${gradeCard(dB, displayB, winner === 'b', winner === 'a')}`;
-
-    // Winner banner
     const diff = Math.abs(sA - sB);
-    const wb = el('winner-banner');
-    if (winner === 'tie') {
-      wb.className = 'winner-banner tie';
-      wb.innerHTML = `🤝 It's a tie — both sites scored ${sA}/100`;
-    } else {
-      const winUrl = winner === 'a' ? displayA : displayB;
-      wb.className = `winner-banner win-${winner}`;
-      wb.innerHTML = `🏆 <strong>${esc(winUrl)}</strong> wins by ${diff} point${diff !== 1 ? 's' : ''}`;
-    }
 
-    // Comparison sections
+    // Scoreline — the two scores face each other across the axis
+    el('versus-header').className = 'scoreline';
+    el('versus-header').innerHTML =
+      scoreSide(dA, displayA, 'a', winner) +
+      '<div class="sl-axis" aria-hidden="true"></div>' +
+      scoreSide(dB, displayB, 'b', winner);
+
+    // Gap meter — centre-origin bar leaning toward whoever leads
+    const lean = Math.min(diff, 50) / 50 * 50;   // % of half-width
+    const wb = el('winner-banner');
+    wb.className = 'gap-meter';
+    const fillStyle = winner === 'b'
+      ? `left:50%;width:${lean}%`
+      : `right:50%;width:${lean}%`;
+    const verdict = winner === 'tie'
+      ? '<span class="gap-verdict tie">Dead heat — both on ' + sA + '/100</span>'
+      : '<span class="gap-verdict"><strong>' + esc(winner === 'a' ? displayA : displayB) + '</strong> leads by ' + diff + ' point' + (diff !== 1 ? 's' : '') + '</span>';
+    wb.innerHTML = `
+      <div class="gap-track">${winner === 'tie' ? '' : `<div class="gap-fill" style="${fillStyle}"></div>`}</div>
+      <div class="gap-caption">
+        <span>Point gap</span>
+        ${verdict}
+        <span>Scored out of 100</span>
+      </div>`;
+
+    // Diverging ledger
     const sections = buildSections(dA, dB);
     el('cmp-sections').innerHTML = sections.map(renderSection).join('');
   }
 
-  function gradeCard(d, displayUrl, isWinner, isLoser) {
-    const g = d.grade, s = d.score;
-    const cls = isWinner ? 'winner' : (isLoser ? 'loser' : '');
+  function scoreSide(d, displayUrl, which, winner) {
+    const lead = winner === which;
+    const tag = winner === 'tie' ? 'Level' : (lead ? '↑ Leads' : 'Trails');
     return `
-      <div class="versus-grade-card ${cls}">
-        <div class="grade-badge-sm ${gradeCls(g)}">
-          <div class="grade-letter-sm">${esc(g)}</div>
-          <div class="grade-score-sm">${s}/100</div>
-        </div>
-        <div class="grade-card-info">
-          <div class="grade-card-url">${esc(displayUrl)}</div>
-          <div class="grade-card-label">Security score</div>
-          ${isWinner ? '<div class="winner-ribbon">🏆 Winner</div>' : ''}
+      <div class="sl-side ${which}${lead ? ' lead' : ''}">
+        <div class="sl-host">${esc(displayUrl)}</div>
+        <div class="sl-score">${d.score}<small>/100</small></div>
+        <div class="sl-meta">
+          <span class="sl-grade ${gradeCls(d.grade)}">${esc(d.grade)}</span>
+          <span class="sl-tag">${tag}</span>
         </div>
       </div>`;
   }
 
-  // ── Build comparison data ─────────────────────────────────────────────────
+  // ── Build comparison data (scoring untouched) ──────────────────────────────
   function buildSections(dA, dB) {
     return [
-      {
-        icon: '🔒', title: 'HTTP Security Headers',
-        rows: buildHeaderRows(dA, dB),
-      },
-      {
-        icon: '🛡', title: 'TLS / SSL',
-        rows: buildTLSRows(dA, dB),
-      },
-      {
-        icon: '📡', title: 'DNS Security',
-        rows: buildDNSRows(dA, dB),
-      },
-      {
-        icon: '🔍', title: 'Page Analysis',
-        rows: buildPageRows(dA, dB),
-      },
-      {
-        icon: '🌐', title: 'CORS & Server Info',
-        rows: buildExtrasRows(dA, dB),
-      },
+      { title: 'HTTP Security Headers', rows: buildHeaderRows(dA, dB) },
+      { title: 'TLS / SSL',             rows: buildTLSRows(dA, dB) },
+      { title: 'DNS Security',          rows: buildDNSRows(dA, dB) },
+      { title: 'Page Analysis',         rows: buildPageRows(dA, dB) },
+      { title: 'CORS & Server Info',    rows: buildExtrasRows(dA, dB) },
     ];
   }
 
@@ -757,37 +1156,71 @@
     ];
   }
 
-  // ── Render section ────────────────────────────────────────────────────────
-  function renderSection(sec) {
+  // ── Render one ledger block ───────────────────────────────────────────────
+  /* the bar length is the deduction, so the worse side visibly reaches
+     further out from the spine. Capped so a −20 doesn't run off the page. */
+  function bar(ded) {
+    const w = ded > 0 ? Math.min(6 + ded * 4, 96) : 14;
+    return `<span class="led-bar" style="width:${w}px"></span>`;
+  }
+
+  function renderSection(sec, i) {
+    const decided = sec.rows.filter(r => r.winner !== 'tie').length;
     const rows = sec.rows.map(r => {
-      const clsA = r.winner === 'a' ? 'cell-win' : (r.winner === 'b' ? 'cell-lose' : 'cell-tie');
-      const clsB = r.winner === 'b' ? 'cell-win' : (r.winner === 'a' ? 'cell-lose' : 'cell-tie');
-      const ptsA = r.dedA > 0 ? `<span class="pts-delta">−${r.dedA}</span>` : '';
-      const ptsB = r.dedB > 0 ? `<span class="pts-delta">−${r.dedB}</span>` : '';
-      return `<tr>
-        <td class="col-check">${esc(r.label)}</td>
-        <td class="col-site"><span class="cmp-cell ${clsA}">${esc(r.labelA)} ${ptsA}</span></td>
-        <td class="col-site"><span class="cmp-cell ${clsB}">${esc(r.labelB)} ${ptsB}</span></td>
-      </tr>`;
+      const clsA = r.winner === 'a' ? 'v-win' : (r.winner === 'b' ? 'v-lose' : 'v-tie');
+      const clsB = r.winner === 'b' ? 'v-win' : (r.winner === 'a' ? 'v-lose' : 'v-tie');
+      const ptsA = r.dedA > 0 ? `<span class="led-pts">−${r.dedA}</span>` : '';
+      const ptsB = r.dedB > 0 ? `<span class="led-pts">−${r.dedB}</span>` : '';
+      return `<div class="led-row">
+        <div class="led-cell a ${clsA}"><span class="led-verdict">${esc(r.labelA)}</span>${ptsA}${bar(r.dedA)}</div>
+        <div class="led-check">${esc(r.label)}</div>
+        <div class="led-cell b ${clsB}"><span class="led-verdict">${esc(r.labelB)}</span>${ptsB}${bar(r.dedB)}</div>
+      </div>`;
     }).join('');
 
-    return `<div class="cmp-section">
-      <div class="cmp-section-hdr">${sec.icon} ${esc(sec.title)}</div>
-      <div style="overflow-x:auto">
-      <table class="cmp-table">
-        <thead><tr>
-          <th>Check</th>
-          <th class="col-site" id="th-a">Site A</th>
-          <th class="col-site" id="th-b">Site B</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+    return `<section class="led-block">
+      <div class="led-block-hdr">
+        <span class="led-num">${String(i + 1).padStart(2, '0')}</span>
+        <h2 class="led-title">${esc(sec.title)}</h2>
+        <span class="led-count">${decided} of ${sec.rows.length} decided</span>
       </div>
-    </div>`;
+      ${rows}
+    </section>`;
   }
 </script>
 <script>
-(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+(function(){
+  /* dock the nav once scrolled, so content never blends through it.
+     An open dropdown forces the same state — otherwise the difference blend
+     smears the panel into whatever is behind the header. */
+  var hdr = document.querySelector('header'), ticking = false, menuOpen = false;
+  function dock() { hdr.classList.toggle('docked', menuOpen || window.scrollY > 40); }
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { dock(); ticking = false; });
+  }, { passive: true });
+  Array.prototype.slice.call(document.querySelectorAll('.nav-dropdown')).forEach(function (d) {
+    ['mouseenter', 'focusin'].forEach(function (ev) {
+      d.addEventListener(ev, function () { menuOpen = true; dock(); });
+    });
+    ['mouseleave', 'focusout'].forEach(function (ev) {
+      d.addEventListener(ev, function () { menuOpen = false; dock(); });
+    });
+  });
+  dock();
+
+  /* close the fullscreen menu when a link is tapped */
+  Array.prototype.slice.call(document.querySelectorAll('#nav-mobile a')).forEach(function(a){
+    a.addEventListener('click', function(){ document.getElementById('nav-mobile').classList.remove('open'); });
+  });
+  /* hide the link to the page you are already on */
+  var c = window.location.href.replace(/[?#].*$/, "");
+  document.querySelectorAll('.nav-dropdown-menu a, #nav-mobile a').forEach(function(a){
+    var e = document.createElement('a'); e.href = a.getAttribute('href') || '';
+    if (e.href === c) a.style.display = 'none';
+  });
+})();
 </script>
 </body>
 </html>

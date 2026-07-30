@@ -19,399 +19,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Instant web security scan — check HTTP security headers, TLS certificate, DNS email security (SPF/DMARC) and cookies. Free, no login required.">
   <meta property="og:title" content="SecureScanr — Free Website Security Scanner | Instant A-F Grade">
-  <meta property="og:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Trusted by security professionals worldwide.">
+  <meta property="og:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Every finding ships with the exact fix.">
   <meta property="og:image" content="https://securescanr.com/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://securescanr.com/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Website Security Scanner — Check HTTP Headers, TLS &amp; DNS | SecureScanr">
-  <meta name="twitter:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Trusted by security professionals worldwide.">
+  <meta name="twitter:description" content="Instant security audit — headers, TLS, DNS, cookies. Free scan, no login. Every finding ships with the exact fix.">
   <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
   <meta name="twitter:site" content="@securescanr_in">
   <link rel="canonical" href="https://securescanr.com/">
   <meta name="google-site-verification" content="BWuKYjeqinBYyCRZJDLgJn43FRgTKd_S4NmscFIZRwU" />
   <title>SecureScanr — Free Website Security Scanner | Instant A-F Grade</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
-
-    :root {
-      --bg:      #0a0b0d;
-      --surface: #111318;
-      --border:  #1e2128;
-      --accent:  #00d4aa;
-      --danger:  #ff4757;
-      --warning: #ffa502;
-      --success: #2ed573;
-      --text:    #e8eaf0;
-      --muted:   #6b7280;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
-    body { overflow-x: hidden; }
-    body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      font-size: 15px;
-    }
-    a { color: var(--accent); text-decoration: none; }
-
-    /* ── Nav ─────────────────────────────────────────────────────────────── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,11,13,0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 24px; height: 60px;
-      display: flex; align-items: center;
-    }
-    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
-    .logo-accent { color: var(--accent); }
-    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
-    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
-    .nav-links > a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--accent); color: #0a0b0d !important;
-      font-size: 12px; font-weight: 600;
-      padding: 6px 14px; border-radius: 6px;
-      transition: opacity .15s !important;
-    }
-    .nav-cta:hover { opacity: .88; }
-    .nav-dropdown { position: relative; }
-    .nav-dropdown-btn {
-      font-size: 13px; color: var(--muted); background: none; border: none;
-      cursor: pointer; display: flex; align-items: center; gap: 4px;
-      padding: 0; font-family: inherit; transition: color .15s;
-    }
-    .nav-dropdown-btn:hover,
-    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
-    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
-    .nav-dropdown::after {
-      content: ''; position: absolute; bottom: -8px; left: 0;
-      width: 100%; height: 8px;
-    }
-    .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5);
-      z-index: 200;
-    }
-    .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
-    .nav-dropdown-menu a {
-      display: block; padding: 8px 12px; font-size: 13px;
-      color: var(--muted); border-radius: 6px; text-decoration: none;
-      transition: background .12s, color .12s;
-    }
-    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
-    .nav-dropdown-menu a.active-link { color: var(--text); }
-    .nav-hamburger {
-      display: none; background: none; border: none;
-      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
-    }
-    .nav-mobile {
-      display: none; flex-direction: column;
-      border-top: 1px solid var(--border); padding: 12px 24px 16px;
-    }
-    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
-    .nav-mobile a:last-child { border-bottom: none; }
-    .nav-mobile.open { display: flex; }
-    @media (max-width: 700px) {
-      .nav-links { display: none; }
-      .nav-hamburger { display: block; }
-    }
-
-    /* ── Hero ────────────────────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 80px 24px;
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,212,170,.12) 0%, transparent 70%);
-      text-align: center;
-    }
-    .hero-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 20px;
-    }
-    .hero-title {
-      font-size: clamp(36px, 6vw, 64px);
-      font-weight: 700;
-      letter-spacing: -1.5px;
-      line-height: 1.1;
-      color: var(--text);
-      max-width: 700px;
-    }
-    .hero-sub {
-      margin-top: 20px;
-      font-size: clamp(13px, 1.8vw, 15px);
-      color: var(--muted);
-      max-width: 520px;
-    }
-    .hero-cta {
-      margin-top: 40px;
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--accent); color: #0a0b0d;
-      font-size: 16px; font-weight: 700;
-      padding: 14px 32px; border-radius: 8px;
-      transition: transform .18s, box-shadow .18s;
-    }
-    .hero-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(0,212,170,.3);
-      color: #0a0b0d;
-    }
-    .hero-proof {
-      margin-top: 20px;
-      font-size: 12px; color: var(--muted);
-    }
-    .hero-chips {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
-      margin-top: 48px;
-    }
-    .hero-chip {
-      font-size: 12px; color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 5px 12px; border-radius: 20px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .hero-chip::before { content: '✓'; color: var(--accent); font-weight: 700; }
-
-    /* ── Section commons ─────────────────────────────────────────────────── */
-    section { padding: 96px 24px; }
-    .section-inner { max-width: 1100px; margin: 0 auto; }
-    .section-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent);
-      margin-bottom: 14px;
-    }
-    .section-title {
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 700; letter-spacing: -.5px;
-      color: var(--text); margin-bottom: 48px;
-    }
-
-    /* ── Free Tools ─────────────────────────────────────────────────────── */
-    #free-tools { background: var(--bg); padding: 72px 24px; border-top: 1px solid var(--border); }
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-      margin-top: 40px;
-    }
-    .tool-card {
-      display: flex;
-      flex-direction: column;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 22px 20px;
-      text-decoration: none;
-      color: var(--text);
-      transition: border-color .2s, transform .2s;
-    }
-    .tool-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-      color: var(--text);
-    }
-    .tool-icon { font-size: 26px; margin-bottom: 12px; display: block; }
-    .tool-name { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-    .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
-    .tool-link {
-      font-size: 11px; font-weight: 700; color: var(--accent);
-      margin-top: 14px; letter-spacing: .3px;
-    }
-    @media (max-width: 768px) {
-      .tools-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      #free-tools { padding: 56px 16px; }
-    }
-    @media (max-width: 480px) {
-      .tools-grid { grid-template-columns: 1fr; gap: 10px; }
-      .tool-card { padding: 18px 16px; flex-direction: row; align-items: flex-start; gap: 14px; }
-      .tool-icon { font-size: 22px; margin-bottom: 0; flex-shrink: 0; }
-      .tool-link { margin-top: 8px; }
-    }
-
-    /* ── How it works ────────────────────────────────────────────────────── */
-    #how { background: var(--bg); }
-    .steps {
-      display: grid;
-      grid-template-columns: 1fr 40px 1fr 40px 1fr;
-      align-items: center;
-      gap: 16px;
-    }
-    .step {
-      text-align: center;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 28px 24px;
-      transition: border-color .2s, transform .2s;
-    }
-    .step:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-    .step-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; font-weight: 700; color: var(--accent);
-      letter-spacing: 1px; margin-bottom: 16px;
-    }
-    .step-icon {
-      font-size: 36px; margin-bottom: 14px; display: block;
-    }
-    .step-title {
-      font-size: 16px; font-weight: 700; margin-bottom: 6px;
-    }
-    .step-desc { font-size: 13px; color: var(--muted); }
-    .step-arrow {
-      text-align: center; color: var(--border);
-      font-size: 24px; font-weight: 700;
-    }
-    @media (max-width: 768px) {
-      .steps {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      .step-arrow { display: none; }
-    }
-
-    /* ── What we check ───────────────────────────────────────────────────── */
-    #checks { background: var(--bg); }
-    .checks-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-    .check-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 24px;
-      transition: border-color .2s, transform .2s;
-    }
-    .check-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-    .check-icon { font-size: 28px; margin-bottom: 16px; display: block; }
-    .check-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-    .check-count {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--accent);
-      font-weight: 700; margin-bottom: 10px;
-    }
-    .check-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-    @media (max-width: 640px) {
-      .checks-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .checks-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── Why SecureScanr ────────────────────────────────────────────────────── */
-    #why { background: var(--bg); }
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-    }
-    .why-col {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 28px 24px;
-      transition: border-color .2s, transform .2s;
-    }
-    .why-col:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-    .why-icon { font-size: 28px; margin-bottom: 14px; display: block; }
-    .why-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-    .why-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
-    @media (max-width: 768px) {
-      .why-grid { grid-template-columns: 1fr; gap: 32px; }
-    }
-
-    /* ── CTA Banner ──────────────────────────────────────────────────────── */
-    #cta-banner {
-      background: var(--bg);
-      padding: 80px 24px;
-      text-align: center;
-      border-top: 1px solid var(--border);
-    }
-    .cta-title {
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 700; letter-spacing: -.5px;
-      margin-bottom: 14px;
-    }
-    .cta-sub { color: var(--muted); margin-bottom: 32px; }
-
-    /* ── Footer ──────────────────────────────────────────────────────────── */
-    footer {
-      background: #111318;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 40px 24px 0;
-      font-size: 13px; color: var(--muted);
-    }
-    .footer-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr auto;
-      align-items: start; gap: 32px;
-      padding-bottom: 20px;
-    }
-    .footer-logo { font-size: 16px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
-    .footer-logo span { color: var(--accent); }
-    .footer-tagline { font-size: 12px; color: var(--muted); line-height: 1.6; }
-    .footer-nav {
-      display: flex; gap: 20px; justify-content: center; align-items: center;
-      position: static; background: none;
-      backdrop-filter: none; -webkit-backdrop-filter: none;
-      border: none; z-index: auto;
-    }
-    .footer-nav a { font-size: 13px; color: var(--muted); transition: color .15s; }
-    .footer-nav a:hover { color: var(--text); }
-    .footer-right { text-align: right; font-size: 12px; color: var(--muted); line-height: 1.8; }
-    .footer-right a { color: var(--muted); }
-    .footer-right a:hover { color: var(--text); }
-    .footer-bottom {
-      max-width: 1100px; margin: 0 auto;
-      padding: 12px 0 16px;
-      border-top: 1px solid var(--border);
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px;
-      font-size: 12px; color: var(--muted);
-    }
-    .footer-bottom a { color: var(--muted); }
-    .footer-bottom a:hover { color: var(--text); }
-    .footer-sep { opacity: 0.4; }
-    @media (max-width: 640px) {
-      .footer-inner { grid-template-columns: 1fr; text-align: center; }
-      .footer-nav { flex-wrap: wrap; }
-    }
-    footer a { color: var(--muted); }
-    footer a:hover { color: var(--text); }
-
-    /* ── Compliance bottom CTA ───────────────────────────────────────────────── */
-    #compliance-bottom {
-      padding: 56px 24px;
-      background: var(--bg);
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-  </style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -422,399 +42,1394 @@
     "description": "Free website security scanner — check HTTP headers, TLS, DNS and cookies."
   }
   </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What does SecureScanr check in a free website security scan?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "SecureScanr checks HTTP security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy), TLS/SSL certificate validity and expiry, DNS email security records (SPF, DMARC, DKIM, CAA, DNSSEC), and cookie security attributes — all in a single free scan with no login required."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is SecureScanr really free to use?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. The core scan — covering HTTP headers, TLS certificate, and DNS records — is completely free with no account required. Pro features like PDF report export, cookie analysis, cross-origin isolation checks, and API access are available from ₹499/month (India) or $7/month (international)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does SecureScanr calculate the security score?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "SecureScanr starts at 100 and deducts points for missing or misconfigured security controls. Critical issues like a missing Content Security Policy or HSTS deduct 20 points each. Important headers like X-Frame-Options deduct 10 points. TLS certificate expiry, weak DNS records, insecure cookies, and server fingerprinting each carry their own deductions. The final score maps to grades A+ (90–100) through F (below 50)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use SecureScanr to scan any website?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You can scan any publicly accessible website — just paste the URL and hit Scan. SecureScanr fetches the site's HTTP response headers, resolves its DNS records, and validates its TLS certificate without installing anything. Scanning sites you do not own is permitted for security research and educational purposes."
-        }
-      }
-    ]
-  }
-  </script>
-  <link rel="stylesheet" href="/mobile.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+    :root {
+      --ink:       #050607;
+      --ink-2:     #0b0d10;
+      --paper:     #f2efe9;
+      --paper-dim: #d9d5cc;
+      --accent:    #00e5b0;
+      --accent-dk: #00d4aa;
+      --red:       #ff4d5e;
+      --amber:     #ffb020;
+      --text:      #eceee9;
+      --muted:     #8a8f98;
+      --muted-2:   #565b64;
+      --line:      rgba(236,238,233,.14);
+      --line-soft: rgba(236,238,233,.07);
+      --ease-out:  cubic-bezier(.16, 1, .3, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+      font-size: clamp(15px, 1.05vw + .5rem, 18px);
+      scrollbar-width: thin;
+      scrollbar-color: #1c1f24 var(--ink);
+    }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: #1c1f24; border-radius: 99px; border: 2px solid var(--ink); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-dk); }
+    body {
+      background: var(--ink);
+      color: var(--text);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      line-height: 1.55;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--accent); color: var(--ink); }
+
+    .serif  { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+    .mono   { font-family: 'JetBrains Mono', monospace; }
+
+    /* ── Film grain ──────────────────────────────────────────────────────── */
+    .grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      pointer-events: none; z-index: 2000;
+      opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain-shift 900ms steps(4) infinite;
+    }
+    @keyframes grain-shift {
+      0%   { transform: translate(0,0); }
+      25%  { transform: translate(-2%,3%); }
+      50%  { transform: translate(3%,-2%); }
+      75%  { transform: translate(-3%,-3%); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* ── Boot preloader ──────────────────────────────────────────────────── */
+    #boot {
+      position: fixed; inset: 0; z-index: 3000;
+      background: var(--ink);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .7s var(--ease-out);
+    }
+    #boot.done { transform: translateY(-101%); }
+    #boot.gone { display: none; }
+    .boot-lines { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+    .boot-lines div { opacity: 0; }
+    .boot-lines div.on { opacity: 1; }
+    .boot-lines .ok { color: var(--accent); }
+
+    /* ── Nav ─────────────────────────────────────────────────────────────── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      mix-blend-mode: difference;
+    }
+    /* Docked state: past ~40px the difference blend would let scrolled content
+       tangle with the nav glyphs, so we drop the blend and fade in a backdrop. */
+    header::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(5,6,7,.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+      opacity: 0; transition: opacity .3s var(--ease-out);
+      pointer-events: none;
+    }
+    header.docked { mix-blend-mode: normal; }
+    header.docked::before { opacity: 1; }
+    .nav-inner {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 22px clamp(20px, 4vw, 56px);
+      color: #fff;
+      position: relative; z-index: 1;
+    }
+    .nav-logo { font-weight: 700; font-size: 17px; letter-spacing: -.3px; }
+    .nav-logo sup { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; opacity: .55; margin-left: 6px; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: clamp(18px, 2.6vw, 36px); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .nav-links a { position: relative; opacity: .72; transition: opacity .2s; }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a::after {
+      content: ''; position: absolute; left: 0; bottom: -4px;
+      width: 100%; height: 1px; background: #fff;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .35s var(--ease-out);
+    }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    /* ── Grouped dropdowns (Tools / More) ────────────────────────────────
+       The header blends with `difference`, which would smear an open panel into
+       whatever sits behind it — so opening one forces the docked/normal state. */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-btn {
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: inherit;
+      opacity: .72; transition: opacity .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      line-height: inherit; /* buttons default to `normal` and break the row baseline */
+    }
+    .nav-dropdown-btn::after {
+      content: '+'; font-size: 12px; opacity: .6;
+      transition: transform .3s var(--ease-out);
+    }
+    .nav-dropdown:hover .nav-dropdown-btn,
+    .nav-dropdown:focus-within .nav-dropdown-btn { opacity: 1; }
+    .nav-dropdown:hover .nav-dropdown-btn::after,
+    .nav-dropdown:focus-within .nav-dropdown-btn::after { transform: rotate(45deg); }
+    /* hover bridge across the gap between trigger and panel */
+    .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 18px; }
+    .nav-dropdown-menu {
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      min-width: 200px; padding: 8px;
+      background: var(--ink-2); border: 1px solid var(--line);
+      box-shadow: 0 24px 64px rgba(0,0,0,.6);
+      opacity: 0; visibility: hidden;
+      transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), visibility 0s .25s;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      opacity: 1; visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      transition-delay: 0s;
+    }
+    .nav-dropdown-menu a {
+      display: block; padding: 10px 12px;
+      font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); opacity: 1; white-space: nowrap;
+      transition: background .18s, color .18s;
+    }
+    .nav-dropdown-menu a::after { display: none; }
+    .nav-dropdown-menu a:hover { background: var(--accent); color: var(--ink); }
+
+    /* Plain accent link, deliberately NOT a pill: .nav-inner aligns on the
+       baseline, and a padded pill sits on a different one — which knocks the
+       whole row out of alignment and visually outweighs every other item. */
+    .nav-cta { color: var(--accent); opacity: 1; }
+    .nav-cta::after { background: var(--accent); }
+
+    .nav-burger {
+      display: none; background: none; border: none; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 2px; color: #fff; text-transform: uppercase;
+    }
+    @media (max-width: 760px) {
+      .nav-links { display: none; }
+      .nav-burger { display: block; }
+    }
+
+    /* fullscreen mobile menu */
+    #menu {
+      position: fixed; inset: 0; z-index: 1500;
+      background: var(--ink);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 88px clamp(24px, 8vw, 80px) 40px;
+      overflow-y: auto;
+      visibility: hidden; opacity: 0;
+      transition: opacity .35s ease, visibility 0s .35s;
+    }
+    #menu.open { visibility: visible; opacity: 1; transition: opacity .35s ease; }
+    #menu .menu-scroll { width: 100%; margin: auto 0; }
+    #menu a {
+      font-size: clamp(22px, 5.4vw, 34px); font-weight: 600; letter-spacing: -.6px;
+      padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+      color: var(--text); display: flex; justify-content: space-between; align-items: baseline;
+    }
+    #menu a .mono { font-size: 11px; color: var(--muted); letter-spacing: 2px; }
+    #menu a.menu-sub {
+      font-size: clamp(15px, 3.6vw, 20px); font-weight: 500;
+      color: var(--muted); padding: 8px 0;
+    }
+    #menu a.menu-sub:hover { color: var(--text); }
+    #menu .menu-group {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 400;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2);
+      margin: 24px 0 6px;
+    }
+    #menu-close {
+      position: absolute; top: 24px; right: 24px;
+      background: none; border: 1px solid var(--line); border-radius: 99px;
+      color: var(--text); font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 2px; padding: 8px 16px; cursor: pointer;
+    }
+
+    /* ── Reveal primitives ───────────────────────────────────────────────── */
+    .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+    .rv.in { opacity: 1; transform: none; }
+
+
+    /* ── Reticle corner ticks ────────────────────────────────────────────── */
+    [data-ticks] { position: relative; }
+    [data-ticks]::before, [data-ticks]::after {
+      content: ''; position: absolute; width: 16px; height: 16px;
+      pointer-events: none; z-index: 1;
+      border: 1px solid rgba(0,229,176,.55);
+    }
+    [data-ticks]::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    [data-ticks]::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100svh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 96px clamp(20px, 4vw, 56px) clamp(24px, 3.5vh, 44px);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-scanline {
+      position: absolute; left: 0; right: 0; top: -2px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: .5; z-index: 1; pointer-events: none;
+      animation: sweep 7s linear infinite;
+    }
+    @keyframes sweep {
+      0%   { transform: translateY(0); opacity: 0; }
+      6%   { opacity: .5; }
+      70%  { opacity: .5; }
+      82%  { transform: translateY(100vh); opacity: 0; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    .hero-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 22px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hero-kicker::before { content: ''; width: 34px; height: 1px; background: var(--accent); display: inline-block; }
+    .hero-h1 {
+      font-size: clamp(50px, 9.8vw, 142px);
+      line-height: .92; font-weight: 700; letter-spacing: -.035em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .hero-h1 .hollow {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--text);
+      transition: color .45s var(--ease-out);
+    }
+    .hero-h1 .hollow:hover { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+    .hero-h1 .accent-dot { color: var(--accent); }
+    .hero-row {
+      display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: clamp(24px, 4vw, 64px);
+      align-items: end;
+      margin-top: clamp(20px, 3vh, 44px);
+    }
+    .hero-copy p {
+      max-width: 46ch; color: var(--muted); font-size: clamp(14px, 1.15vw, 17px);
+    }
+    .hero-copy p b { color: var(--text); font-weight: 600; }
+    .hero-actions { display: flex; align-items: center; gap: 22px; margin-top: 26px; flex-wrap: wrap; }
+    .btn-scan {
+      display: inline-flex; align-items: center; gap: 14px;
+      background: var(--accent); color: var(--ink);
+      font-weight: 700; font-size: 15px; letter-spacing: -.2px;
+      padding: 16px 30px; border-radius: 99px;
+      transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
+      will-change: transform;
+    }
+    .btn-scan .arr { transition: transform .3s var(--ease-out); }
+    .btn-scan:hover { box-shadow: 0 12px 44px rgba(0,229,176,.35); }
+    .btn-scan:hover .arr { transform: translateX(5px); }
+    .btn-ghost {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--line); padding-bottom: 3px;
+      transition: color .2s, border-color .2s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+    .hero-proof {
+      margin-top: 20px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
+      white-space: nowrap;
+    }
+    @media (max-width: 480px) { .hero-proof { white-space: normal; } }
+    .hero-proof span { color: var(--muted); }
+
+    /* terminal */
+    .term {
+      background: var(--ink-2);
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(10px, .78vw, 12px);
+      line-height: 1.68;
+      padding: 16px 18px 18px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      position: relative;
+    }
+    .term-bar { display: flex; gap: 6px; margin-bottom: 14px; }
+    .term-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+    .term-bar i:first-child { background: rgba(255,77,94,.7); }
+    /* min-height reserves the fully-typed height so the hero row never grows mid-animation */
+    .term-body { min-height: 22em; color: var(--muted); white-space: pre-wrap; word-break: break-word; }
+    .term-body .tl { display: block; opacity: 0; transform: translateY(4px); transition: opacity .25s ease, transform .25s ease; }
+    .term-body .tl.on { opacity: 1; transform: none; }
+    .term-body .cmd  { color: var(--text); }
+    .term-body .ok   { color: var(--accent); }
+    .term-body .bad  { color: var(--red); }
+    .term-body .warn { color: var(--amber); }
+    .term-body .dim  { color: var(--muted-2); }
+    .term-grade {
+      position: absolute; right: 22px; bottom: 20px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 74px; font-weight: 700; line-height: 1;
+      color: var(--red);
+      border: 3px solid var(--red); border-radius: 10px;
+      padding: 2px 18px;
+      transform: rotate(-8deg) scale(1.6);
+      opacity: 0;
+      transition: opacity .18s ease-out, transform .18s ease-out;
+    }
+    .term-grade.on { opacity: 1; transform: rotate(-8deg) scale(1); animation: stamp-jitter .3s steps(2) .12s 1; }
+    @keyframes stamp-jitter {
+      0%   { transform: rotate(-7deg) scale(1.03) translate(1px,-1px); }
+      50%  { transform: rotate(-9deg) scale(.99) translate(-1px,1px); }
+      100% { transform: rotate(-8deg) scale(1); }
+    }
+    @media (max-width: 900px) {
+      .hero-row { grid-template-columns: 1fr; }
+      .term { display: none; }
+    }
+
+    /* ── Marquee ─────────────────────────────────────────────────────────── */
+    .marquee {
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      overflow: hidden; white-space: nowrap;
+      padding: 16px 0;
+      background: var(--ink);
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 36s linear infinite;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted-2);
+    }
+    .marquee-track b { color: var(--accent); font-weight: 400; margin: 0 20px; }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── Section scaffolding ─────────────────────────────────────────────── */
+    .sec { padding: clamp(90px, 13vh, 160px) clamp(20px, 4vw, 56px); }
+    .sec-inner { max-width: 1240px; margin: 0 auto; }
+    .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: clamp(40px, 6vh, 72px); }
+    .sec-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 3px; color: var(--muted-2); text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .sec-h2 {
+      font-size: clamp(34px, 5.4vw, 72px);
+      font-weight: 600; letter-spacing: -.03em; line-height: 1.02;
+    }
+    .sec-h2 .serif { font-style: italic; letter-spacing: 0; font-weight: 400; }
+
+    /* ── Dimensions (blueprint grid) ─────────────────────────────────────── */
+    #dimensions {
+      background:
+        linear-gradient(rgba(0,229,176,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,176,.03) 1px, transparent 1px),
+        var(--ink-2);
+      background-size: 44px 44px, 44px 44px, auto;
+      border-top: 1px solid var(--line-soft);
+      border-bottom: 1px solid var(--line-soft);
+      position: relative;
+    }
+    .dim-list { border-top: 1px solid var(--line); }
+    .dim-row {
+      display: grid;
+      grid-template-columns: 70px minmax(0,1.15fr) minmax(0,2fr) 30px;
+      gap: clamp(12px, 2.5vw, 40px);
+      align-items: baseline;
+      padding: 17px 6px;
+      border-bottom: 1px solid var(--line-soft);
+      position: relative;
+      /* stagger delay applies ONLY to the reveal (opacity/transform), never to hover */
+      --rv-d: 0ms;
+      transition:
+        opacity .7s var(--ease-out) var(--rv-d),
+        transform .7s var(--ease-out) var(--rv-d),
+        background .25s ease,
+        color .25s ease,
+        padding-left .35s var(--ease-out);
+      cursor: default;
+    }
+    .dim-row:hover { background: var(--accent); color: var(--ink); padding-left: 18px; }
+    .dim-row:hover .dim-no, .dim-row:hover .dim-desc { color: rgba(5,6,7,.65); opacity: 1; }
+    .dim-row:hover .dim-arrow { opacity: 1; transform: translateX(0); color: var(--ink); }
+    .dim-no { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; color: var(--muted-2); transition: color .25s ease; }
+    .dim-name { font-weight: 600; font-size: clamp(15px, 1.5vw, 21px); letter-spacing: -.3px; }
+    .dim-desc { font-size: 13px; color: var(--muted); transition: color .25s ease; }
+    .dim-arrow { opacity: 0; transform: translateX(-8px); transition: opacity .3s, transform .3s; }
+    @media (max-width: 700px) {
+      .dim-row { grid-template-columns: 44px 1fr 20px; }
+      .dim-desc { display: none; }
+    }
+    .dim-foot {
+      margin-top: 34px; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; flex-wrap: wrap;
+      font-size: 13.5px; color: var(--muted);
+    }
+    .dim-foot a { font-weight: 600; color: var(--accent); border-bottom: 1px solid var(--accent); transition: opacity .2s; }
+    .dim-foot a:hover { opacity: .75; }
+
+    /* ── Verdict (scroll-driven score bleed) ─────────────────────────────── */
+    #verdict { position: relative; height: 340vh; background: var(--ink); }
+    .verdict-sticky {
+      position: sticky; top: 0; height: 100svh;
+      display: flex; align-items: center;
+      padding: 0 clamp(20px, 4vw, 56px);
+      overflow: hidden;
+    }
+    .verdict-grid {
+      max-width: 1240px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      gap: clamp(24px, 5vw, 80px); align-items: center;
+    }
+    .v-score-wrap { text-align: left; position: relative; }
+    .v-score-wrap::before, .v-score-wrap::after {
+      content: ''; position: absolute; border-radius: 50%;
+      border: 1px dashed rgba(236,238,233,.09);
+      pointer-events: none; z-index: -1;
+    }
+    .v-score-wrap::before {
+      width: clamp(260px, 30vw, 460px); height: clamp(260px, 30vw, 460px);
+      top: 50%; left: 38%; transform: translate(-50%,-50%);
+      animation: ring-spin 60s linear infinite;
+    }
+    .v-score-wrap::after {
+      width: clamp(170px, 20vw, 310px); height: clamp(170px, 20vw, 310px);
+      top: 50%; left: 38%; transform: translate(-50%,-50%);
+      border-style: solid; border-color: rgba(236,238,233,.05);
+    }
+    @keyframes ring-spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+    .v-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted-2); margin-bottom: 8px; }
+    .v-score {
+      font-size: clamp(120px, 22vw, 300px);
+      font-weight: 700; line-height: .9; letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      transition: color .4s ease;
+    }
+    .v-grade {
+      display: inline-block; margin-top: 18px;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 2px;
+      border: 1px solid var(--line); border-radius: 99px; padding: 8px 18px;
+      color: var(--muted);
+    }
+    .v-grade b { color: var(--accent); transition: color .4s ease; font-weight: 700; }
+    .v-title { font-size: clamp(22px, 2.6vw, 34px); font-weight: 600; letter-spacing: -.5px; margin-bottom: 26px; line-height: 1.15; }
+    .v-title .serif { font-style: italic; font-weight: 400; }
+    .v-list { list-style: none; }
+    .v-list li {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: clamp(11px, 1vw, 13.5px);
+      color: var(--muted-2);
+      padding: 11px 2px; border-bottom: 1px solid var(--line-soft);
+      opacity: .28;
+      transition: opacity .35s ease, color .35s ease;
+    }
+    .v-list li .pts { color: var(--muted-2); white-space: nowrap; transition: color .35s ease; }
+    .v-list li.hit { opacity: 1; color: var(--text); }
+    .v-list li.hit .pts { color: var(--red); font-weight: 700; }
+    .v-caption {
+      margin-top: 26px; font-size: 14.5px; color: var(--muted);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .v-caption.hit { opacity: 1; transform: none; }
+    .v-caption b { color: var(--accent); font-weight: 600; }
+    @media (max-width: 820px) {
+      .verdict-grid { grid-template-columns: 1fr; gap: 30px; }
+      .v-score { font-size: clamp(90px, 26vw, 160px); }
+      #verdict { height: 300vh; }
+    }
+
+    /* ── Creed (serif manifesto band) ────────────────────────────────────── */
+    #creed {
+      background: var(--ink);
+      border-top: 1px solid var(--line-soft);
+      text-align: center;
+      padding: clamp(120px, 18vh, 220px) clamp(20px, 6vw, 56px);
+    }
+    .creed-line {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(30px, 5.2vw, 66px);
+      line-height: 1.18; letter-spacing: -.01em;
+      max-width: 22ch; margin: 0 auto;
+      color: var(--text);
+    }
+    .creed-line em { font-style: italic; color: var(--accent); }
+    .creed-sub {
+      margin-top: 30px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted);
+    }
+    .creed-cta { margin-top: 44px; }
+
+    /* ── Access — the deliverable ────────────────────────────────────────── */
+    #access { border-top: 1px solid var(--line-soft); }
+    .deliv {
+      margin-top: clamp(26px, 3.5vw, 48px);
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr);
+      gap: clamp(26px, 5vw, 76px); align-items: center;
+    }
+    /* Stage owns the animation state: --p = scroll progress 0→1 (fan open),
+       --mx/--my = pointer offset −1→1 (parallax). Children inherit both. */
+    .deliv-stage {
+      --u: clamp(7px, 1.15vw, 14px);
+      --p: 0; --mx: 0; --my: 0;
+      position: relative; min-height: clamp(320px, 33vw, 450px);
+      border: 1px solid var(--line-soft);
+      background:
+        radial-gradient(125% 85% at 50% 0%, rgba(0,229,176,.075), transparent 62%),
+        repeating-linear-gradient(rgba(236,238,233,.028) 0 1px, transparent 1px 36px),
+        var(--ink-2);
+      overflow: hidden;
+    }
+    /* corner ticks sit at -1px by default — pull them in so overflow:hidden doesn't clip them */
+    .deliv-stage::before { top: 0; left: 0; z-index: 7; }
+    .deliv-stage::after { bottom: 0; right: 0; z-index: 7; }
+    .rp {
+      position: absolute; left: 50%; top: 50%;
+      width: clamp(146px, 19.5vw, 222px); aspect-ratio: 1 / 1.36;
+      transform:
+        translate(-50%, -50%)
+        translate(calc(var(--x) * var(--u) * var(--p) + var(--mx) * var(--d) * 18px),
+                  calc(var(--y) * var(--u) * var(--p) + var(--my) * var(--d) * 13px))
+        rotate(calc(var(--r) * 1deg * var(--p)))
+        scale(calc(1 + (var(--s) - 1) * var(--p)));
+      transition: transform .55s var(--ease-out);
+      will-change: transform;
+    }
+    /* Drift lives on the inner sheet so the perpetual loop never fights the
+       scrub/parallax transform on the wrapper. */
+    .rp-i {
+      position: absolute; inset: 0;
+      background: linear-gradient(177deg, #fbfaf6, #e8e4da);
+      color: #14171b;
+      padding: clamp(11px, 1.15vw, 16px);
+      display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 20px 46px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.7);
+      animation: rp-drift 7.5s var(--dd, 0s) ease-in-out infinite;
+    }
+    @keyframes rp-drift {
+      0%, 100% { transform: translate3d(0, -3.5px, 0) rotate(-.22deg); }
+      50%      { transform: translate3d(0,  4px,   0) rotate(.22deg); }
+    }
+    .deliv-stage.paused .rp-i { animation-play-state: paused; }
+    .rp-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      font-family: 'JetBrains Mono', monospace; font-size: 6px; letter-spacing: 1px;
+      text-transform: uppercase; color: #6c7178;
+      border-bottom: 1px solid rgba(20,23,27,.16); padding-bottom: 5px;
+    }
+    .rp-top b { color: #14171b; font-weight: 700; letter-spacing: .4px; }
+    .rp-h {
+      font-family: 'JetBrains Mono', monospace; font-size: 6.5px; letter-spacing: 1.4px;
+      text-transform: uppercase; color: #00806a; margin-top: 2px;
+    }
+    .ln { display: block; height: 2.5px; border-radius: 2px; background: rgba(20,23,27,.17); }
+    .ln.d { background: rgba(20,23,27,.32); }
+    .ln.a { background: rgba(0,128,106,.42); }
+    .ln.r { background: rgba(200,50,66,.38); }
+    .rp-rows { display: flex; flex-direction: column; gap: 5.5px; margin-top: 3px; }
+    .rp-row { display: flex; align-items: center; gap: 5px; }
+    .rp-dot { width: 4px; height: 4px; border-radius: 50%; flex: none; }
+    .rp-blk {
+      margin-top: auto; background: #14171b; border-radius: 2px;
+      padding: 6px 7px; display: flex; flex-direction: column; gap: 3.5px;
+    }
+    .rp-blk .ln { background: rgba(0,229,176,.4); }
+    /* Cover page */
+    .rp-cover { justify-content: space-between; }
+    .rp-title { font-size: clamp(13px, 1.35vw, 18px); font-weight: 700; letter-spacing: -.4px; line-height: 1.1; }
+    .rp-title span { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+    .rp-dom { font-family: 'JetBrains Mono', monospace; font-size: 6.5px; letter-spacing: .6px; color: #6c7178; margin-top: 3px; }
+    .rp-grade {
+      align-self: flex-start; display: flex; align-items: baseline; gap: 4px;
+      background: #14171b; color: #fff; border-radius: 2px; padding: 5px 8px;
+    }
+    .rp-grade b { font-size: 15px; line-height: 1; letter-spacing: -.5px; }
+    .rp-grade small { font-family: 'JetBrains Mono', monospace; font-size: 7px; color: var(--accent); }
+    .rp-foot { font-family: 'JetBrains Mono', monospace; font-size: 5.5px; letter-spacing: 1px; text-transform: uppercase; color: #8b9098; }
+    /* Margin callouts — fade in as the fan opens */
+    .dc {
+      position: absolute; z-index: 6;
+      font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: center; gap: 9px;
+      opacity: calc((var(--p) - .5) * 3.6); pointer-events: none;
+    }
+    .dc::before { content: ''; width: clamp(18px, 3vw, 40px); height: 1px; background: var(--line); flex: none; }
+    .dc-1 { top: 11%; right: 5%; }
+    .dc-2 { bottom: 30%; left: 4%; flex-direction: row-reverse; }
+    .dc-3 { bottom: 9%; right: 7%; }
+    .deliv-copy { display: flex; flex-direction: column; gap: 22px; }
+    .dv-lede { font-size: clamp(14.5px, 1.35vw, 17px); color: var(--muted); line-height: 1.65; }
+    .dv-lede b { color: var(--text); font-weight: 600; }
+    .dv-list { list-style: none; display: flex; flex-direction: column; }
+    .dv-list li {
+      display: flex; gap: 14px; align-items: baseline;
+      padding: 11px 0; border-bottom: 1px solid var(--line-soft);
+      font-size: 13.5px; color: var(--text);
+    }
+    .dv-list li:first-child { border-top: 1px solid var(--line-soft); }
+    .dv-list em { font-style: normal; color: var(--muted-2); font-size: 12px; }
+    .dv-list span {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px;
+      color: var(--accent); flex: none;
+    }
+    .dv-cta {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; display: inline-flex; gap: 9px; align-items: center; align-self: flex-start;
+    }
+    .dv-cta .arr { color: var(--accent); transition: transform .3s var(--ease-out); }
+    .dv-cta:hover .arr { transform: translateX(5px); }
+    /* Price strip — one row, not a grid competing with the stage */
+    .price-strip {
+      margin-top: clamp(26px, 3.2vw, 44px);
+      display: flex; flex-wrap: wrap; border: 1px solid var(--line-soft);
+    }
+    .ps-item {
+      flex: 1 1 170px; padding: 15px clamp(14px, 1.7vw, 24px);
+      border-right: 1px solid var(--line-soft);
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      transition: background .3s ease;
+    }
+    .ps-item:hover { background: var(--ink-2); }
+    .ps-tier { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); }
+    .ps-item.hot .ps-tier { color: var(--accent); }
+    .ps-price { font-size: clamp(17px, 1.7vw, 23px); font-weight: 700; letter-spacing: -.025em; }
+    .ps-price small { font-size: .58em; font-weight: 500; color: var(--muted-2); letter-spacing: 0; }
+    .ps-all {
+      flex: 0 1 auto; padding: 15px clamp(14px, 1.7vw, 24px);
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase;
+      border-right: none; transition: background .3s ease;
+    }
+    .ps-all:hover { background: var(--ink-2); }
+    .ps-all .arr { color: var(--accent); transition: transform .3s var(--ease-out); }
+    .ps-all:hover .arr { transform: translateX(5px); }
+    .access-note {
+      margin-top: 22px; font-size: 13px; color: var(--muted-2);
+      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .access-note a { color: var(--muted); border-bottom: 1px solid var(--line); transition: color .2s; }
+    .access-note a:hover { color: var(--text); }
+    @media (max-width: 900px) {
+      .deliv { grid-template-columns: 1fr; gap: 34px; }
+      .deliv-stage { min-height: 300px; --u: 6px; }
+      .rp { width: 150px; }
+      .dc { display: none; }
+      .ps-item { flex: 1 1 100%; border-right: none; border-bottom: 1px solid var(--line-soft); }
+      .ps-all { width: 100%; }
+    }
+
+    /* ── Finale ──────────────────────────────────────────────────────────── */
+    #finale {
+      border-top: 1px solid var(--line-soft);
+      padding: clamp(100px, 16vh, 200px) clamp(20px, 4vw, 56px);
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .finale-kicker { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted-2); margin-bottom: 26px; }
+    .finale-link {
+      display: block;
+      font-size: clamp(46px, 10.5vw, 150px);
+      font-weight: 700; letter-spacing: -.035em; line-height: .95;
+      text-transform: uppercase;
+      color: transparent; -webkit-text-stroke: 1.5px var(--text);
+      transition: color .5s var(--ease-out), -webkit-text-stroke-color .5s var(--ease-out);
+    }
+    .finale-link:hover { color: var(--accent); -webkit-text-stroke-color: var(--accent); }
+    .finale-sub { margin-top: 30px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2); }
+    .finale-sub kbd {
+      font-family: inherit; border: 1px solid var(--line); border-radius: 5px;
+      padding: 2px 7px; color: var(--muted); margin: 0 2px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────────────── */
+    footer { border-top: 1px solid var(--line-soft); padding: 44px clamp(20px, 4vw, 56px) 30px; }
+    .foot-grid {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px;
+      padding-bottom: 34px;
+    }
+    .foot-logo { font-weight: 700; font-size: 17px; }
+    .foot-logo span { color: var(--accent); }
+    .foot-tag { margin-top: 8px; font-size: 12.5px; color: var(--muted-2); max-width: 26ch; }
+    .foot-col h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2); margin-bottom: 14px; font-weight: 400; }
+    .foot-col a { display: block; font-size: 13.5px; color: var(--muted); padding: 4px 0; transition: color .2s; }
+    .foot-col a:hover { color: var(--text); }
+    .foot-bottom {
+      max-width: 1240px; margin: 0 auto;
+      border-top: 1px solid var(--line-soft); padding-top: 20px;
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px;
+      color: var(--muted-2); text-transform: uppercase;
+    }
+    .foot-bottom a { color: var(--muted-2); }
+    .foot-bottom a:hover { color: var(--text); }
+    @media (max-width: 820px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+
+    /* ── Reduced motion ──────────────────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .grain, .hero-scanline { animation: none; }
+      .marquee-track { animation: none; }
+      #boot { display: none; }
+      .rv { opacity: 1; transform: none; transition: none; }
+      .dim-row.rv { opacity: 1; transform: none; --rv-d: 0ms; }
+      .term-body .tl { opacity: 1; transform: none; transition: none; }
+      .term-grade { opacity: 1; transform: rotate(-8deg); transition: none; }
+      .v-list li, .v-caption { opacity: 1; transform: none; color: var(--text); }
+      .v-list li .pts { color: var(--red); }
+      /* Freeze the stack fully fanned — the frame worth landing on */
+      .deliv-stage { --p: 1; }
+      .rp { transition: none; }
+      .rp-i { animation: none; }
+      * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
-<nav>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ── Boot sequence ─────────────────────────────────────────────────────── -->
+<div id="boot" aria-hidden="true">
+  <div class="boot-lines">
+    <div>SECURESCANR // audit engine</div>
+    <div>loading 14 dimensions .......... <span class="ok">ok</span></div>
+    <div class="ok">ready.</div>
+  </div>
+</div>
+
+<!-- ── Nav ───────────────────────────────────────────────────────────────── -->
+<header>
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
-    <div class="nav-links">
+    <a href="index.html" class="nav-logo">Secure<span style="opacity:.6">Scanr</span><sup>EST. 2026</sup></a>
+    <nav class="nav-links" aria-label="Primary">
       <a href="scan.html">Scan</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">Tools</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true">Tools</button>
         <div class="nav-dropdown-menu">
           <a href="versus.html">Versus</a>
           <a href="generators.html">Generators</a>
           <a href="security-txt.html">Security.txt</a>
           <a href="api-docs.html">API Docs</a>
           <a href="learn.html">Learn</a>
-    <a href="badge.html">Badge</a>
+          <a href="badge.html">Badge</a>
         </div>
       </div>
       <a href="plans.html">Plans</a>
       <a href="world-security-index.html">World Index</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">More</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true">More</button>
         <div class="nav-dropdown-menu">
           <a href="methodology.html">Methodology</a>
           <a href="about.html">About</a>
-          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
           <a href="compliance-report.html">Compliance Report</a>
           <a href="status.html">Status</a>
         </div>
       </div>
-      <a href="plans.html" class="nav-cta">Get API access →</a>
-    </div>
-    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+      <a href="plans.html" class="nav-cta">API Access →</a>
+    </nav>
+    <button class="nav-burger" onclick="document.getElementById('menu').classList.add('open')" aria-label="Open menu">Menu +</button>
   </div>
-  <div class="nav-mobile" id="nav-mobile">
-    <a href="scan.html">Scan</a>
-    <a href="versus.html">Versus</a>
-    <a href="generators.html">Generators</a>
-    <a href="security-txt.html">Security.txt</a>
-    <a href="api-docs.html">API Docs</a>
-    <a href="learn.html">Learn</a>
-    <a href="badge.html">Badge</a>
-    <a href="plans.html">Plans</a>
-    <a href="world-security-index.html">World Index</a>
-    <a href="methodology.html">Methodology</a>
-    <a href="about.html">About</a>
-    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
-    <a href="compliance-report.html">Compliance Report</a>
-    <a href="status.html">Status</a>
-    <a href="plans.html">Get API access →</a>
+</header>
+
+<div id="menu" role="dialog" aria-label="Menu">
+  <button id="menu-close" onclick="document.getElementById('menu').classList.remove('open')">Close ×</button>
+  <div class="menu-scroll">
+    <a href="scan.html">Scan <span class="mono">01</span></a>
+    <a href="plans.html">Plans <span class="mono">02</span></a>
+    <a href="world-security-index.html">World Index <span class="mono">03</span></a>
+    <h4 class="menu-group">Tools</h4>
+    <a class="menu-sub" href="versus.html">Versus</a>
+    <a class="menu-sub" href="generators.html">Generators</a>
+    <a class="menu-sub" href="security-txt.html">Security.txt</a>
+    <a class="menu-sub" href="api-docs.html">API Docs</a>
+    <a class="menu-sub" href="learn.html">Learn</a>
+    <a class="menu-sub" href="badge.html">Badge</a>
+    <h4 class="menu-group">More</h4>
+    <a class="menu-sub" href="methodology.html">Methodology</a>
+    <a class="menu-sub" href="about.html">About</a>
+    <a class="menu-sub" href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
+    <a class="menu-sub" href="compliance-report.html">Compliance Report</a>
+    <a class="menu-sub" href="status.html">Status</a>
   </div>
-</nav>
+</div>
 
 <main>
 
-<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+<!-- ── Hero ──────────────────────────────────────────────────────────────── -->
 <section id="hero">
-  <p class="hero-eyebrow">Web Security Scanner</p>
-  <h1 class="hero-title">Know Your Attack Surface.</h1>
-  <p class="hero-sub">Instant security audit — headers, TLS, DNS, cookies. Free scan, no login.</p>
-  <a href="scan.html" class="hero-cta">Scan a website →</a>
-  <p class="hero-proof">Trusted by security professionals worldwide.</p>
-  <div class="hero-chips">
-    <span class="hero-chip">HTTP Security Headers</span>
-    <span class="hero-chip">TLS / SSL Certificate</span>
-    <span class="hero-chip">DNS Security (SPF &amp; DMARC)</span>
-    <span class="hero-chip">Cookie Flags</span>
-  </div>
-</section>
-
-
-
-<!-- ── Free Tools ───────────────────────────────────────────────────────────── -->
-<section id="free-tools">
-  <div class="section-inner">
-    <p class="section-label">Free Tools</p>
-    <h2 class="section-title">Everything free, no login required</h2>
-    <div class="tools-grid">
-      <a href="versus.html" class="tool-card">
-        <span class="tool-icon">⚔️</span>
-        <span class="tool-name">Versus</span>
-        <span class="tool-desc">Compare two sites side by side — headers, TLS, DNS, score. See who wins instantly.</span>
-        <span class="tool-link">Compare sites →</span>
-      </a>
-      <a href="generators.html" class="tool-card">
-        <span class="tool-icon">🛠</span>
-        <span class="tool-name">Header Generators</span>
-        <span class="tool-desc">Build CSP, HSTS, Permissions-Policy and CORS headers visually. Validate your CSP.</span>
-        <span class="tool-link">Open generators →</span>
-      </a>
-      <a href="security-txt.html" class="tool-card">
-        <span class="tool-icon">📄</span>
-        <span class="tool-name">Security.txt</span>
-        <span class="tool-desc">Generate an RFC 9116 compliant security.txt file or validate an existing one.</span>
-        <span class="tool-link">Generate / validate →</span>
-      </a>
-      <a href="badge.html" class="tool-card">
-        <span class="tool-icon">🏅</span>
-        <span class="tool-name">Security Badge</span>
-        <span class="tool-desc">Embed a live security grade badge in your GitHub README, docs, or portfolio.</span>
-        <span class="tool-link">Get badge →</span>
-      </a>
-      <a href="learn.html" class="tool-card">
-        <span class="tool-icon">📚</span>
-        <span class="tool-name">Learning Center</span>
-        <span class="tool-desc">Guides on CSP, HSTS, TLS, SPF/DMARC, X-Frame-Options and security.txt.</span>
-        <span class="tool-link">Read guides →</span>
-      </a>
+  <div class="hero-scanline" aria-hidden="true"></div>
+  <p class="hero-kicker rv">Free website security scanner</p>
+  <h1 class="hero-h1 rv" style="transition-delay:.06s">
+    Find the <span class="hollow">gaps</span><br>
+    before they do<span class="accent-dot">.</span>
+  </h1>
+  <div class="hero-row">
+    <div class="hero-copy rv" style="transition-delay:.14s">
+      <p>SecureScanr reads your site the way an attacker's tooling does — <b>14 security dimensions</b> in one pass: headers, TLS, DNS, cookies, cross-origin isolation, page integrity. Every failing check comes back with the <b>exact fix, ready to paste</b>.</p>
+      <div class="hero-actions">
+        <a href="scan.html" class="btn-scan" data-magnetic>Run a free scan <span class="arr">→</span></a>
+        <a href="methodology.html" class="btn-ghost">How we grade</a>
+      </div>
+      <p class="hero-proof">No signup <span>·</span> 14 dimensions <span>·</span> ~30 seconds</p>
+    </div>
+    <div class="term rv" style="transition-delay:.22s" aria-hidden="true" data-ticks>
+      <div class="term-bar"><i></i><i></i><i></i></div>
+      <div class="term-body" id="term-body"></div>
+      <div class="term-grade" id="term-grade">F</div>
     </div>
   </div>
 </section>
 
-<!-- ── How It Works ─────────────────────────────────────────────────────────── -->
-<section id="how">
-  <div class="section-inner">
-    <p class="section-label">How it works</p>
-    <h2 class="section-title">Three steps to a full audit</h2>
-    <div class="steps">
-      <div class="step">
-        <p class="step-num">01</p>
-        <span class="step-icon">🔗</span>
-        <h3 class="step-title">Paste a URL</h3>
-        <p class="step-desc">Enter any website — no account, no setup, no API key needed for the free scan. Works on any publicly accessible URL including staging and production environments.</p>
+<!-- ── Marquee ───────────────────────────────────────────────────────────── -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
+
+<!-- ── The 14 dimensions ─────────────────────────────────────────────────── -->
+<section id="dimensions" class="sec">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <h2 class="sec-h2 rv">Fourteen ways in.<br><span class="serif">One scan to see them all.</span></h2>
+      <span class="sec-num rv">01 / Surface</span>
+    </div>
+    <div class="dim-list" id="dim-list">
+      <!-- rows injected by JS from DIMENSIONS below; noscript fallback -->
+      <noscript>
+        <div class="dim-row"><span class="dim-no">01–14</span><span class="dim-name">Headers · TLS · DNS · Cookies · Isolation · Page integrity</span><span class="dim-desc">Enable JavaScript to browse the full list, or just run the scan.</span><span></span></div>
+      </noscript>
+    </div>
+    <div class="dim-foot rv">
+      <span>Checked in parallel, on a live request — the same response your visitors get, not a cached snapshot.</span>
+      <a href="scan.html">Scan your site free →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Verdict: watch a perfect score bleed out ──────────────────────────── -->
+<section id="verdict" aria-label="How scoring works">
+  <div class="verdict-sticky">
+    <div class="verdict-grid">
+      <div class="v-score-wrap">
+        <p class="v-label">Live score · demo site</p>
+        <div class="v-score" id="v-score">100</div>
+        <span class="v-grade">GRADE <b id="v-grade">A+</b></span>
       </div>
-      <div class="step-arrow">→</div>
-      <div class="step">
-        <p class="step-num">02</p>
-        <span class="step-icon">⚡</span>
-        <h3 class="step-title">We scan 20+ checks</h3>
-        <p class="step-desc">Headers, TLS certificate, DNS records, cookie security — all in parallel, in seconds. We use a real HTTP request with browser-like headers to get the same response your visitors see, not a cached snapshot.</p>
-      </div>
-      <div class="step-arrow">→</div>
-      <div class="step">
-        <p class="step-num">03</p>
-        <span class="step-icon">📄</span>
-        <h3 class="step-title">Get instant results</h3>
-        <p class="step-desc">Letter grade, per-finding fixes, and an exportable PDF report (Pro) ready to hand to a client. Each finding includes the exact header value to add, so fixes take minutes rather than hours of research.</p>
+      <div>
+        <h3 class="v-title">Every site starts at 100.<br><span class="serif">Then the findings land.</span></h3>
+        <ul class="v-list" id="v-list">
+          <li data-at="0.14" data-pts="20"><span>content-security-policy — missing</span><span class="pts">−20</span></li>
+          <li data-at="0.30" data-pts="20"><span>strict-transport-security — missing</span><span class="pts">−20</span></li>
+          <li data-at="0.46" data-pts="10"><span>x-frame-options — missing</span><span class="pts">−10</span></li>
+          <li data-at="0.60" data-pts="5"><span>dmarc — p=none (weak policy)</span><span class="pts">−5</span></li>
+          <li data-at="0.72" data-pts="5"><span>session cookie — no HttpOnly flag</span><span class="pts">−5</span></li>
+        </ul>
+        <p class="v-caption" id="v-caption" data-at="0.84">Five common findings — and every one ships with a <b>copy-paste fix</b>. These are SecureScanr's real scoring weights, documented in full in the <a href="methodology.html" style="color:var(--accent);border-bottom:1px solid var(--accent)">methodology</a>.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── Why Security Headers Matter ──────────────────────────────────────────── -->
-<section id="why-headers" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:72px 24px;">
-  <div class="section-inner" style="max-width:760px;">
-    <p class="section-label">The case for checking</p>
-    <h2 class="section-title" style="margin-bottom:24px;">Why HTTP security headers matter</h2>
-    <p style="font-size:15px;color:var(--muted);line-height:1.8;">
-      HTTP security headers are the first line of defence browsers enforce before any code runs on your page. A properly configured Content Security Policy (CSP) blocks cross-site scripting (XSS) at the browser level. HSTS forces every connection to use HTTPS, eliminating protocol-downgrade attacks. X-Frame-Options stops your pages being embedded in phishing iframes. Despite being a few lines of server configuration, most websites are missing two or more of these controls. A free website security scan with SecureScanr tells you exactly which headers are absent and what to add.
-    </p>
+<!-- ── Creed ─────────────────────────────────────────────────────────────── -->
+<section id="creed">
+  <p class="creed-line rv">Attackers scan sites like yours every day. The only question is whether <em>you see the gaps first.</em></p>
+  <p class="creed-sub rv" style="transition-delay:.1s">Every finding comes with the exact fix · free scan · no signup</p>
+  <div class="creed-cta rv" style="transition-delay:.18s">
+    <a href="scan.html" class="btn-scan" data-magnetic>Run a free scan <span class="arr">→</span></a>
   </div>
 </section>
 
-<!-- ── What We Check ────────────────────────────────────────────────────────── -->
-<section id="checks">
-  <div class="section-inner">
-    <p class="section-label">What we check</p>
-    <h2 class="section-title">Full coverage. Zero noise.</h2>
-    <div class="checks-grid">
-      <div class="check-card">
-        <span class="check-icon">🔒</span>
-        <p class="check-count">8 CHECKS</p>
-        <h3 class="check-title">HTTP Security Headers</h3>
-        <p class="check-desc">CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, CORS policy, server fingerprinting. Each missing or misconfigured header is a potential attack vector. A missing Content Security Policy leaves your site open to cross-site scripting; missing HSTS lets attackers downgrade connections to plain HTTP and intercept sensitive data.</p>
+<!-- ── Access / pricing ──────────────────────────────────────────────────── -->
+<section id="access" class="sec">
+  <div class="sec-inner">
+    <div class="sec-head">
+      <h2 class="sec-h2 rv">The scan is free.<br><span class="serif">The report is what you hand over.</span></h2>
+      <span class="sec-num rv">04 / Access</span>
+    </div>
+
+    <div class="deliv">
+      <!-- Report stack: fans open on scroll (--p), drifts on a loop, leans to the pointer -->
+      <div class="deliv-stage rv" id="deliv-stage" data-ticks aria-hidden="true">
+        <span class="dc dc-1">Every finding, its fix</span>
+        <span class="dc dc-2">Compliance mapping</span>
+        <span class="dc dc-3">Client-ready, no jargon</span>
+
+        <article class="rp" style="--x:-6.4; --y:-2.9; --r:-13; --s:.87; --d:.22; --dd:-5.6s; z-index:1">
+          <div class="rp-i">
+            <div class="rp-top"><span><b>SecureScanr</b></span><span>04</span></div>
+            <div class="rp-h">Remediation Plan</div>
+            <span class="ln d" style="width:64%"></span>
+            <span class="ln" style="width:88%"></span>
+            <div class="rp-blk">
+              <span class="ln" style="width:82%"></span>
+              <span class="ln" style="width:58%"></span>
+              <span class="ln" style="width:71%"></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="rp" style="--x:-3.8; --y:-1.1; --r:-8; --s:.91; --d:.42; --dd:-3.7s; z-index:2">
+          <div class="rp-i">
+            <div class="rp-top"><span><b>SecureScanr</b></span><span>03</span></div>
+            <div class="rp-h">Findings · 14 checks</div>
+            <div class="rp-rows">
+              <div class="rp-row"><i class="rp-dot" style="background:#c83242"></i><span class="ln d" style="width:74%"></span></div>
+              <div class="rp-row"><i class="rp-dot" style="background:#c83242"></i><span class="ln d" style="width:61%"></span></div>
+              <div class="rp-row"><i class="rp-dot" style="background:#d9902a"></i><span class="ln" style="width:83%"></span></div>
+              <div class="rp-row"><i class="rp-dot" style="background:#00806a"></i><span class="ln a" style="width:55%"></span></div>
+              <div class="rp-row"><i class="rp-dot" style="background:#00806a"></i><span class="ln a" style="width:69%"></span></div>
+              <div class="rp-row"><i class="rp-dot" style="background:#00806a"></i><span class="ln a" style="width:47%"></span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="rp" style="--x:-1.4; --y:.6; --r:-3.5; --s:.95; --d:.66; --dd:-1.9s; z-index:3">
+          <div class="rp-i">
+            <div class="rp-top"><span><b>SecureScanr</b></span><span>02</span></div>
+            <div class="rp-h">Executive Summary</div>
+            <span class="ln" style="width:94%"></span>
+            <span class="ln" style="width:87%"></span>
+            <span class="ln" style="width:91%"></span>
+            <span class="ln" style="width:52%"></span>
+            <span class="ln d" style="width:38%; margin-top:6px"></span>
+            <span class="ln r" style="width:76%"></span>
+            <span class="ln r" style="width:64%"></span>
+          </div>
+        </article>
+
+        <article class="rp" style="--x:1.9; --y:2.5; --r:4.5; --s:1; --d:1; --dd:0s; z-index:4">
+          <div class="rp-i rp-cover">
+            <div class="rp-top"><span><b>SecureScanr</b></span><span>Jul 2026</span></div>
+            <div>
+              <div class="rp-title">Security<br><span>Assessment</span></div>
+              <div class="rp-dom">client-domain.com</div>
+            </div>
+            <div class="rp-grade"><b>B</b><small>78 / 100</small></div>
+            <div class="rp-foot">Headers · TLS · DNS · Cookies</div>
+          </div>
+        </article>
       </div>
-      <div class="check-card">
-        <span class="check-icon">🛡</span>
-        <p class="check-count">5 CHECKS</p>
-        <h3 class="check-title">TLS / SSL Certificate</h3>
-        <p class="check-desc">Certificate expiry, days remaining, cipher strength, protocol version (TLSv1.0 is deprecated), and self-signed detection. An expired certificate triggers browser warnings that drive visitors away instantly. Weak cipher suites or old protocol versions can expose encrypted traffic to well-known downgrade attacks.</p>
+
+      <div class="deliv-copy">
+        <p class="dv-lede rv">The scan itself is free, on screen, forever. What you pay for is the <b>document you send the client</b> — the same fourteen checks, written for someone who has never heard of a CSP.</p>
+        <ul class="dv-list rv" style="transition-delay:.08s">
+          <li><span>01</span><div>Every finding with its exact, copy-paste fix <em>— free on screen, in the PDF on Pro</em></div></li>
+          <li><span>02</span><div>Cookie flags and cross-origin isolation <em>— Pro adds both to the scan</em></div></li>
+          <li><span>03</span><div>OWASP · PCI-DSS · GDPR · ISO 27001 mapping <em>— compliance report, ₹249 one-off</em></div></li>
+          <li><span>04</span><div>25 domains on a schedule, PDFs to your inbox <em>— Agency</em></div></li>
+        </ul>
+        <a class="dv-cta rv" style="transition-delay:.14s" href="plans.html">Compare the plans <span class="arr">→</span></a>
       </div>
-      <div class="check-card">
-        <span class="check-icon">📡</span>
-        <p class="check-count">7 CHECKS</p>
-        <h3 class="check-title">DNS Security</h3>
-        <p class="check-desc">SPF, DMARC, DKIM detection, CAA records, DNSSEC, and security.txt — plus policy strength analysis. Without SPF and DMARC, anyone can send convincing phishing emails that appear to come from your domain. SecureScanr checks record values, not just presence — a DMARC "p=none" policy is flagged as weak.</p>
-      </div>
-      <div class="check-card">
-        <span class="check-icon">🍪</span>
-        <p class="check-count">3 FLAGS/COOKIE</p>
-        <h3 class="check-title">Cookie Security</h3>
-        <p class="check-desc">Secure flag, HttpOnly flag, SameSite attribute — checked on every cookie set by the page. A cookie without the Secure flag can be intercepted over plain HTTP; without HttpOnly, any XSS flaw gives attackers direct access to session tokens. SecureScanr reports each cookie by name so you know exactly which ones to fix.</p>
-      </div>
-      <div class="check-card">
-        <span class="check-icon">🔗</span>
-        <p class="check-count">3 CHECKS</p>
-        <h3 class="check-title">Cross-Origin Isolation</h3>
-        <p class="check-desc">COOP, COEP, CORP — modern headers that isolate your browsing context and prevent cross-origin data leaks and Spectre-style attacks. These headers are required to safely use high-resolution timers and SharedArrayBuffers. Many developers overlook them entirely; SecureScanr checks all three and explains the impact of each.</p>
-      </div>
-      <div class="check-card">
-        <span class="check-icon">🔍</span>
-        <p class="check-count">4 CHECKS</p>
-        <h3 class="check-title">Page Analysis</h3>
-        <p class="check-desc">Mixed content detection, Subresource Integrity (SRI) checks, base tag hijacking risk, external dependency audit. Mixed content means your HTTPS page loads resources over plain HTTP, silently breaking security guarantees. Missing SRI attributes allow CDN-served scripts to be replaced with malicious versions without detection.</p>
-      </div>
+    </div>
+
+    <div class="price-strip rv">
+      <a class="ps-item" href="scan.html"><span class="ps-tier">Free</span><span class="ps-price">₹0<small> forever</small></span></a>
+      <a class="ps-item hot" href="plans.html"><span class="ps-tier">Pro</span><span class="ps-price">₹499<small> /mo · $7</small></span></a>
+      <a class="ps-item" href="plans.html"><span class="ps-tier">Agency</span><span class="ps-price">₹999<small> /mo · $28</small></span></a>
+      <a class="ps-all" href="plans.html">Full pricing <span class="arr">→</span></a>
+    </div>
+    <div class="access-note rv">
+      <span>One-off needs — <a href="one-time-scan.html">single full scan ₹99</a> · <a href="compliance-report.html">compliance report (OWASP · PCI-DSS · GDPR · ISO 27001) ₹249</a></span>
+      <span>Razorpay for India · LemonSqueezy international</span>
     </div>
   </div>
 </section>
 
-<!-- ── Why SecureScanr ──────────────────────────────────────────────────────────── -->
-<section id="why">
-  <div class="section-inner">
-    <p class="section-label">Why SecureScanr</p>
-    <h2 class="section-title">Built for the way you actually work.</h2>
-    <div class="why-grid">
-      <div class="why-col">
-        <span class="why-icon">⚡</span>
-        <h3 class="why-title">100% free scan</h3>
-        <p class="why-desc">No account required. Paste a URL, get results instantly. SecurityHeaders.com shut down its API in April 2026 — SecureScanr stepped in with more checks, no login wall, and INR pricing for Indian developers.</p>
-      </div>
-      <div class="why-col">
-        <span class="why-icon">📄</span>
-        <h3 class="why-title">PDF report (Pro)</h3>
-        <p class="why-desc">Client-ready PDF export with executive summary, per-finding severity, and fix recommendations grouped by effort — something your client can actually read and act on. Pro plan includes 50 PDF exports per month.</p>
-      </div>
-      <div class="why-col">
-        <span class="why-icon">💳</span>
-        <h3 class="why-title">API access from ₹499/month</h3>
-        <p class="why-desc">INR pricing for India via Razorpay. International payments via LemonSqueezy at $7/month. Automate security checks in your CI pipeline or build your own reporting dashboard on top of the SecureScanr API.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Who is SecureScanr for ───────────────────────────────────────────────────── -->
-<section id="for-who" style="background:var(--bg);border-top:1px solid var(--border);padding:72px 24px;">
-  <div class="section-inner" style="max-width:760px;">
-    <p class="section-label">Who uses SecureScanr</p>
-    <h2 class="section-title" style="margin-bottom:24px;">Built for anyone responsible for a site's security</h2>
-    <p style="font-size:15px;color:var(--muted);line-height:1.8;">
-      Freelance pentesters use the PDF export to deliver professional client reports without building their own tooling. Developers run scans in CI to catch regressions before they ship. Digital agencies run scheduled scans across all their client domains. Site owners who are not security experts get plain-English explanations of every finding and exactly what needs to change — no background in security required to act on the results.
-    </p>
-  </div>
-</section>
-
-<!-- ── CTA Banner ────────────────────────────────────────────────────────────── -->
-<section id="cta-banner">
-  <h2 class="cta-title">What grade does your site get?</h2>
-  <p class="cta-sub">Most sites score D or F. Find out in 8 seconds.</p>
-  <a href="scan.html" class="hero-cta">Run a free scan →</a>
-</section>
-
-<!-- ── Compliance bottom CTA ─────────────────────────────────────────────────── -->
-<section id="compliance-bottom">
-  <div style="max-width:680px;margin:0 auto;">
-    <p style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Compliance</p>
-    <h2 style="font-size:clamp(20px,2.5vw,28px);font-weight:700;letter-spacing:-.4px;margin-bottom:10px;">Know your compliance posture.</h2>
-    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.65;">OWASP Top 10 · PCI-DSS v4.0 · GDPR Article 32 · ISO 27001:2022 — all mapped automatically in one PDF report.</p>
-    <a href="compliance-report.html" style="display:inline-block;background:var(--accent);color:#0a0b0d;font-weight:700;font-size:14px;padding:11px 26px;border-radius:8px;text-decoration:none;transition:opacity .15s;" onmouseenter="this.style.opacity='.88'" onmouseleave="this.style.opacity='1'">Get report for ₹249 / $3 →</a>
-  </div>
+<!-- ── Finale ────────────────────────────────────────────────────────────── -->
+<section id="finale">
+  <p class="finale-kicker rv">One field. One click. Full report.</p>
+  <a href="scan.html" class="finale-link rv" style="transition-delay:.08s">What's your<br>grade?</a>
+  <p class="finale-sub rv" style="transition-delay:.16s">press <kbd>S</kbd> anywhere to scan</p>
 </section>
 
 </main>
 
-<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<!-- ── Footer ────────────────────────────────────────────────────────────── -->
 <footer>
-  <div class="footer-inner">
+  <div class="foot-grid">
     <div>
-      <div class="footer-logo">Web<span>Audit</span></div>
-      <div class="footer-tagline">Free web security scanner.</div>
+      <div class="foot-logo">Secure<span>Scanr</span></div>
+      <p class="foot-tag">Free website security scanner. Fourteen dimensions, one grade, every fix included.</p>
     </div>
-    <nav class="footer-nav">
+    <div class="foot-col">
+      <h4>Product</h4>
       <a href="scan.html">Scan</a>
+      <a href="versus.html">Versus</a>
+      <a href="generators.html">Generators</a>
+      <a href="security-txt.html">Security.txt</a>
+      <a href="badge.html">Badge</a>
+    </div>
+    <div class="foot-col">
+      <h4>Resources</h4>
       <a href="methodology.html">Methodology</a>
+      <a href="learn.html">Learning Center</a>
+      <a href="api-docs.html">API Docs</a>
+      <a href="world-security-index.html">World Index</a>
+      <a href="halloffame.html">Hall of Fame</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
       <a href="about.html">About</a>
-    </nav>
+      <a href="plans.html">Plans</a>
+      <a href="compliance-report.html">Compliance</a>
+      <a href="status.html">Status</a>
+      <a href="mailto:hello@securescanr.com">Contact</a>
+    </div>
   </div>
-  <div class="footer-bottom">
+  <div class="foot-bottom">
     <span>© 2026 SecureScanr</span>
-    <span class="footer-sep">·</span>
-    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
-    <span class="footer-sep">·</span>
-    <a href="methodology.html">Methodology</a>
-    <span class="footer-sep">·</span>
-    <a href="privacy.html">Privacy</a>
-    <span class="footer-sep">·</span>
-    <a href="terms.html">Terms</a>
-    <span class="footer-sep">·</span>
-    <a href="refund.html">Refund</a>
-    <span class="footer-sep">·</span>
-    <a href="status.html">Status</a>
-    <span class="footer-sep">·</span>
-    <a href="https://postyourstartup.co/startup/securescanr?ref=badge" target="_blank" style="opacity:0.7;">
-      <img src="https://postyourstartup.co/api/badge/securescanr?theme=dark" alt="Featured on PostYourStartup" width="120" height="30" style="vertical-align:middle;" />
-    </a>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refund.html">Refund</a></span>
   </div>
 </footer>
 
 <script>
-  function toggleNav() {
-    document.getElementById('nav-mobile').classList.toggle('open');
-  }
+(function () {
+  'use strict';
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
-  // ── Particle network (constellation) ──────────────────────────────────────
-  (function() {
-    const N = 28, LINK = 120, ATTRACT = 150, LINK2 = LINK * LINK;
-    const cv = document.createElement('canvas');
-    cv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
-    document.body.insertBefore(cv, document.body.firstChild);
-    const ctx = cv.getContext('2d');
-    let W = cv.width = window.innerWidth, H = cv.height = window.innerHeight;
-    window.addEventListener('resize', () => { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; });
-    let mx = W / 2, my = H / 2;
-    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    const pts = Array.from({ length: N }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
-    }));
-    function tick() {
-      ctx.clearRect(0, 0, W, H);
-      for (const p of pts) {
-        const cdx = mx - p.x, cdy = my - p.y;
-        const cd = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
-        if (cd < ATTRACT) {
-          const f = ((ATTRACT - cd) / ATTRACT) * 0.03;
-          p.vx += cdx / cd * f; p.vy += cdy / cd * f;
-        }
-        p.vx *= 0.98; p.vy *= 0.98;
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
-        if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
-      }
-      ctx.lineWidth = 1;
-      for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < LINK2) {
-            const alpha = ((1 - Math.sqrt(d2) / LINK) * 0.12).toFixed(3);
-            ctx.strokeStyle = `rgba(0,212,170,${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      ctx.fillStyle = 'rgba(0,212,170,0.4)';
-      for (const p of pts) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.5, 0, 6.283);
-        ctx.fill();
-      }
-      requestAnimationFrame(tick);
-    }
-    tick();
+  /* ── Boot sequence ──────────────────────────────────────────────────── */
+  (function boot() {
+    var el = $('#boot');
+    if (!el) return;
+    if (RM) { el.classList.add('done', 'gone'); return; }
+    var lines = $$('.boot-lines div', el);
+    lines.forEach(function (l, i) { setTimeout(function () { l.classList.add('on'); }, 120 + i * 220); });
+    setTimeout(function () { el.classList.add('done'); }, 950);
+    setTimeout(function () { el.classList.add('gone'); }, 1750);
   })();
-</script>
-<script>
-(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+
+  /* ── Scroll reveal ──────────────────────────────────────────────────── */
+  (function revealer() {
+    var els = $$('.rv');
+    if (RM || !('IntersectionObserver' in window)) {
+      els.forEach(function (e) { e.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  })();
+
+  /* ── Marquee content ────────────────────────────────────────────────── */
+  (function marquee() {
+    var track = $('#marquee-track');
+    if (!track) return;
+    var items = [
+      'Content-Security-Policy', 'Strict-Transport-Security', 'X-Frame-Options',
+      'X-Content-Type-Options', 'Referrer-Policy', 'Permissions-Policy',
+      'TLS 1.3', 'SPF', 'DMARC', 'DKIM', 'CAA', 'DNSSEC',
+      'HttpOnly', 'SameSite', 'COOP', 'COEP', 'CORP', 'SRI'
+    ];
+    var half = items.map(function (i) { return i + ' <b>//</b> '; }).join('');
+    track.innerHTML = half + half; /* duplicate for seamless -50% loop */
+  })();
+
+  /* ── Hero terminal ──────────────────────────────────────────────────── */
+  (function terminal() {
+    var body = $('#term-body'), grade = $('#term-grade');
+    if (!body) return;
+    var SCRIPT = [
+      { t: '$ securescanr scan https://demo-site.example', cls: 'cmd',  d: 0,    type: true },
+      { t: '  resolving host ............ ok',              cls: 'dim',  d: 350  },
+      { t: '  tls handshake ............. TLSv1.3 · cert valid 214d', cls: 'dim', d: 300 },
+      { t: '  headers received .......... auditing 14 dimensions',    cls: 'dim', d: 320 },
+      { t: '  ✗ content-security-policy   missing        −20', cls: 'bad',  d: 420 },
+      { t: '  ✗ strict-transport-security missing        −20', cls: 'bad',  d: 240 },
+      { t: '  ✗ x-frame-options           missing        −10', cls: 'bad',  d: 240 },
+      { t: '  ⚠ dmarc                     p=none          −5', cls: 'warn', d: 240 },
+      { t: '  ✗ cookie "session"          no HttpOnly     −5', cls: 'bad',  d: 240 },
+      { t: '  ✓ x-content-type-options    nosniff',            cls: 'ok',   d: 240 },
+      { t: '  ✓ referrer-policy           strict-origin',      cls: 'ok',   d: 200 },
+      { t: '  ──────────────────────────────────────',         cls: 'dim',  d: 320 },
+      { t: '  40/100 · 5 fixes ready to paste',                 cls: 'cmd',  d: 260, stamp: true }
+    ];
+    function makeLine(cls) {
+      var s = document.createElement('span');
+      s.className = 'tl ' + cls;
+      body.appendChild(s);
+      return s;
+    }
+    if (RM) {
+      SCRIPT.forEach(function (L) { var s = makeLine(L.cls); s.textContent = L.t; s.classList.add('on'); });
+      grade.classList.add('on');
+      return;
+    }
+    var started = false;
+    function play() {
+      var i = 0;
+      function next() {
+        if (i >= SCRIPT.length) return;
+        var L = SCRIPT[i++], el = makeLine(L.cls);
+        var go = function () {
+          if (L.type) {
+            el.classList.add('on');
+            var k = 0;
+            (function typeCh() {
+              el.textContent = L.t.slice(0, ++k);
+              if (k < L.t.length) setTimeout(typeCh, 24);
+              else setTimeout(next, 150);
+            })();
+          } else {
+            el.textContent = L.t;
+            el.classList.add('on');
+            if (L.stamp) setTimeout(function () { grade.classList.add('on'); }, 380);
+            next();
+          }
+        };
+        setTimeout(go, L.d);
+      }
+      next();
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        if (en[0].isIntersecting && !started) { started = true; setTimeout(play, 1100); io.disconnect(); }
+      }, { threshold: 0.3 });
+      io.observe(body);
+    } else { setTimeout(play, 1100); }
+  })();
+
+  /* ── 14 dimensions list ─────────────────────────────────────────────── */
+  (function dimensions() {
+    var DIMENSIONS = [
+      ['Content-Security-Policy',   'Blocks XSS at the browser level before any injected script runs.'],
+      ['Strict-Transport-Security', 'Forces HTTPS on every connection — kills protocol downgrade attacks.'],
+      ['X-Frame-Options',           'Stops your pages being framed inside phishing overlays.'],
+      ['X-Content-Type-Options',    'Prevents MIME-sniffing that turns uploads into executable scripts.'],
+      ['Referrer-Policy',           'Controls how much of your URLs leak to third parties.'],
+      ['Permissions-Policy',        'Locks down camera, mic, geolocation and other powerful APIs.'],
+      ['CORS Policy',               'Flags wildcard origins that hand your API to any website.'],
+      ['Server Fingerprint',        'Exposed version strings give attackers a CVE shopping list.'],
+      ['TLS / SSL Certificate',     'Expiry, cipher strength, protocol version, self-signed detection.'],
+      ['SPF + DMARC + DKIM',        'Without these, anyone can send email that looks like it’s from you.'],
+      ['CAA + DNSSEC',              'Controls who can issue your certificates; signs your DNS answers.'],
+      ['Cookie Flags',              'Secure, HttpOnly, SameSite — checked on every cookie, by name.'],
+      ['Cross-Origin Isolation',    'COOP / COEP / CORP against cross-origin leaks and Spectre-class attacks.'],
+      ['Page Integrity',            'Mixed content, missing SRI on CDN scripts, base-tag hijacking risk.']
+    ];
+    var list = $('#dim-list');
+    if (!list) return;
+    var frag = document.createDocumentFragment();
+    DIMENSIONS.forEach(function (d, i) {
+      var row = document.createElement('div');
+      row.className = 'dim-row rv';
+      row.style.setProperty('--rv-d', (Math.min(i, 8) * 40) + 'ms');
+      var no = String(i + 1); if (no.length < 2) no = '0' + no;
+      row.innerHTML =
+        '<span class="dim-no">' + no + '</span>' +
+        '<span class="dim-name">' + d[0] + '</span>' +
+        '<span class="dim-desc">' + d[1] + '</span>' +
+        '<span class="dim-arrow">→</span>';
+      frag.appendChild(row);
+    });
+    list.appendChild(frag);
+    /* rows were added after the initial reveal pass — observe them now */
+    if (RM || !('IntersectionObserver' in window)) {
+      $$('.rv', list).forEach(function (e) { e.classList.add('in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -4% 0px' });
+      $$('.rv', list).forEach(function (e) { io.observe(e); });
+    }
+  })();
+
+  /* ── Verdict: scroll-driven score bleed ─────────────────────────────── */
+  (function verdict() {
+    var sec = $('#verdict');
+    if (!sec) return;
+    var scoreEl = $('#v-score'), gradeEl = $('#v-grade');
+    var items = $$('#v-list li'), caption = $('#v-caption');
+    var displayed = 100, target = 100, raf = null;
+
+    function gradeOf(s) {
+      return s >= 90 ? 'A+' : s >= 80 ? 'A' : s >= 70 ? 'B' : s >= 60 ? 'C' : s >= 50 ? 'D' : 'F';
+    }
+    function colorOf(s) {
+      return s >= 80 ? 'var(--accent)' : s >= 60 ? 'var(--amber)' : 'var(--red)';
+    }
+    function render() {
+      displayed += (target - displayed) * 0.14;
+      if (Math.abs(target - displayed) < 0.5) displayed = target;
+      var shown = Math.round(displayed);
+      scoreEl.textContent = shown;
+      scoreEl.style.color = colorOf(shown);
+      gradeEl.textContent = gradeOf(shown);
+      gradeEl.style.color = colorOf(shown);
+      if (displayed !== target) raf = requestAnimationFrame(render);
+      else raf = null;
+    }
+    function setTarget(t) {
+      if (t === target) return;
+      target = t;
+      if (!raf) raf = requestAnimationFrame(render);
+    }
+    if (RM) {
+      items.forEach(function (li) { li.classList.add('hit'); });
+      caption.classList.add('hit');
+      displayed = 40; target = 40; render();
+      return;
+    }
+    function onScroll() {
+      var rect = sec.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = rect.height - vh;
+      var p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 1;
+      var score = 100;
+      items.forEach(function (li) {
+        var at = parseFloat(li.dataset.at), pts = parseInt(li.dataset.pts, 10);
+        if (p >= at) { li.classList.add('hit'); score -= pts; }
+        else li.classList.remove('hit');
+      });
+      caption.classList.toggle('hit', p >= parseFloat(caption.dataset.at));
+      setTarget(score);
+    }
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { onScroll(); ticking = false; });
+    }, { passive: true });
+    onScroll();
+  })();
+
+  /* ── Text decode/scramble on mono labels ────────────────────────────── */
+  (function scrambler() {
+    if (RM || !('IntersectionObserver' in window)) return;
+    var CHARS = '#%&$@01<>/*+=';
+    function scramble(el) {
+      var txt = el.textContent;
+      var total = Math.max(16, Math.round(txt.length * 1.5));
+      var frame = 0;
+      (function step() {
+        frame++;
+        var solved = Math.floor((frame / total) * txt.length);
+        var out = '';
+        for (var i = 0; i < txt.length; i++) {
+          out += i < solved || txt[i] === ' '
+            ? txt[i]
+            : CHARS[Math.floor(Math.random() * CHARS.length)];
+        }
+        el.textContent = out;
+        if (frame < total) requestAnimationFrame(step);
+        else el.textContent = txt;
+      })();
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { scramble(en.target); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.5 });
+    $$('.hero-kicker, .sec-num, .v-label, .finale-kicker').forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ── Report stack: scroll-scrubbed fan + pointer lean ───────────────── */
+  (function deliverable() {
+    var stage = $('#deliv-stage');
+    if (!stage) return;
+    if (RM) { stage.style.setProperty('--p', 1); return; }
+
+    function scrub() {
+      var r = stage.getBoundingClientRect();
+      /* 0 when the stage top hits the viewport bottom, 1 once it's ~a third up */
+      var p = (innerHeight - r.top) / (innerHeight * 0.72);
+      stage.style.setProperty('--p', (p < 0 ? 0 : p > 1 ? 1 : p).toFixed(3));
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { scrub(); ticking = false; });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', scrub);
+    scrub();
+
+    /* Don't burn frames on the drift loop while the stack is off screen */
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        stage.classList.toggle('paused', !en[0].isIntersecting);
+      }, { threshold: 0 }).observe(stage);
+    }
+
+    /* Pointer lean — fine pointers only, no touch */
+    if (window.matchMedia('(pointer: fine)').matches) {
+      stage.addEventListener('pointermove', function (e) {
+        var r = stage.getBoundingClientRect();
+        stage.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+        stage.style.setProperty('--my', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+      });
+      stage.addEventListener('pointerleave', function () {
+        stage.style.setProperty('--mx', 0);
+        stage.style.setProperty('--my', 0);
+      });
+    }
+  })();
+
+  /* ── Dock the nav once scrolled (keeps content from blending through) ─ */
+  (function dockNav() {
+    var hdr = $('header');
+    if (!hdr) return;
+    var menuOpen = false;
+    function dock() { hdr.classList.toggle('docked', menuOpen || window.scrollY > 40); }
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { dock(); ticking = false; });
+    }, { passive: true });
+    /* an open dropdown needs the same normal-blend state as the docked nav */
+    $$('.nav-dropdown').forEach(function (d) {
+      ['mouseenter', 'focusin'].forEach(function (ev) {
+        d.addEventListener(ev, function () { menuOpen = true; dock(); });
+      });
+      ['mouseleave', 'focusout'].forEach(function (ev) {
+        d.addEventListener(ev, function () { menuOpen = false; dock(); });
+      });
+    });
+    dock();
+  })();
+
+  /* ── Magnetic buttons (fine pointers only) ──────────────────────────── */
+  (function magnetic() {
+    if (RM || !window.matchMedia('(pointer: fine)').matches) return;
+    $$('[data-magnetic]').forEach(function (btn) {
+      var R = 90;
+      btn.addEventListener('mousemove', function (e) {
+        var b = btn.getBoundingClientRect();
+        var dx = e.clientX - (b.left + b.width / 2);
+        var dy = e.clientY - (b.top + b.height / 2);
+        btn.style.transform = 'translate(' + (dx / R) * 10 + 'px,' + (dy / R) * 10 + 'px)';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+    });
+  })();
+
+  /* ── Keyboard shortcut: S → scan ────────────────────────────────────── */
+  window.addEventListener('keydown', function (e) {
+    if (e.key !== 's' && e.key !== 'S') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    window.location.href = 'scan.html';
+  });
+
+  /* ── Close mobile menu on link tap ──────────────────────────────────── */
+  $$('#menu a').forEach(function (a) {
+    a.addEventListener('click', function () { $('#menu').classList.remove('open'); });
+  });
+})();
 </script>
 </body>
 </html>

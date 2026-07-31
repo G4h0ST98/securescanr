@@ -1277,23 +1277,16 @@
     .module-card::before { transition: box-shadow .3s var(--ease-out); }
     .module-card:hover::before { box-shadow: 0 0 12px var(--rule, transparent); }
 
-    /* ── Light over the panel ────────────────────────────────────────────
-       One accent glow tracking the pointer across the whole row — a light
-       moving over an instrument, not six separate hover effects. Sits above
-       the cards but takes no pointer events, so clicks still land. */
+    /* ── The arrival sweep ───────────────────────────────────────────────
+       A pointer-tracked glow used to live here too, and it was cut: a wash
+       sitting under the card text cost readability, which is the one thing
+       this block cannot afford. The one-shot sweep stays — it crosses once on
+       arrival and is gone, so it never sits on anything you are reading.
+       Same gesture the hero scanline makes, reused rather than invented. */
     .mg-fx {
       position: absolute; inset: 0; z-index: 2;
       pointer-events: none; overflow: hidden;
     }
-    .mg-fx::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px),
-                  rgba(0,229,176,.13), rgba(0,229,176,.04) 45%, transparent 70%);
-      opacity: var(--fx-o, 0);
-      transition: opacity .4s var(--ease-out);
-    }
-    /* and one sweep after the rules have finished drawing — the same gesture
-       the hero scanline makes, reused rather than a new idea */
     .mg-fx::after {
       content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 150px;
       background: linear-gradient(90deg, transparent, rgba(0,229,176,.12), transparent);
@@ -2083,38 +2076,15 @@
   // Marks the module row matching the section currently under the reading line.
   // Rebuilt after every render because both card sets are re-emitted each scan.
   let _railObserver = null;
-  // The row's light layer. Re-created on every render because #module-cards
-  // has its innerHTML replaced; absolutely positioned, so it takes no grid cell.
+  // Host for the arrival sweep. Re-created on every render because
+  // #module-cards has its innerHTML replaced; absolutely positioned, so it
+  // takes no grid cell, and pointer-events:none so cards stay clickable.
   function wireRowFX() {
     const grid = el('module-cards');
     if (!grid || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const fx = document.createElement('div');
     fx.className = 'mg-fx';
     grid.appendChild(fx);
-
-    let raf = 0, mx = 0, my = 0;
-    function paint() {
-      raf = 0;
-      fx.style.setProperty('--mx', mx + 'px');
-      fx.style.setProperty('--my', my + 'px');
-    }
-    grid.addEventListener('mousemove', function (e) {
-      const r = grid.getBoundingClientRect();
-      mx = e.clientX - r.left;
-      my = e.clientY - r.top;
-      fx.style.setProperty('--fx-o', '1');
-      if (!raf) raf = requestAnimationFrame(paint);
-    });
-    function douse() { fx.style.setProperty('--fx-o', '0'); }
-    grid.addEventListener('mouseleave', douse);
-    /* mouseleave on the row does not fire when the pointer leaves the window
-       entirely (alt-tab, a screenshot tool taking focus), which would strand
-       the glow wherever it was last seen. */
-    window.addEventListener('blur', douse);
-    document.addEventListener('mouseleave', douse);
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden) douse();
-    });
   }
 
   function wireRailIndex() {

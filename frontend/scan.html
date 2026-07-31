@@ -1289,6 +1289,7 @@
   }
   </script>
   <link rel="stylesheet" href="/mobile.css">
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -1553,10 +1554,6 @@
 </footer>
 <script>
   // ── Config ─────────────────────────────────────────────────────────────────
-  const API_BASE = (
-    location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-  ) ? 'http://localhost:5000' : 'https://api.securescanr.com';
-
   // ── State ──────────────────────────────────────────────────────────────────
   let currentUrl = '';
   let scanStepTimer = null;

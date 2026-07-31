@@ -24,7 +24,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <link rel="canonical" href="https://securescanr.com/compliance-report.html">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com http://localhost:5000 http://127.0.0.1:5000; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';">
   <title>Security Compliance Report — SecureScanr</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -517,6 +517,7 @@
     }
   </style>
   <link rel="stylesheet" href="/mobile.css">
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -757,7 +758,6 @@
 </footer>
 
 <script>
-  const API_BASE = 'https://api.securescanr.com';
   const LS_COMPLIANCE_URL = 'https://webaudit-in.lemonsqueezy.com/checkout/buy/YOUR_COMPLIANCE_VARIANT_UUID';
 
   // Detect token in URL (from LemonSqueezy flow)

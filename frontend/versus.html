@@ -729,6 +729,7 @@
   <link rel="stylesheet" href="/mobile.css">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -916,9 +917,6 @@
 </footer>
 
 <script>
-  const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-    ? 'http://localhost:5000' : 'https://api.securescanr.com';
-
   function esc(v) {
     if (v == null) return '—';
     return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

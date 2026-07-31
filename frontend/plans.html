@@ -24,7 +24,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <link rel="canonical" href="https://securescanr.com/plans.html">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com http://localhost:5000 http://127.0.0.1:5000; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';">
   <title>SecureScanr Pricing — Pro &amp; Agency Website Security Scanner Plans</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
@@ -599,6 +599,7 @@
   <link rel="stylesheet" href="/mobile.css">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -885,7 +886,6 @@
 </footer>
 
 <script>
-  const API_BASE = 'https://api.securescanr.com';
 
   const LS_URLS = {
     pro:    'https://webaudit-in.lemonsqueezy.com/checkout/buy/d8ef46ee-530b-4134-898c-508b491927ab?checkout[variant_id]=1039013',

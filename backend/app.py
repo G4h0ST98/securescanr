@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import random
+import re
 import socket
 import string
 import threading
@@ -31,10 +32,27 @@ from report.pdf import generate_pdf
 from compliance_pdf import evaluate_compliance, generate_compliance_pdf
 import db
 
+# Load backend/.env before any os.environ.get() below runs. Optional import so
+# the app still boots where the package isn't installed (Railway injects real
+# env vars and has no .env file).
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+except ImportError:
+    pass
+
 app = Flask(__name__)
 
 CORS(app,
-     origins=["https://securescanr.com", "https://www.securescanr.com"],
+     # Production origins, plus local dev on any port. The frontend is served
+     # separately (Cloudflare Pages in prod, a static server locally), so a
+     # localhost frontend calling a localhost Flask is still cross-origin.
+     origins=[
+         "https://securescanr.com",
+         "https://www.securescanr.com",
+         re.compile(r"^http://localhost:\d+$"),
+         re.compile(r"^http://127\.0\.0\.1:\d+$"),
+     ],
      allow_headers=["Content-Type", "X-API-Key", "Authorization"],
      methods=["GET", "POST", "OPTIONS"],
      supports_credentials=False,

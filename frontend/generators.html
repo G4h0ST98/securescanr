@@ -696,6 +696,7 @@
   <link rel="stylesheet" href="/mobile.css">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://securescanr.com/og-image.jpg">
+  <script src="/config.js"></script>
 </head>
 <body>
 
@@ -1515,7 +1516,7 @@
     loading.style.display = 'inline';
 
     try {
-      const res  = await fetch('https://api.securescanr.com/api/tools/validate-csp', {
+      const res  = await fetch(`${API_BASE}/api/tools/validate-csp`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ csp: cspRaw }),

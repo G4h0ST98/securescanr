@@ -1,12 +1,12 @@
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.webaudit.in https://api.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.securescanr.com https://api.razorpay.com https://www.google-analytics.com https://www.googletagmanager.com; frame-src https://api.razorpay.com https://checkout.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self';
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Frame-Options: SAMEORIGIN
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
-  Access-Control-Allow-Origin: https://webaudit.in
+  Access-Control-Allow-Origin: https://securescanr.com
   Cross-Origin-Opener-Policy: same-origin-allow-popups
   Cross-Origin-Embedder-Policy: unsafe-none
   Cross-Origin-Resource-Policy: same-origin
 
-/og-image.png
+/og-image.jpg
   Cross-Origin-Resource-Policy: cross-origin

@@ -758,7 +758,10 @@
 </footer>
 
 <script>
-  const LS_COMPLIANCE_URL = 'https://webaudit-in.lemonsqueezy.com/checkout/buy/YOUR_COMPLIANCE_VARIANT_UUID';
+  // Its own LS product (like the one-time scan), so its own checkout UUID.
+  // variant_id must stay 1696995 — the webhook matches on it to issue the token.
+  // No redirect_url here on purpose: delivery is by email, not by landing page.
+  const LS_COMPLIANCE_URL = 'https://webaudit-in.lemonsqueezy.com/checkout/buy/29849c35-f1c3-4359-a0c0-d0176249c92b?checkout[variant_id]=1696995';
 
   // Detect token in URL (from LemonSqueezy flow)
   const _params = new URLSearchParams(location.search);

@@ -1123,7 +1123,11 @@
         display: grid; grid-template-columns: minmax(276px, 320px) minmax(0, 1fr);
         gap: clamp(28px, 3.2vw, 56px); align-items: start;
       }
-      .res-rail { position: sticky; top: 88px; }
+      /* --rail-top is normally 88px. When the rail is taller than the viewport
+         (deep browser zoom, a very short window) the script below eases it
+         negative as you scroll down, so the bottom of the index is always
+         reachable within one screen instead of only at the end of the page. */
+      .res-rail { position: sticky; top: var(--rail-top, 88px); }
 
       /* verdict plate */
       .res-rail .grade-hero {
@@ -1949,6 +1953,54 @@
       <span class="mc-arrow">→</span>
     </div>`;
   }
+
+  // ── Rail follow ────────────────────────────────────────────────────────────
+  // A `position: sticky` element taller than the viewport pins in place and
+  // never shows its own bottom: modules 05/06 stay unreachable until the page
+  // has scrolled far enough for the rail's end to arrive, which with sections
+  // expanded is most of the document. The CSS bands keep the rail short enough
+  // to fit at ordinary heights; this covers what they can't — browser zoom and
+  // unusually short windows.
+  //
+  // When it fits, --rail-top stays 88px and nothing changes. When it doesn't,
+  // the sticky offset eases negative as you scroll down (revealing the bottom)
+  // and back to 88 as you scroll up (revealing the grade), so both ends are
+  // always one screen away. The rail is never a scroll container.
+  (function railFollow() {
+    const TOP = 88, GAP = 24;
+    let lastY = window.scrollY, railTop = TOP, ticking = false;
+
+    function update() {
+      ticking = false;
+      const rail = document.querySelector('.res-rail');
+      if (!rail || !rail.offsetParent) return;
+      // below 1001px the rail is static — leave it alone
+      if (getComputedStyle(rail).position !== 'sticky') {
+        document.documentElement.style.removeProperty('--rail-top');
+        return;
+      }
+      const y = window.scrollY;
+      const dy = y - lastY;
+      lastY = y;
+
+      const overflow = rail.offsetHeight + TOP + GAP - window.innerHeight;
+      if (overflow <= 0) {                       // fits: normal pinned behaviour
+        railTop = TOP;
+      } else {
+        railTop = Math.min(TOP, Math.max(TOP - overflow, railTop - dy));
+      }
+      document.documentElement.style.setProperty('--rail-top', railTop + 'px');
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { railTop = TOP; onScroll(); });
+    update();
+  })();
 
   // ── Rail index ─────────────────────────────────────────────────────────────
   // Marks the module row matching the section currently under the reading line.

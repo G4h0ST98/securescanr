@@ -1225,60 +1225,6 @@
     document.getElementById('nav-mobile').classList.toggle('open');
   }
 
-  // ── Particle network ───────────────────────────────────────────────────────
-  (function() {
-    const N = 28, LINK = 120, ATTRACT = 150, LINK2 = LINK * LINK;
-    const cv = document.createElement('canvas');
-    cv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
-    document.body.insertBefore(cv, document.body.firstChild);
-    const ctx = cv.getContext('2d');
-    let W = cv.width = window.innerWidth, H = cv.height = window.innerHeight;
-    window.addEventListener('resize', () => { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; });
-    let mx = W / 2, my = H / 2;
-    window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    const pts = Array.from({ length: N }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5,
-    }));
-    function tick() {
-      ctx.clearRect(0, 0, W, H);
-      for (const p of pts) {
-        const cdx = mx - p.x, cdy = my - p.y;
-        const cd = Math.sqrt(cdx * cdx + cdy * cdy) || 1;
-        if (cd < ATTRACT) {
-          const f = ((ATTRACT - cd) / ATTRACT) * 0.03;
-          p.vx += cdx / cd * f; p.vy += cdy / cd * f;
-        }
-        p.vx *= 0.98; p.vy *= 0.98;
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
-        if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
-      }
-      ctx.lineWidth = 1;
-      for (let i = 0; i < N; i++) {
-        for (let j = i + 1; j < N; j++) {
-          const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < LINK2) {
-            const alpha = ((1 - Math.sqrt(d2) / LINK) * 0.12).toFixed(3);
-            ctx.strokeStyle = `rgba(0,212,170,${alpha})`;
-            ctx.beginPath();
-            ctx.moveTo(pts[i].x, pts[i].y);
-            ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      ctx.fillStyle = 'rgba(0,212,170,0.4)';
-      for (const p of pts) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.5, 0, 6.283);
-        ctx.fill();
-      }
-      requestAnimationFrame(tick);
-    }
-    tick();
-  })();
 </script>
 <script>
 (function(){

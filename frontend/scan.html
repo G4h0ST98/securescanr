@@ -1300,9 +1300,13 @@
       transform: translateX(-160px);
       animation: rowSweep 1.15s var(--ease-out) 1.05s 1 forwards;
     }
+    /* 100vw, not 100%: a percentage in translateX resolves against the moving
+       element's OWN width (150px), so the sweep travelled 310px and parked over
+       card 02. The row can never be wider than the viewport, so 100vw always
+       clears it, and .mg-fx clips whatever runs past the edge. */
     @keyframes rowSweep {
       from { transform: translateX(-160px); }
-      to   { transform: translateX(calc(100% + 160px)); }
+      to   { transform: translateX(100vw); }
     }
     @media (prefers-reduced-motion: reduce) { .mg-fx { display: none; } }
 
@@ -2101,8 +2105,15 @@
       fx.style.setProperty('--fx-o', '1');
       if (!raf) raf = requestAnimationFrame(paint);
     });
-    grid.addEventListener('mouseleave', function () {
-      fx.style.setProperty('--fx-o', '0');
+    function douse() { fx.style.setProperty('--fx-o', '0'); }
+    grid.addEventListener('mouseleave', douse);
+    /* mouseleave on the row does not fire when the pointer leaves the window
+       entirely (alt-tab, a screenshot tool taking focus), which would strand
+       the glow wherever it was last seen. */
+    window.addEventListener('blur', douse);
+    document.addEventListener('mouseleave', douse);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) douse();
     });
   }
 

@@ -275,7 +275,68 @@
       82%  { transform: translateY(100vh); opacity: 0; }
       100% { transform: translateY(100vh); opacity: 0; }
     }
-    .hero-wrap { max-width: 1240px; margin: 0 auto; width: 100%; }
+    /* Split masthead: the control on the left, the manifest of what will be
+       checked on the right, divided by a live seam. The manifest is the same
+       register the loading state ticks through — one element carries all
+       three states of the page. */
+    .hero-wrap {
+      max-width: 1240px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .85fr);
+      gap: clamp(28px, 4vw, 64px); align-items: start;
+    }
+    .hero-lead { min-width: 0; }
+    .hero-manifest {
+      min-width: 0; position: relative;
+      border-left: 1px solid var(--line-soft);
+      padding-left: clamp(20px, 2.6vw, 40px);
+      padding-top: 6px;
+    }
+    /* the seam carries a slow accent bleed so it reads as live, not ruled */
+    .hero-manifest::before {
+      content: ''; position: absolute; left: -1px; top: 0; width: 1px; height: 34%;
+      background: linear-gradient(180deg, transparent, var(--accent), transparent);
+      opacity: .55; animation: seam-run 6.5s var(--ease-out) infinite;
+    }
+    @keyframes seam-run {
+      0%   { transform: translateY(-40%); opacity: 0; }
+      15%  { opacity: .55; }
+      75%  { opacity: .55; }
+      100% { transform: translateY(310%); opacity: 0; }
+    }
+    .manifest-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--muted-2); padding-bottom: 14px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .manifest-head b { color: var(--accent); font-weight: 500; }
+    .reg-row {
+      display: grid; grid-template-columns: 26px 1fr; align-items: baseline;
+      gap: 14px; padding: 13px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .reg-no {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; color: var(--muted-2);
+    }
+    .reg-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text);
+    }
+    .reg-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: .5px; color: var(--muted-2);
+      margin-top: 5px; line-height: 1.5;
+    }
+    .manifest-foot {
+      margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
+      line-height: 1.7;
+    }
+    .manifest-foot a { color: var(--muted); border-bottom: 1px solid var(--line); }
+    .manifest-foot a:hover { color: var(--accent); border-color: var(--accent); }
     .hero-kicker {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
@@ -368,17 +429,8 @@
     .hist-domain { max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); }
     .hist-ago { color: var(--muted-2); flex-shrink: 0; }
 
-    .hero-features { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
-    .feat-chip {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--muted-2); border: 1px solid var(--line-soft);
-      padding: 6px 12px;
-      display: inline-flex; align-items: center; gap: 7px;
-      transition: color .2s, border-color .2s;
-    }
-    .feat-chip::before { content: '✓'; color: var(--accent); }
-    .feat-chip:hover { color: var(--text); border-color: var(--line); }
+    /* .hero-features / .feat-chip removed — the manifest register replaced them;
+       listing the same five modules twice on one screen was the redundancy. */
 
     /* ── Section label helper ────────────────────────────────────────────── */
     .sec-num {
@@ -400,28 +452,51 @@
     }
     .loading-url-display::before { content: '$ scanning '; color: var(--muted-2); }
     .progress-track {
-      height: 1px; background: var(--line); overflow: hidden; margin-bottom: 26px;
+      position: relative; height: 1px; background: var(--line); margin-bottom: 26px;
     }
     .progress-fill {
-      height: 100%; background: var(--accent);
+      position: relative; height: 100%; background: var(--accent);
       box-shadow: 0 0 12px var(--accent);
       transition: width .6s var(--ease-out);
     }
-    .stage-labels { display: flex; justify-content: space-between; gap: 6px; }
+    /* leading edge reads as a probe head travelling the wire */
+    .progress-fill::after {
+      content: ''; position: absolute; right: -1px; top: -3px;
+      width: 2px; height: 7px; background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: probe-blink 1s steps(2) infinite;
+    }
+    @keyframes probe-blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+    /* The stage list is laid out as the hero's manifest register, so the five
+       rows you read before the scan are the five rows that tick during it. */
+    .stage-labels { display: flex; flex-direction: column; border-top: 1px solid var(--line-soft); }
+    /* No index numbers here: these are pipeline stages, not the manifest's
+       01–06 groups, and numbering both would imply a mapping that isn't real. */
     .stage-item {
-      display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1;
+      display: grid; grid-template-columns: 18px 1fr auto;
+      align-items: center; gap: 14px; padding: 13px 0;
+      border-bottom: 1px solid var(--line-soft);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
       color: var(--muted-2); transition: color .25s;
     }
+    .stage-item::after {
+      content: 'queued'; font-size: 9.5px; letter-spacing: 1.5px;
+      color: var(--muted-2); opacity: .5;
+    }
+    .stage-item.active::after { content: 'running'; color: var(--text); opacity: 1; }
+    .stage-item.done::after   { content: 'done';    color: var(--accent); opacity: 1; }
     .stage-check { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted-2); transition: color .25s; }
     .stage-item.active, .stage-item.active .stage-check { color: var(--text); }
+    .stage-item.active .stage-check { animation: stage-pulse 1.1s ease-in-out infinite; }
+    @keyframes stage-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
     .stage-item.done,   .stage-item.done   .stage-check { color: var(--accent); }
     .loading-eta {
       margin-top: 26px;
       font-family: 'JetBrains Mono', monospace; font-size: 10px;
       letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
     }
+    .loading-eta b { color: var(--accent); font-weight: 500; font-variant-numeric: tabular-nums; }
 
     /* ── Error ───────────────────────────────────────────────────────────── */
     #error-state {
@@ -455,14 +530,22 @@
 
     /* ── Results shell ───────────────────────────────────────────────────── */
     #results-state {
-      max-width: 1240px; margin: 0 auto; width: 100%;
+      max-width: 1320px; margin: 0 auto; width: 100%;
       padding: clamp(40px, 7vh, 80px) clamp(20px, 4vw, 56px) clamp(70px, 12vh, 130px);
       scroll-margin-top: 70px;
     }
+    /* Below the rail breakpoint this is a plain block — grade, index, then the
+       findings — i.e. exactly the old single-column stack. The two-column
+       instrument is installed in the min-width block near the responsive rules. */
+    .res-main { min-width: 0; }
 
     /* Grade hero */
     .grade-hero {
-      background: var(--ink-2);
+      /* reads as the cover sheet of a report rather than a plain panel */
+      background:
+        radial-gradient(85% 130% at 85% 0%, rgba(0,229,176,.055), transparent 62%),
+        repeating-linear-gradient(rgba(236,238,233,.02) 0 1px, transparent 1px 38px),
+        var(--ink-2);
       border: 1px solid var(--line-soft);
       padding: clamp(24px, 3vw, 40px);
       display: flex; align-items: center; gap: clamp(24px, 3.5vw, 48px); flex-wrap: wrap;
@@ -540,10 +623,11 @@
       border: 1px solid var(--line-soft);
     }
     .module-card {
+      position: relative;
       background: transparent;
       border-right: 1px solid var(--line-soft);
       border-top: 2px solid transparent;
-      padding: 20px 18px 22px;
+      padding: 18px 18px 22px;
       cursor: pointer;
       transition: background .25s ease, color .25s ease;
     }
@@ -552,7 +636,24 @@
     .module-card.status-good   { border-top-color: var(--accent); }
     .module-card.status-warn   { border-top-color: var(--amber); }
     .module-card.status-danger { border-top-color: var(--red); }
-    .module-card-icon { font-size: 20px; margin-bottom: 12px; opacity: .9; }
+    /* Index + status dot instead of an emoji — same numbering language as the
+       fourteen dimensions on the homepage. */
+    .mc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .mc-no {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; color: var(--muted-2);
+    }
+    .mc-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted-2); transition: background .25s; }
+    .status-good   .mc-dot { background: var(--accent); box-shadow: 0 0 7px rgba(0,229,176,.55); }
+    .status-warn   .mc-dot { background: var(--amber);  box-shadow: 0 0 7px rgba(255,176,32,.5); }
+    .status-danger .mc-dot { background: var(--red);    box-shadow: 0 0 7px rgba(255,77,94,.5); }
+    .mc-arrow {
+      position: absolute; right: 16px; bottom: 18px;
+      font-size: 13px; color: var(--muted-2);
+      opacity: 0; transform: translateX(-6px);
+      transition: opacity .3s var(--ease-out), transform .3s var(--ease-out);
+    }
+    .module-card:hover .mc-arrow { opacity: 1; transform: none; color: var(--text); }
     .module-card-name {
       font-family: 'JetBrains Mono', monospace;
       font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
@@ -582,7 +683,12 @@
     }
     .section-hdr:hover { background: rgba(236,238,233,.03); }
     .section-hdr.open { border-bottom-color: var(--line-soft); }
-    .section-hdr-icon { font-size: 16px; opacity: .85; }
+    .section-hdr-no {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; color: var(--muted-2);
+      min-width: 20px; transition: color .2s;
+    }
+    .section-hdr:hover .section-hdr-no { color: var(--accent); }
     .section-hdr-title {
       flex: 1;
       font-family: 'JetBrains Mono', monospace;
@@ -953,7 +1059,12 @@
     .btn-unlock:hover { background: var(--accent); color: var(--ink); }
     .locked-section-body { padding: 44px 28px; text-align: center; }
     .locked-section-body p { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
-    .lock-icon { font-size: 26px; margin-bottom: 14px; opacity: .7; }
+    .lock-icon {
+      display: inline-block; margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent);
+      border: 1px solid rgba(0,229,176,.4); padding: 5px 12px;
+    }
 
     /* ── WhatsApp share — mobile only ────────────────────────────────────── */
     .btn-whatsapp { display: none; }
@@ -1001,10 +1112,116 @@
     @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
     .fade-up { animation: fadeUp .5s var(--ease-out); }
 
+    /* ── The instrument: sticky verdict rail (desktop only) ──────────────
+       The verdict is the thing every finding is read against, so it stops
+       being a panel you scroll past and becomes a rail that stays. The module
+       cards below it turn into the index of the document on the right, with
+       the section you are reading marked. Nothing here is a scroll container
+       (no max-height / overflow-y) — the rail is compacted to fit instead. */
+    @media (min-width: 1001px) {
+      .res-grid {
+        display: grid; grid-template-columns: minmax(276px, 320px) minmax(0, 1fr);
+        gap: clamp(28px, 3.2vw, 56px); align-items: start;
+      }
+      .res-rail { position: sticky; top: 88px; }
+
+      /* verdict plate */
+      .res-rail .grade-hero {
+        flex-direction: column; align-items: stretch; gap: 20px;
+        padding: 24px 22px 22px;
+      }
+      .res-rail .grade-badge { width: 100%; height: 116px; }
+      .res-rail .grade-letter { font-size: 56px; }
+      .res-rail .grade-scanned-url { font-size: 12px; }
+      .res-rail .grade-context { margin-bottom: 10px; }
+      .res-rail .grade-info { min-width: 0; }
+      /* the note is emitted with inline centring for the wide layout */
+      .res-rail .grade-normal-note { max-width: none !important; text-align: left !important; }
+      .res-rail .grade-summary-text { max-width: none; font-size: 13px; margin-bottom: 14px; }
+      .res-rail .score-bar-wrap { max-width: none; }
+      .res-rail .grade-actions { margin-left: 0; width: 100%; }
+      .res-rail .btn-pdf, .res-rail .btn-share { width: 100%; font-size: 10px; padding: 12px 14px; }
+
+      /* module cards → index rows */
+      .res-rail .module-grid {
+        grid-template-columns: 1fr; margin-top: 14px;
+        border: 1px solid var(--line-soft); border-top: none;
+      }
+      /* Two compact lines per module so all five stay on screen with the
+         verdict above them — the rail is only useful if it fits. */
+      .res-rail .module-card {
+        display: grid; grid-template-columns: 24px 1fr auto;
+        align-items: center; gap: 4px 12px;
+        padding: 11px 16px 12px;
+        border-right: none; border-top: none;
+        border-bottom: 1px solid var(--line-soft);
+        border-left: 2px solid transparent;
+      }
+      .res-rail .module-card:last-child { border-bottom: none; }
+      .res-rail .module-card.status-good   { border-left-color: var(--accent); }
+      .res-rail .module-card.status-warn   { border-left-color: var(--amber); }
+      .res-rail .module-card.status-danger { border-left-color: var(--red); }
+      .res-rail .module-card.is-active { background: var(--ink-2); }
+      .res-rail .module-card.is-active .module-card-name { color: var(--text); }
+      .res-rail .mc-top { display: contents; }
+      .res-rail .mc-no { grid-column: 1; grid-row: 1; }
+      .res-rail .mc-dot { grid-column: 3; grid-row: 1; }
+      .res-rail .module-card-name { grid-column: 2; grid-row: 1; }
+      .res-rail .module-card-stat { grid-column: 2; grid-row: 2; font-size: 12.5px; margin-top: 0; }
+      .res-rail .module-card-sub  { grid-column: 3; grid-row: 2; margin-top: 0; text-align: right; font-size: 9.5px; }
+      .res-rail .mc-arrow { display: none; }
+
+      /* findings read as one continuous document, not a run of panels */
+      .res-main .detail-sections { margin-top: 0; gap: 0; border-top: 1px solid var(--line-soft); }
+      .res-main .detail-section {
+        background: transparent; border: none;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .res-main .section-hdr { padding: 18px 6px; }
+      .res-main .section-body.open { padding-bottom: 10px; }
+      .res-main #simulator-container:not(:empty) { margin-bottom: 26px; }
+      .res-main .upgrade-cta-card { margin: 22px 0; }
+    }
+    /* Short viewports: compact the rail so it FITS rather than scrolling
+       inside itself or unpinning (both make the column go blank mid-read). */
+    @media (min-width: 1001px) and (max-height: 900px) {
+      .res-rail .grade-hero { gap: 14px; padding: 18px 18px 16px; }
+      .res-rail .grade-badge { height: 100px; }
+      .res-rail .grade-letter { font-size: 46px; }
+      .res-rail .grade-normal-note { display: none; }
+      .res-rail .module-card { padding: 9px 16px 10px; }
+      .res-rail .btn-pdf, .res-rail .btn-share { padding: 10px 14px; }
+      .res-rail .grade-actions { gap: 8px; }
+    }
+    @media (min-width: 1001px) and (max-height: 800px) {
+      .res-rail .grade-summary-text { display: none; }
+      .res-rail .grade-badge { height: 88px; }
+      .res-rail .grade-letter { font-size: 38px; }
+    }
+    @media (min-width: 1001px) and (max-height: 700px) {
+      /* last things to go: the sub-line on each row and the score bar */
+      .res-rail .module-card-sub, .res-rail .score-bar-wrap { display: none; }
+      .res-rail .grade-badge { height: 72px; }
+      .res-rail .grade-letter { font-size: 30px; }
+      .res-rail .grade-score { margin-top: 4px; }
+      .res-rail .module-card { padding: 7px 16px 8px; }
+    }
+
     /* ── Responsive ──────────────────────────────────────────────────────── */
     @media (max-width: 1000px) {
+      .hero-wrap { grid-template-columns: 1fr; gap: 36px; }
+      .hero-manifest {
+        border-left: none; padding-left: 0;
+        border-top: 1px solid var(--line-soft); padding-top: 26px;
+      }
+      .hero-manifest::before { display: none; }
+    }
+    /* Range-scoped: the :nth-child(3n) rule outranks the 2-column rules below
+       on specificity, so it must not leak past the 700px breakpoint. */
+    @media (max-width: 1000px) and (min-width: 701px) {
+      /* six cards → two rows of three */
       .module-grid { grid-template-columns: repeat(3, 1fr); }
-      .module-card:nth-child(3) { border-right: none; }
+      .module-card:nth-child(3n) { border-right: none; }
       .module-card:nth-child(-n+3) { border-bottom: 1px solid var(--line-soft); }
     }
     @media (max-width: 700px) {
@@ -1138,6 +1355,7 @@
 <section id="hero">
   <div class="hero-scanline" aria-hidden="true"></div>
   <div class="hero-wrap">
+   <div class="hero-lead">
     <p class="hero-kicker">Free scan · no signup · ~30 seconds</p>
     <h1 class="hero-title">
       Point it at<br>
@@ -1156,7 +1374,7 @@
           <span id="btn-spinner" class="btn-spinner hidden"></span>
         </button>
       </div>
-      <p class="hero-proof">Nothing is stored <span>·</span> Results are on-screen only <span>·</span> <a href="methodology.html" style="color:var(--muted);border-bottom:1px solid var(--line)">How we grade</a></p>
+      <p class="hero-proof">Nothing is stored <span>·</span> Results are on-screen only <span>·</span> No login</p>
     </form>
 
     <p class="hero-sub">One live request, <b>14 security dimensions</b> — headers, TLS, DNS, cookies, cross-origin isolation, page integrity. You get an A–F grade and the <b>exact fix</b> for every failing check.</p>
@@ -1169,14 +1387,42 @@
       </div>
       <div id="recent-scans-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
+   </div>
 
-    <div class="hero-features">
-      <span class="feat-chip">HTTP Headers</span>
-      <span class="feat-chip">TLS / SSL</span>
-      <span class="feat-chip">DNS Security</span>
-      <span class="feat-chip">Cookie Flags</span>
-      <span class="feat-chip">Cross-Origin Isolation</span>
-    </div>
+   <!-- The manifest: what the one request will look at. Same register the
+        loading state ticks through, and the same 01–05 numbering the results
+        index uses. -->
+   <aside class="hero-manifest">
+     <!-- The count reconciles with the 14 dimensions claimed in the hero copy
+          and on index.html: 14 named checks, grouped into six areas. Do not
+          state a module count here without the 14 beside it. -->
+     <div class="manifest-head"><span>One request</span><b>14 checks · 06 groups</b></div>
+     <div class="reg-row">
+       <span class="reg-no">01</span>
+       <div><div class="reg-name">HTTP Headers</div><div class="reg-desc">CSP · HSTS · X-Frame-Options · X-Content-Type-Options · Referrer &amp; Permissions Policy · CORS · server fingerprint</div></div>
+     </div>
+     <div class="reg-row">
+       <span class="reg-no">02</span>
+       <div><div class="reg-name">TLS / SSL</div><div class="reg-desc">Protocol · cipher suite · certificate expiry · issuer</div></div>
+     </div>
+     <div class="reg-row">
+       <span class="reg-no">03</span>
+       <div><div class="reg-name">DNS Security</div><div class="reg-desc">SPF · DMARC · DKIM · CAA · DNSSEC</div></div>
+     </div>
+     <div class="reg-row">
+       <span class="reg-no">04</span>
+       <div><div class="reg-name">Cookie Flags</div><div class="reg-desc">Secure · HttpOnly · SameSite, per cookie</div></div>
+     </div>
+     <div class="reg-row">
+       <span class="reg-no">05</span>
+       <div><div class="reg-name">Cross-Origin</div><div class="reg-desc">COOP · COEP · CORP isolation headers</div></div>
+     </div>
+     <div class="reg-row">
+       <span class="reg-no">06</span>
+       <div><div class="reg-name">Page Integrity</div><div class="reg-desc">Mixed content · missing SRI on CDN scripts · base-tag hijacking</div></div>
+     </div>
+     <p class="manifest-foot">Graded out of 100 · <a href="methodology.html">see the deduction table</a></p>
+   </aside>
   </div>
 </section>
 
@@ -1194,7 +1440,7 @@
       <div class="stage-item" id="stage-3"><span class="stage-check">○</span><span>DNS</span></div>
       <div class="stage-item" id="stage-4"><span class="stage-check">○</span><span>Cookies</span></div>
     </div>
-    <div class="loading-eta">~8 seconds</div>
+    <div class="loading-eta" id="loading-eta">~8 seconds</div>
   </div>
 </div>
 
@@ -1212,12 +1458,18 @@
 
 <!-- ── Results ──────────────────────────────────────────────────────────────── -->
 <div id="results-state" class="hidden">
-  <div id="grade-hero" class="grade-hero fade-up" data-ticks></div>
-  <div id="simulator-container"></div>
-  <div id="module-cards" class="module-grid fade-up"></div>
-  <div id="detail-sections" class="detail-sections"></div>
-  <div class="scan-again">
-    <button class="btn-ghost" onclick="resetScan()">← Scan another URL</button>
+  <div class="res-grid">
+    <aside class="res-rail">
+      <div id="grade-hero" class="grade-hero fade-up" data-ticks></div>
+      <div id="module-cards" class="module-grid fade-up"></div>
+    </aside>
+    <div class="res-main">
+      <div id="simulator-container"></div>
+      <div id="detail-sections" class="detail-sections"></div>
+      <div class="scan-again">
+        <button class="btn-ghost" onclick="resetScan()">← Scan another URL</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1308,6 +1560,7 @@
   // ── State ──────────────────────────────────────────────────────────────────
   let currentUrl = '';
   let scanStepTimer = null;
+  let scanClockTimer = null;
   let scanStartTime = 0;
   let _urlParamScan  = false; // true when scan was triggered by ?url= param
   let _freeFullAccess = false; // render-time flag: suppress fix gating for auto-scans
@@ -1395,7 +1648,7 @@
   }
   function lockedFixCTA() {
     if (_freeFullAccess) return '';
-    return `<a href="plans.html" class="locked-fix-cta">🔒 Get fix with Pro</a>`;
+    return `<a href="plans.html" class="locked-fix-cta">Get fix with Pro →</a>`;
   }
   function flag(ok, trueLabel, falseLabel) {
     return ok
@@ -1413,6 +1666,13 @@
       s.querySelector('.stage-check').textContent = '○';
     }
     el('stage-0').classList.add('active');
+    // elapsed readout — a scan is 3–10s, and a live counter reads as progress
+    const t0 = Date.now();
+    clearInterval(scanClockTimer);
+    scanClockTimer = setInterval(() => {
+      el('loading-eta').innerHTML =
+        '<b>' + ((Date.now() - t0) / 1000).toFixed(1) + 's</b> elapsed · ~8s typical';
+    }, 100);
     let idx = 0;
     scanStepTimer = setInterval(() => {
       if (idx >= 5) { clearInterval(scanStepTimer); return; }
@@ -1430,6 +1690,7 @@
 
   function stopLoadingAnim() {
     clearInterval(scanStepTimer);
+    clearInterval(scanClockTimer);
     el('progress-fill').style.width = '100%';
     for (let i = 0; i < 5; i++) {
       el(`stage-${i}`).classList.remove('active');
@@ -1527,11 +1788,13 @@
     renderModuleCards(data);
     const container = el('detail-sections');
     container.innerHTML = '';
-    container.appendChild(renderHeadersSection(data.headers));
+    container.appendChild(renderHeadersSection(data.headers, data.cors, data.server_fingerprint));
     container.appendChild(renderTLSSection(data.tls));
     container.appendChild(renderDNSSection(data.dns));
     container.appendChild(renderCookiesSection(data.cookies));
     container.appendChild(renderCrossOriginSection(data.cross_origin));
+    container.appendChild(renderPageSection(data.page_analysis));
+    wireRailIndex();
   }
 
   function renderFreeResults(data, isAutoScan) {
@@ -1542,13 +1805,18 @@
     const container = el('detail-sections');
     container.innerHTML = '';
     _freeFullAccess = !!isAutoScan;
-    container.appendChild(renderHeadersSection(data.headers));
+    container.appendChild(renderHeadersSection(data.headers, data.cors, data.server_fingerprint));
     if (!isAutoScan) container.appendChild(renderUpgradeCTA());
     container.appendChild(renderTLSSection(data.tls));
     container.appendChild(renderDNSSection(data.dns));
     _freeFullAccess = false;
     container.appendChild(renderLockedSection('section-cookies', '🍪', 'Cookie Security'));
     container.appendChild(renderLockedSection('section-cross-origin', '🔗', 'Cross-Origin Isolation'));
+    // 06 last so document order matches the rail's numbering
+    _freeFullAccess = !!isAutoScan;
+    container.appendChild(renderPageSection(data.page_analysis));
+    _freeFullAccess = false;
+    wireRailIndex();
   }
 
   // ── Grade hero ─────────────────────────────────────────────────────────────
@@ -1598,7 +1866,10 @@
     const ck       = data.cookies  || {};
     const co       = data.cross_origin || {};
 
-    const hIssues  = Object.values(headers).filter(h => h.status !== 'good').length;
+    // CORS + server fingerprint are part of the headers group's 8 checks
+    const hIssues  = Object.values(headers).filter(h => h.status !== 'good').length
+                   + extraHeaderIssues(data.cors, data.server_fingerprint);
+    const pgIssues = pageIntegrityIssues(data.page_analysis);
     const tlsOk    = tls.supported && (!tls.deductions || tls.deductions.length === 0);
     const tlsProto = (tls.connection || {}).protocol || '—';
     const tlsDays  = (tls.certificate || {}).days_remaining;
@@ -1618,7 +1889,7 @@
     el('module-cards').innerHTML = `
       ${card('🔒','Headers',    cardStatus(hIssues),   statCls(hIssues),
              hIssues===0?'All good':`${hIssues} issue${hIssues>1?'s':''}`,
-             hIssues===0?'6/6 present':`${6-hIssues}/6 present`,'section-headers', 0)}
+             '8 checks','section-headers', 0)}
       ${card('🛡','TLS / SSL', tlsOk?'status-good':'status-danger',
              tlsOk?'stat-good':'stat-danger',
              tlsOk?'Passed':(tls.supported?'Issues found':'No HTTPS'),
@@ -1631,17 +1902,55 @@
              `${ckCount} cookie${ckCount!==1?'s':''}`, 'section-cookies', 3)}
       ${card('🔗','Cross-Origin', cardStatus(coIssues), statCls(coIssues),
              coIssues===0?'All set':`${coIssues} issue${coIssues>1?'s':''}`,
-             'COOP · COEP · CORP','section-cross-origin', 4)}`;
+             'COOP · COEP · CORP','section-cross-origin', 4)}
+      ${card('🧩','Page Integrity', cardStatus(pgIssues), statCls(pgIssues),
+             pgIssues===0?'Clean':`${pgIssues} issue${pgIssues>1?'s':''}`,
+             'Mixed · SRI · base','section-page', 5)}`;
   }
 
+  // Section numbering replaces the old emoji icons. `icon` args are still
+  // accepted at every call site but ignored — the number is derived from the id.
+  const SECTION_NO = {
+    'section-headers': '01', 'section-tls': '02', 'section-dns': '03',
+    'section-cookies': '04', 'section-cross-origin': '05', 'section-page': '06'
+  };
+  function sectionNo(id) { return SECTION_NO[id] || '··'; }
+
   function card(icon, name, statusCls, statCls, stat, sub, anchor, idx) {
-    return `<div class="module-card ${statusCls}" onclick="scrollToSection('${anchor}')"
+    return `<div class="module-card ${statusCls}" data-target="${anchor}" onclick="scrollToSection('${anchor}')"
       style="animation:cardIn .4s ease-out ${idx * 100}ms both">
-      <div class="module-card-icon">${icon}</div>
+      <div class="mc-top"><span class="mc-no">${sectionNo(anchor)}</span><i class="mc-dot"></i></div>
       <div class="module-card-name">${name}</div>
       <div class="module-card-stat ${statCls}">${stat}</div>
       <div class="module-card-sub">${sub}</div>
+      <span class="mc-arrow">→</span>
     </div>`;
+  }
+
+  // ── Rail index ─────────────────────────────────────────────────────────────
+  // Marks the module row matching the section currently under the reading line.
+  // Rebuilt after every render because both card sets are re-emitted each scan.
+  let _railObserver = null;
+  function wireRailIndex() {
+    if (_railObserver) { _railObserver.disconnect(); _railObserver = null; }
+    if (!('IntersectionObserver' in window)) return;
+    const cards = Array.from(document.querySelectorAll('#module-cards .module-card'));
+    if (!cards.length) return;
+    const visible = new Set();
+    const mark = () => {
+      const first = cards.find(c => visible.has(c.dataset.target));
+      cards.forEach(c => c.classList.toggle('is-active', c === first));
+    };
+    _railObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id);
+      });
+      mark();
+    }, { rootMargin: '-88px 0px -55% 0px' });
+    cards.forEach(c => {
+      const sec = el(c.dataset.target);
+      if (sec) _railObserver.observe(sec);
+    });
   }
 
   function scrollToSection(id) {
@@ -1659,7 +1968,7 @@
     div.id = id;
     div.innerHTML = `
       <div class="section-hdr${startOpen?' open':''}" onclick="toggleSection('${id}')">
-        <span class="section-hdr-icon">${icon}</span>
+        <span class="section-hdr-no">${sectionNo(id)}</span>
         <span class="section-hdr-title">${esc(title)}</span>
         ${chipHtml}
         <span class="toggle-caret${startOpen?' open':''}">▼</span>
@@ -1685,11 +1994,61 @@
   }
 
   // ── HTTP Headers ───────────────────────────────────────────────────────────
-  function renderHeadersSection(headers) {
+  // Gate a fix the same way the backend gates header/DNS fixes: free scans get
+  // the explanation, Pro gets the fix. Used by the checks whose remediation is
+  // written here in the frontend rather than returned by the scanner.
+  function gatedFix(fixHtml, isIssue) {
+    if (!isIssue) return '';
+    if (_freeFullAccess || _currentScanIsPro) return fixHtml;
+    return lockedFixCTA();
+  }
+
+  // Access-Control-Allow-Origin, Server and X-Powered-By are response headers
+  // and are scored, so they belong in this table — they were being collected
+  // and deducted for without ever being shown.
+  function extraHeaderRows(cors, fp) {
+    const out = [];
+    const row = (name, rec, sev) => {
+      const isIssue = (rec.deduction || 0) > 0;
+      return `<tr>
+        <td>
+          <div class="hdr-name">${esc(name)}</div>
+          ${isIssue ? sevPriorityBlock(sev, '') : ''}
+        </td>
+        <td style="white-space:nowrap;text-align:center;vertical-align:top;padding-top:12px">
+          ${statusBadge(rec.status || 'good')}
+          <div style="margin-top:7px">
+            <div class="chip-label" style="text-align:center">Score Impact</div>
+            ${ptsChip(rec.deduction || 0)}
+          </div>
+        </td>
+        <td>
+          <p class="dim">${esc(rec.explanation || '')}</p>
+          ${rec.business_impact && isIssue ? `<p class="biz-impact">⚡ ${esc(rec.business_impact)}</p>` : ''}
+          ${rec.value ? `<code class="header-val">${esc(rec.value)}</code>` : ''}
+          ${rec.fix ? gatedFix(fixBox(rec.fix), isIssue) : ''}
+        </td>
+      </tr>`;
+    };
+    if (cors && cors.explanation) out.push(row('Access-Control-Allow-Origin', cors, 'important'));
+    const server = (fp || {}).server, powered = (fp || {}).x_powered_by;
+    if (server  && server.explanation)  out.push(row('Server', server, 'minor'));
+    if (powered && powered.explanation) out.push(row('X-Powered-By', powered, 'minor'));
+    return out.join('');
+  }
+
+  function extraHeaderIssues(cors, fp) {
+    return (((cors || {}).deduction || 0) > 0 ? 1 : 0)
+         + ((((fp || {}).server || {}).deduction || 0) > 0 ? 1 : 0)
+         + ((((fp || {}).x_powered_by || {}).deduction || 0) > 0 ? 1 : 0);
+  }
+
+  function renderHeadersSection(headers, cors, fp) {
     if (!headers) return makeSection('section-headers','🔒','HTTP Security Headers','',
       '<p class="dim" style="padding:16px">No data.</p>',false);
 
-    const issues = Object.values(headers).filter(h => h.status !== 'good').length;
+    const issues = Object.values(headers).filter(h => h.status !== 'good').length
+                 + extraHeaderIssues(cors, fp);
     const rows = Object.entries(headers).map(([name, info]) => {
       const { status, deduction, severity, explanation, fix, value, note, business_impact, fix_priority } = info;
       return `<tr>
@@ -1720,7 +2079,7 @@
         <th style="width:15%">Status · Score Impact</th>
         <th>Details &amp; Business Risk</th>
       </tr></thead>
-      <tbody>${rows}</tbody>
+      <tbody>${rows}${extraHeaderRows(cors, fp)}</tbody>
     </table>`;
 
     return makeSection('section-headers','🔒','HTTP Security Headers', issueChip(issues), body, issues > 0);
@@ -1943,13 +2302,107 @@
     return makeSection('section-cross-origin','🔗','Cross-Origin Isolation', issueChip(issues), body, issues > 0);
   }
 
+  // ── Page Integrity ─────────────────────────────────────────────────────────
+  // Checks on the page's own HTML rather than its headers. The scanner has
+  // always run these and deducted for them (they show up in the simulator);
+  // this is the surface that finally reports them. page.py returns no `fix`
+  // strings, so remediation copy lives here and is Pro-gated like the rest.
+  function pageIntegrityIssues(pa) {
+    if (!pa) return 0;
+    return [(pa.mixed_content || {}), (pa.sri || {}), (pa.base_tag || {})]
+      .filter(c => (c.deduction || 0) > 0).length;
+  }
+
+  function renderPageSection(pa) {
+    if (!pa) return makeSection('section-page','🧩','Page Integrity','',
+      '<p class="dim" style="padding:16px">No data.</p>', false);
+
+    const mc  = pa.mixed_content || {};
+    const sri = pa.sri          || {};
+    const bt  = pa.base_tag     || {};
+    const ext = pa.external_deps || {};
+    const issues = pageIntegrityIssues(pa);
+
+    const urlList = (urls, shown) => {
+      const list = (urls || []).slice(0, 5);
+      if (!list.length) return '';
+      const more = (shown || list.length) - list.length;
+      return list.map(u => `<code class="header-val">${esc(u)}</code>`).join('') +
+        (more > 0 ? `<p class="note-weak">+ ${more} more</p>` : '');
+    };
+
+    const row = (name, rec, sev, detailHtml, fixHtml) => {
+      const isIssue = (rec.deduction || 0) > 0;
+      return `<tr>
+        <td>
+          <div class="hdr-name">${esc(name)}</div>
+          ${isIssue ? sevPriorityBlock(sev, '') : ''}
+        </td>
+        <td style="white-space:nowrap;text-align:center;vertical-align:top;padding-top:12px">
+          ${statusBadge(rec.status === 'warn' ? 'weak' : (rec.status || 'good'))}
+          <div style="margin-top:7px">
+            <div class="chip-label" style="text-align:center">Score Impact</div>
+            ${ptsChip(rec.deduction || 0)}
+          </div>
+        </td>
+        <td>
+          <p class="dim">${esc(rec.explanation || '')}</p>
+          ${detailHtml || ''}
+          ${gatedFix(fixHtml, isIssue)}
+        </td>
+      </tr>`;
+    };
+
+    const rows =
+      row('Mixed content', mc, 'important',
+          urlList(mc.urls, mc.count),
+          `<p class="note-weak">Serve every resource over https://, then let the browser catch stragglers:</p>` +
+          fixBox('Content-Security-Policy: upgrade-insecure-requests')) +
+      row('Subresource Integrity', sri, 'minor',
+          urlList(sri.missing_urls, sri.missing_count),
+          `<p class="note-weak">Pin each external script and stylesheet to a hash:</p>` +
+          // the closing tag below MUST keep its backslash: an unescaped closing
+          // script tag terminates this inline block and breaks the whole page
+          fixBox('<script src="https://cdn.example.com/lib.js" integrity="sha384-…" crossorigin="anonymous"><\/script>')) +
+      row('Base tag', bt, 'minor',
+          bt.href ? `<code class="header-val">&lt;base href="${esc(bt.href)}"&gt;</code>` : '',
+          `<p class="note-weak">Remove the &lt;base&gt; tag and use root-relative URLs (<code>/path</code>) instead, so injected HTML cannot repoint every relative link on the page.</p>`) +
+      `<tr>
+        <td><div class="hdr-name">External dependencies</div></td>
+        <td style="white-space:nowrap;text-align:center;vertical-align:top;padding-top:12px">
+          <span class="status-badge s-good">${ext.count || 0} domain${(ext.count || 0) === 1 ? '' : 's'}</span>
+          <div style="margin-top:7px">
+            <div class="chip-label" style="text-align:center">Score Impact</div>
+            ${ptsChip(0)}
+          </div>
+        </td>
+        <td>
+          <p class="dim">${esc(ext.explanation || 'External domains loaded by this page.')} Not scored — shown so you can see whose code runs on your page.</p>
+          ${(ext.domains || []).length ? `<p class="note-weak">${(ext.domains || []).map(d => esc(d)).join(' · ')}</p>` : ''}
+        </td>
+      </tr>`;
+
+    const body = `<table class="result-table">
+      <thead><tr>
+        <th style="width:26%">Check · Risk · Priority</th>
+        <th style="width:15%">Status · Score Impact</th>
+        <th>Details &amp; Fix</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+    return makeSection('section-page','🧩','Page Integrity', issueChip(issues), body, issues > 0);
+  }
+
   // ── Free tier render ───────────────────────────────────────────────────────
   function renderFreeModuleCards(data) {
     const headers = data.headers || {};
     const tls     = data.tls     || {};
     const dns     = data.dns     || {};
 
-    const hIssues   = Object.values(headers).filter(h => h.status !== 'good').length;
+    const hIssues   = Object.values(headers).filter(h => h.status !== 'good').length
+                    + extraHeaderIssues(data.cors, data.server_fingerprint);
+    const pgIssues  = pageIntegrityIssues(data.page_analysis);
     const tlsOk     = tls.supported && (!tls.deductions || tls.deductions.length === 0);
     const tlsProto  = (tls.connection || {}).protocol || '—';
     const tlsDays   = (tls.certificate || {}).days_remaining;
@@ -1965,7 +2418,7 @@
     el('module-cards').innerHTML = `
       ${card('🔒','Headers',      cardStatus(hIssues),  statCls(hIssues),
              hIssues===0?'All good':`${hIssues} issue${hIssues>1?'s':''}`,
-             hIssues===0?'6/6 present':`${6-hIssues}/6 present`, 'section-headers', 0)}
+             '8 checks', 'section-headers', 0)}
       ${card('🛡','TLS / SSL',   tlsOk?'status-good':'status-danger',
              tlsOk?'stat-good':'stat-danger',
              tlsOk?'Passed':(tls.supported?'Issues found':'No HTTPS'),
@@ -1973,8 +2426,11 @@
       ${card('📡','DNS',         cardStatus(dnsIssues), statCls(dnsIssues),
              dnsIssues===0?'All good':`${dnsIssues} issue${dnsIssues>1?'s':''}`,
              'SPF &amp; DMARC', 'section-dns', 2)}
-      ${card('🍪','Cookies',     'status-warn', 'stat-warn', '🔒 Pro', 'Unlock details', 'section-cookies', 3)}
-      ${card('🔗','Cross-Origin','status-warn', 'stat-warn', '🔒 Pro', 'Unlock details', 'section-cross-origin', 4)}`;
+      ${card('🍪','Cookies',     'status-warn', 'stat-warn', 'Pro only', 'Unlock details', 'section-cookies', 3)}
+      ${card('🔗','Cross-Origin','status-warn', 'stat-warn', 'Pro only', 'Unlock details', 'section-cross-origin', 4)}
+      ${card('🧩','Page Integrity', cardStatus(pgIssues), statCls(pgIssues),
+             pgIssues===0?'Clean':`${pgIssues} issue${pgIssues>1?'s':''}`,
+             'Mixed · SRI · base', 'section-page', 5)}`;
   }
 
   function renderFreeHeadersSection(headers) {
@@ -1988,7 +2444,7 @@
         <td class="hdr-name">${esc(name)}${status !== 'good' ? sevChip(severity) : ''}</td>
         <td style="white-space:nowrap">${statusBadge(status)}</td>
         <td style="white-space:nowrap">${ptsChip(deduction)}</td>
-        <td><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">🔒 Details &amp; fix with Pro</span></td>
+        <td><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">Details &amp; fix with Pro →</span></td>
       </tr>`;
     }).join('');
 
@@ -2011,7 +2467,7 @@
       ? `<div class="tls-ok-box" style="margin:16px">✓ TLS is correctly configured — no issues detected.</div>`
       : `<div style="padding:16px">
            <div class="tls-error-box">⚠ TLS issues detected. Unlock Pro for full certificate details, cipher suite, and protocol analysis.</div>
-           <div style="text-align:center;padding:10px 0"><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">🔒 Unlock TLS details</span></div>
+           <div style="text-align:center;padding:10px 0"><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">Unlock TLS details →</span></div>
          </div>`;
     return makeSection('section-tls','🛡','TLS / SSL Certificate', issueChip(pass ? 0 : 1), body, !pass);
   }
@@ -2022,14 +2478,14 @@
       ? `<div class="tls-ok-box" style="margin:16px">✓ SPF and DMARC records are present and valid.</div>`
       : `<div style="padding:16px">
            <div class="tls-error-box">⚠ DNS email security issues found. Unlock Pro for SPF/DMARC analysis and fix recommendations.</div>
-           <div style="text-align:center;padding:10px 0"><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">🔒 Unlock DNS details</span></div>
+           <div style="text-align:center;padding:10px 0"><span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">Unlock DNS details →</span></div>
          </div>`;
     return makeSection('section-dns','📡','DNS Email Security', issueChip(pass ? 0 : 1), body, !pass);
   }
 
   function renderLockedSection(id, icon, title) {
     const body = `<div class="locked-section-body">
-      <div class="lock-icon">🔒</div>
+      <div class="lock-icon">Pro</div>
       <p>Full analysis available with SecureScanr Pro.</p>
       <span class="locked-fix-cta" style="cursor:pointer" onclick="scrollToUpgrade()">Unlock with Pro →</span>
     </div>`;
@@ -2042,7 +2498,7 @@
     div.className = 'upgrade-cta-card';
     div.id = 'upgrade-cta';
     div.innerHTML = `
-      <h3>🔓 Unlock Pro Features</h3>
+      <h3>Unlock Pro features</h3>
       <p>Cookie security analysis, Cross-Origin Isolation checks, and PDF export for client reports.</p>
       <a id="upgrade-cta-link" href="plans.html" class="btn-upgrade">Get SecureScanr Pro →</a>
       <div style="margin:16px 0;font-size:13px;color:var(--muted)">— or unlock with an existing key —</div>
@@ -2124,7 +2580,7 @@
     card.className = 'simulator-card';
     card.innerHTML = `
       <div class="simulator-hdr" id="sim-hdr" onclick="toggleSimulator()">
-        <span style="font-size:18px">🎯</span>
+        <span class="section-hdr-no">SIM</span>
         <span class="simulator-hdr-title">Score Improvement Simulator</span>
         <span style="font-size:12px;color:var(--muted)">${issues.length} fixable issue${issues.length !== 1 ? 's' : ''} found — check what you plan to fix</span>
         <span class="simulator-toggle-caret" id="sim-caret">▼</span>

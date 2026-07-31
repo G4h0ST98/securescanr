@@ -538,6 +538,7 @@
        findings — i.e. exactly the old single-column stack. The two-column
        instrument is installed in the min-width block near the responsive rules. */
     .res-main { min-width: 0; }
+    .rail-foot { display: none; }
 
     /* Grade hero */
     .grade-hero {
@@ -1129,6 +1130,32 @@
          reachable within one screen instead of only at the end of the page. */
       .res-rail { position: sticky; top: var(--rail-top, 88px); }
 
+      /* Fill the column instead of ending in dead space. min-height can only
+         ever grow the rail to the viewport, never past it, so short screens and
+         the follow-on-scroll behaviour above are untouched. The index takes a
+         capped share of the slack and the footer takes the rest, so the column
+         ends on a deliberate line rather than trailing off. */
+      .res-rail { display: flex; flex-direction: column; min-height: calc(100vh - 112px); }
+      .res-rail .module-grid { grid-auto-rows: minmax(min-content, 1fr); max-height: 480px; }
+      .rail-foot {
+        display: flex;
+        margin-top: auto; padding-top: 16px;
+        border-top: 1px solid var(--line-soft);
+        display: flex; flex-direction: column; gap: 9px;
+      }
+      .rail-foot a, .rail-foot button {
+        background: none; border: none; padding: 0; text-align: left;
+        font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+        letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+        transition: color .2s;
+      }
+      .rail-foot a:hover, .rail-foot button:hover { color: var(--accent); }
+      .rail-foot .rf-note {
+        font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+        letter-spacing: 1px; line-height: 1.7; color: var(--muted-2); opacity: .8;
+        text-transform: none;
+      }
+
       /* verdict plate */
       .res-rail .grade-hero {
         flex-direction: column; align-items: stretch; gap: 20px;
@@ -1235,6 +1262,8 @@
       .res-rail .module-card-stat {
         grid-column: 3; grid-row: 1; font-size: 11.5px; white-space: nowrap;
       }
+      .rail-foot .rf-note { display: none; }
+      .rail-foot { padding-top: 12px; gap: 7px; }
     }
 
     /* ── Responsive ──────────────────────────────────────────────────────── */
@@ -1493,6 +1522,13 @@
     <aside class="res-rail">
       <div id="grade-hero" class="grade-hero fade-up" data-ticks></div>
       <div id="module-cards" class="module-grid fade-up"></div>
+      <!-- Anchored to the bottom of the rail on desktop; hidden in the stacked
+           layout, where the same actions already sit under the findings. -->
+      <div class="rail-foot">
+        <button onclick="resetScan()">← Scan another URL</button>
+        <a href="methodology.html">How we grade →</a>
+        <p class="rf-note">Nothing is stored. Results are on-screen only.</p>
+      </div>
     </aside>
     <div class="res-main">
       <div id="simulator-container"></div>

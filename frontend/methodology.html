@@ -491,13 +491,25 @@
 
     /* every finding is a row led by its number */
     .find {
+      position: relative;
       display: grid; grid-template-columns: 116px 1fr auto;
       align-items: baseline; gap: 0 clamp(16px, 2.4vw, 30px);
       padding: 16px 0;
       border-bottom: 1px solid var(--line-soft);
-      transition: padding-left .35s var(--ease-out), background .25s;
+      transition: border-color .25s var(--ease-out);
     }
-    .find:hover { padding-left: 14px; background: rgba(236,238,233,.02); }
+    /* Hover used to wash the row with rgba(236,238,233,.02) and shove it 14px
+       right — a tint behind the text you are reading, plus the line moving
+       under your eye. The cue now lives in the margin and on the rule, so it
+       never touches the words: a short accent tick grows in the gutter and the
+       row's own hairline brightens. */
+    .find::before {
+      content: ''; position: absolute; left: -16px; top: 50%;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width .3s var(--ease-out);
+    }
+    .find:hover::before { width: 10px; }
+    .find:hover { border-bottom-color: var(--line); }
     /* the deduction, set large — the page's running subject */
     .find-pts {
       font-size: clamp(21px, 2.2vw, 29px); font-weight: 700;

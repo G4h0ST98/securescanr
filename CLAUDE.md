@@ -434,12 +434,12 @@ CREATE TABLE shared_reports (
 # Run backend locally
 cd backend && python app.py
 
-# Git push
-cd ~/Desktop/2026/WebAudit
+# Git push — repo is G4h0ST98/securescanr, NOT the old webaudit.in repo
+cd ~/Desktop/2026/Securescanr
 git add .
 git commit -m "message"
 PAT=$(cat ~/Desktop/2026/Githubtoken.txt | tr -d '[:space:]')
-git push "https://x-access-token:${PAT}@github.com/G4h0ST98/webaudit.in.git" main
+git push "https://x-access-token:${PAT}@github.com/G4h0ST98/securescanr.git" main
 ```
 
 ---

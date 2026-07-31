@@ -537,8 +537,6 @@
     /* Below the rail breakpoint this is a plain block — grade, index, then the
        findings — i.e. exactly the old single-column stack. The two-column
        instrument is installed in the min-width block near the responsive rules. */
-    .res-main { min-width: 0; }
-    .rail-foot { display: none; }
 
     /* Grade hero */
     .grade-hero {
@@ -619,7 +617,7 @@
 
     /* Module cards */
     .module-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr);
+      display: grid; grid-template-columns: repeat(6, 1fr);
       margin-top: 26px;
       border: 1px solid var(--line-soft);
     }
@@ -1113,158 +1111,138 @@
     @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
     .fade-up { animation: fadeUp .5s var(--ease-out); }
 
-    /* ── The instrument: sticky verdict rail (desktop only) ──────────────
-       The verdict is the thing every finding is read against, so it stops
-       being a panel you scroll past and becomes a rail that stays. The module
-       cards below it turn into the index of the document on the right, with
-       the section you are reading marked. Nothing here is a scroll container
-       (no max-height / overflow-y) — the rail is compacted to fit instead. */
-    @media (min-width: 1001px) {
-      .res-grid {
-        display: grid; grid-template-columns: minmax(276px, 320px) minmax(0, 1fr);
-        gap: clamp(28px, 3.2vw, 56px); align-items: start;
-      }
-      /* --rail-top is normally 88px. When the rail is taller than the viewport
-         (deep browser zoom, a very short window) the script below eases it
-         negative as you scroll down, so the bottom of the index is always
-         reachable within one screen instead of only at the end of the page. */
-      .res-rail { position: sticky; top: var(--rail-top, 88px); }
-
-      /* Fill the column instead of ending in dead space. min-height can only
-         ever grow the rail to the viewport, never past it, so short screens and
-         the follow-on-scroll behaviour above are untouched. The index takes a
-         capped share of the slack and the footer takes the rest, so the column
-         ends on a deliberate line rather than trailing off. */
-      .res-rail { display: flex; flex-direction: column; min-height: calc(100vh - 112px); }
-      .res-rail .module-grid { grid-auto-rows: minmax(min-content, 1fr); max-height: 480px; }
-      .rail-foot {
-        display: flex;
-        margin-top: auto; padding-top: 16px;
-        border-top: 1px solid var(--line-soft);
-        display: flex; flex-direction: column; gap: 9px;
-      }
-      .rail-foot a, .rail-foot button {
-        background: none; border: none; padding: 0; text-align: left;
-        font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
-        letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
-        transition: color .2s;
-      }
-      .rail-foot a:hover, .rail-foot button:hover { color: var(--accent); }
-      .rail-foot .rf-note {
-        font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
-        letter-spacing: 1px; line-height: 1.7; color: var(--muted-2); opacity: .8;
-        text-transform: none;
-      }
-
-      /* verdict plate */
-      .res-rail .grade-hero {
-        flex-direction: column; align-items: stretch; gap: 20px;
-        padding: 24px 22px 22px;
-      }
-      .res-rail .grade-badge { width: 100%; height: 116px; }
-      .res-rail .grade-letter { font-size: 56px; }
-      .res-rail .grade-scanned-url { font-size: 12px; }
-      .res-rail .grade-context { margin-bottom: 10px; }
-      .res-rail .grade-info { min-width: 0; }
-      /* the note is emitted with inline centring for the wide layout */
-      .res-rail .grade-normal-note { max-width: none !important; text-align: left !important; }
-      .res-rail .grade-summary-text { max-width: none; font-size: 13px; margin-bottom: 14px; }
-      .res-rail .score-bar-wrap { max-width: none; }
-      .res-rail .grade-actions { margin-left: 0; width: 100%; }
-      .res-rail .btn-pdf, .res-rail .btn-share { width: 100%; font-size: 10px; padding: 12px 14px; }
-
-      /* module cards → index rows */
-      .res-rail .module-grid {
-        grid-template-columns: 1fr; margin-top: 14px;
-        border: 1px solid var(--line-soft); border-top: none;
-      }
-      /* Two compact lines per module so all five stay on screen with the
-         verdict above them — the rail is only useful if it fits. */
-      .res-rail .module-card {
-        display: grid; grid-template-columns: 24px 1fr auto;
-        align-items: center; gap: 4px 12px;
-        padding: 11px 16px 12px;
-        border-right: none; border-top: none;
-        border-bottom: 1px solid var(--line-soft);
-        border-left: 2px solid transparent;
-      }
-      .res-rail .module-card:last-child { border-bottom: none; }
-      .res-rail .module-card.status-good   { border-left-color: var(--accent); }
-      .res-rail .module-card.status-warn   { border-left-color: var(--amber); }
-      .res-rail .module-card.status-danger { border-left-color: var(--red); }
-      .res-rail .module-card.is-active { background: var(--ink-2); }
-      .res-rail .module-card.is-active .module-card-name { color: var(--text); }
-      .res-rail .mc-top { display: contents; }
-      .res-rail .mc-no { grid-column: 1; grid-row: 1; }
-      .res-rail .mc-dot { grid-column: 3; grid-row: 1; }
-      .res-rail .module-card-name { grid-column: 2; grid-row: 1; }
-      .res-rail .module-card-stat { grid-column: 2; grid-row: 2; font-size: 12.5px; margin-top: 0; }
-      .res-rail .module-card-sub  { grid-column: 3; grid-row: 2; margin-top: 0; text-align: right; font-size: 9.5px; }
-      .res-rail .mc-arrow { display: none; }
-
-      /* findings read as one continuous document, not a run of panels */
-      .res-main .detail-sections { margin-top: 0; gap: 0; border-top: 1px solid var(--line-soft); }
-      .res-main .detail-section {
-        background: transparent; border: none;
-        border-bottom: 1px solid var(--line-soft);
-      }
-      .res-main .section-hdr { padding: 18px 6px; }
-      .res-main .section-body.open { padding-bottom: 10px; }
-      .res-main #simulator-container:not(:empty) { margin-bottom: 26px; }
-      .res-main .upgrade-cta-card { margin: 22px 0; }
+    /* ── The verdict bar ─────────────────────────────────────────────────
+       Results read full width, the way the legacy page did — a dense reading
+       surface should not surrender 320px to a permanent column. What the rail
+       was actually for (the grade staying with you) is handled by a slim bar
+       that slides in once the grade band scrolls away, carrying the grade, the
+       domain and the six modules as jump targets. */
+    #verdict-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      background: rgba(5,6,7,.86);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line-soft);
+      transform: translateY(-102%);
+      transition: transform .45s var(--ease-out);
+      pointer-events: none;
     }
-    /* Short viewports: compact the rail so it FITS rather than scrolling
-       inside itself or unpinning (both make the column go blank mid-read). */
-    @media (min-width: 1001px) and (max-height: 900px) {
-      .res-rail .grade-hero { gap: 14px; padding: 18px 18px 16px; }
-      .res-rail .grade-badge { height: 100px; }
-      .res-rail .grade-letter { font-size: 46px; }
-      .res-rail .grade-normal-note { display: none; }
-      .res-rail .module-card { padding: 9px 16px 10px; }
-      .res-rail .btn-pdf, .res-rail .btn-share { padding: 10px 14px; }
-      .res-rail .grade-actions { gap: 8px; }
+    #verdict-bar.showing { transform: translateY(0); pointer-events: auto; }
+    .vb-inner {
+      max-width: 1240px; margin: 0 auto;
+      padding: 10px clamp(20px, 4vw, 56px);
+      display: flex; align-items: center; gap: clamp(14px, 2vw, 28px);
+      /* clears the site nav, which sits above it */
+      padding-top: 66px;
     }
-    @media (min-width: 1001px) and (max-height: 800px) {
-      .res-rail .grade-summary-text { display: none; }
-      .res-rail .grade-badge { height: 88px; }
-      .res-rail .grade-letter { font-size: 38px; }
+    .vb-grade {
+      flex-shrink: 0; display: flex; align-items: baseline; gap: 8px;
+      font-family: 'Space Grotesk', sans-serif;
     }
-    /* 745, not 700: measured, the band above leaves the rail 621px tall, which
-       overflows any viewport under ~750 once the 88px nav offset is added. */
-    @media (min-width: 1001px) and (max-height: 745px) {
-      /* last things to go: the sub-line on each row and the score bar */
-      .res-rail .module-card-sub, .res-rail .score-bar-wrap { display: none; }
-      .res-rail .grade-badge { height: 72px; }
-      .res-rail .grade-letter { font-size: 30px; }
-      .res-rail .grade-score { margin-top: 4px; }
-      .res-rail .module-card { padding: 7px 16px 8px; }
+    .vb-letter { font-size: 26px; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+    .vb-score {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 1.5px; color: var(--muted-2);
     }
-    /* A laptop with browser chrome leaves ~570px of viewport, where even the
-       compacted two-line rows push 05 and 06 below the fold — and because the
-       rail is pinned, scrolling never brings them back. Below this the index
-       goes to one line per module: number, name, verdict. */
-    @media (min-width: 1001px) and (max-height: 660px) {
-      .res-rail .grade-hero { gap: 10px; padding: 14px 16px 14px; }
-      .res-rail .grade-badge { height: 60px; }
-      .res-rail .grade-letter { font-size: 26px; }
-      .res-rail .grade-score { font-size: 9px; margin-top: 2px; }
-      .res-rail .grade-context { display: none; }
-      .res-rail .grade-scanned-url { font-size: 11px; margin-bottom: 0; }
-      .res-rail .btn-pdf, .res-rail .btn-share { padding: 8px 12px; font-size: 9.5px; }
+    .vb-url {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 30ch;
+      border-left: 1px solid var(--line-soft); padding-left: clamp(14px, 2vw, 28px);
+    }
+    .vb-jumps { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+    .vb-jump {
+      background: none; border: 1px solid transparent; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 10px;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .vb-jump i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .vb-jump:hover { color: var(--text); border-color: var(--line-soft); }
+    .vb-jump.is-active { color: var(--text); border-color: var(--line); background: rgba(236,238,233,.04); }
+    .vb-jump.st-good   i { background: var(--accent); }
+    .vb-jump.st-warn   i { background: var(--amber); }
+    .vb-jump.st-danger i { background: var(--red); }
+    @media (max-width: 900px) { #verdict-bar { display: none; } }
 
-      .res-rail .module-grid { margin-top: 12px; }
-      .res-rail .module-card {
-        grid-template-columns: 24px 1fr auto;
-        padding: 6px 14px; gap: 0 10px;
-      }
-      .res-rail .mc-dot { display: none; }          /* colour lives on the left border */
-      .res-rail .module-card-name { grid-column: 2; grid-row: 1; }
-      .res-rail .module-card-stat {
-        grid-column: 3; grid-row: 1; font-size: 11.5px; white-space: nowrap;
-      }
-      .rail-foot .rf-note { display: none; }
-      .rail-foot { padding-top: 12px; gap: 7px; }
+    /* ── Grade band ──────────────────────────────────────────────────────── */
+    .grade-hero { animation: bandIn .6s var(--ease-out) both; }
+    @keyframes bandIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    /* the plate breathes once on arrival, then holds */
+    .grade-badge { animation: plateIn .7s var(--ease-out) .12s both; }
+    @keyframes plateIn {
+      from { opacity: 0; transform: scale(.94); }
+      to   { opacity: 1; transform: none; }
     }
+    .grade-letter { font-variant-numeric: tabular-nums; }
+
+    /* ── Findings read as panels again ───────────────────────────────────
+       Transparent sections separated by a 7%-opacity hairline read as one
+       undifferentiated column on a dark background; six panels read as six
+       things. This is the single biggest readability win over the previous
+       pass, and it is what the legacy page got right. */
+    .detail-sections { margin-top: 26px; display: flex; flex-direction: column; gap: 14px; }
+    .detail-section {
+      background: var(--ink-2);
+      border: 1px solid var(--line-soft);
+      overflow: hidden;
+      scroll-margin-top: 132px;
+      transition: border-color .3s var(--ease-out);
+    }
+    .detail-section:hover { border-color: var(--line); }
+    .detail-section.is-open { border-color: var(--line); }
+
+    /* Sentence case at a readable size. All-caps at 11.5px with 2.5px tracking
+       destroys word shape, which is exactly what the eye scans by — the mono
+       number keeps the numbering language without paying that cost. */
+    .section-hdr { padding: 17px 22px; gap: 14px; }
+    .section-hdr-no {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 1.5px; color: var(--muted-2);
+      min-width: 22px; transition: color .25s;
+    }
+    .section-hdr-title {
+      flex: 1;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15.5px; font-weight: 500; letter-spacing: -.2px;
+      text-transform: none; color: var(--text);
+    }
+    .section-hdr:hover .section-hdr-no { color: var(--accent); }
+    .detail-section.is-open .section-hdr-no { color: var(--accent); }
+
+    /* Chips and micro-labels, all up ~1.5px from the previous pass */
+    .section-issues-chip { font-size: 10.5px; letter-spacing: 1.2px; padding: 5px 11px; }
+    .sev-chip { font-size: 10px; }
+    .chip-label { font-size: 9.5px; }
+    .hdr-name { font-size: 14px; }
+    .header-val { font-size: 12px; }
+    .result-table th { font-size: 10px; letter-spacing: 1.6px; }
+    .module-card-name { font-size: 10.5px; letter-spacing: 1.6px; }
+
+    /* Smooth open/close instead of a hard display swap */
+    .section-body {
+      display: block; overflow: hidden;
+      max-height: 0; opacity: 0;
+      transition: max-height .45s var(--ease-out), opacity .3s ease;
+    }
+    .section-body.open { max-height: 6000px; opacity: 1; overflow-x: auto; }
+
+    /* rows arrive in sequence when a section opens */
+    .section-body.open .result-table tbody tr {
+      animation: rowIn .4s var(--ease-out) both;
+    }
+    .section-body.open .result-table tbody tr:nth-child(1) { animation-delay: .04s; }
+    .section-body.open .result-table tbody tr:nth-child(2) { animation-delay: .08s; }
+    .section-body.open .result-table tbody tr:nth-child(3) { animation-delay: .12s; }
+    .section-body.open .result-table tbody tr:nth-child(4) { animation-delay: .16s; }
+    .section-body.open .result-table tbody tr:nth-child(5) { animation-delay: .20s; }
+    .section-body.open .result-table tbody tr:nth-child(n+6) { animation-delay: .24s; }
+    @keyframes rowIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── Module cards: bigger, with a lift ───────────────────────────────── */
+    .module-card { padding: 20px 18px 22px; transition: background .25s ease, transform .3s var(--ease-out); }
+    .module-card:hover { transform: translateY(-2px); }
+    .module-card .mc-dot { width: 6px; height: 6px; }
 
     /* ── Responsive ──────────────────────────────────────────────────────── */
     @media (max-width: 1000px) {
@@ -1518,25 +1496,22 @@
 
 <!-- ── Results ──────────────────────────────────────────────────────────────── -->
 <div id="results-state" class="hidden">
-  <div class="res-grid">
-    <aside class="res-rail">
-      <div id="grade-hero" class="grade-hero fade-up" data-ticks></div>
-      <div id="module-cards" class="module-grid fade-up"></div>
-      <!-- Anchored to the bottom of the rail on desktop; hidden in the stacked
-           layout, where the same actions already sit under the findings. -->
-      <div class="rail-foot">
-        <button onclick="resetScan()">← Scan another URL</button>
-        <a href="methodology.html">How we grade →</a>
-        <p class="rf-note">Nothing is stored. Results are on-screen only.</p>
-      </div>
-    </aside>
-    <div class="res-main">
-      <div id="simulator-container"></div>
-      <div id="detail-sections" class="detail-sections"></div>
-      <div class="scan-again">
-        <button class="btn-ghost" onclick="resetScan()">← Scan another URL</button>
-      </div>
-    </div>
+  <div id="grade-hero" class="grade-hero" data-ticks></div>
+  <div id="simulator-container"></div>
+  <div id="module-cards" class="module-grid fade-up"></div>
+  <div id="detail-sections" class="detail-sections"></div>
+  <div class="scan-again">
+    <button class="btn-ghost" onclick="resetScan()">← Scan another URL</button>
+  </div>
+</div>
+
+<!-- Slides in once the grade band has scrolled away: the grade stays with you
+     without a column costing the findings 320px of width. -->
+<div id="verdict-bar" aria-hidden="true">
+  <div class="vb-inner">
+    <span class="vb-grade"><span class="vb-letter" id="vb-letter">—</span><span class="vb-score" id="vb-score"></span></span>
+    <span class="vb-url" id="vb-url"></span>
+    <span class="vb-jumps" id="vb-jumps"></span>
   </div>
 </div>
 
@@ -1895,7 +1870,7 @@
       <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:8px">
         <div class="grade-badge ${gradeCls(g)}">
           <div class="grade-letter">${esc(g)}</div>
-          <div class="grade-score">${s} / 100</div>
+          <div class="grade-score" id="grade-score-num">0 / 100</div>
         </div>
         <div class="grade-normal-note" style="text-align:center;max-width:130px">Most sites score D or F. That's normal.</div>
       </div>
@@ -1919,6 +1894,9 @@
           Share on WhatsApp
         </a>
       </div>`;
+
+    countUp(el('grade-score-num'), s);
+    wireVerdictBar(data);
   }
 
   // ── Module cards ───────────────────────────────────────────────────────────
@@ -1990,53 +1968,47 @@
     </div>`;
   }
 
-  // ── Rail follow ────────────────────────────────────────────────────────────
-  // A `position: sticky` element taller than the viewport pins in place and
-  // never shows its own bottom: modules 05/06 stay unreachable until the page
-  // has scrolled far enough for the rail's end to arrive, which with sections
-  // expanded is most of the document. The CSS bands keep the rail short enough
-  // to fit at ordinary heights; this covers what they can't — browser zoom and
-  // unusually short windows.
-  //
-  // When it fits, --rail-top stays 88px and nothing changes. When it doesn't,
-  // the sticky offset eases negative as you scroll down (revealing the bottom)
-  // and back to 88 as you scroll up (revealing the grade), so both ends are
-  // always one screen away. The rail is never a scroll container.
-  (function railFollow() {
-    const TOP = 88, GAP = 24;
-    let lastY = window.scrollY, railTop = TOP, ticking = false;
+  // ── Verdict bar ────────────────────────────────────────────────────────────
+  // Appears once the grade band leaves the top of the screen and hides again
+  // when it comes back, so the grade is never more than a glance away without
+  // costing the findings any width.
+  let _vbObserver = null;
+  function wireVerdictBar(data) {
+    const bar = el('verdict-bar');
+    const hero = el('grade-hero');
+    if (!bar || !hero) return;
 
-    function update() {
-      ticking = false;
-      const rail = document.querySelector('.res-rail');
-      if (!rail || !rail.offsetParent) return;
-      // below 1001px the rail is static — leave it alone
-      if (getComputedStyle(rail).position !== 'sticky') {
-        document.documentElement.style.removeProperty('--rail-top');
-        return;
-      }
-      const y = window.scrollY;
-      const dy = y - lastY;
-      lastY = y;
+    el('vb-letter').textContent = data.grade;
+    el('vb-letter').style.color = gradeColor(data.grade);
+    el('vb-score').textContent  = data.score + '/100';
+    el('vb-url').textContent    = (data.final_url || data.url || '').replace(/^https?:\/\//, '');
 
-      const overflow = rail.offsetHeight + TOP + GAP - window.innerHeight;
-      if (overflow <= 0) {                       // fits: normal pinned behaviour
-        railTop = TOP;
-      } else {
-        railTop = Math.min(TOP, Math.max(TOP - overflow, railTop - dy));
-      }
-      document.documentElement.style.setProperty('--rail-top', railTop + 'px');
+    if (_vbObserver) _vbObserver.disconnect();
+    if (!('IntersectionObserver' in window)) return;
+    _vbObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        bar.classList.toggle('showing', !e.isIntersecting);
+        bar.setAttribute('aria-hidden', e.isIntersecting ? 'true' : 'false');
+      });
+    }, { rootMargin: '-90px 0px 0px 0px', threshold: 0 });
+    _vbObserver.observe(hero);
+  }
+
+  // The score counts up on arrival — the one number the whole page is about,
+  // so it earns a moment. Skipped when the visitor prefers reduced motion.
+  function countUp(node, to) {
+    if (!node) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      node.textContent = to + ' / 100'; return;
     }
-
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', function () { railTop = TOP; onScroll(); });
-    update();
-  })();
+    const dur = 700, t0 = performance.now();
+    (function step(now) {
+      const p = Math.min(1, (now - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      node.textContent = Math.round(to * eased) + ' / 100';
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
 
   // ── Rail index ─────────────────────────────────────────────────────────────
   // Marks the module row matching the section currently under the reading line.
@@ -2044,20 +2016,36 @@
   let _railObserver = null;
   function wireRailIndex() {
     if (_railObserver) { _railObserver.disconnect(); _railObserver = null; }
-    if (!('IntersectionObserver' in window)) return;
     const cards = Array.from(document.querySelectorAll('#module-cards .module-card'));
     if (!cards.length) return;
+
+    // Mirror the module cards into the verdict bar as jump targets, so the bar
+    // carries the same index the cards do rather than inventing a second one.
+    const jumps = el('vb-jumps');
+    if (jumps) {
+      jumps.innerHTML = cards.map(function (c) {
+        const st = c.classList.contains('status-good') ? 'st-good'
+                 : c.classList.contains('status-danger') ? 'st-danger' : 'st-warn';
+        const name = (c.querySelector('.module-card-name') || {}).textContent || '';
+        return `<button class="vb-jump ${st}" data-target="${c.dataset.target}"
+                  onclick="scrollToSection('${c.dataset.target}')"><i></i>${esc(name)}</button>`;
+      }).join('');
+    }
+
+    if (!('IntersectionObserver' in window)) return;
+    const jumpEls = Array.from(document.querySelectorAll('#vb-jumps .vb-jump'));
     const visible = new Set();
     const mark = () => {
-      const first = cards.find(c => visible.has(c.dataset.target));
-      cards.forEach(c => c.classList.toggle('is-active', c === first));
+      const firstId = cards.map(c => c.dataset.target).find(t => visible.has(t));
+      cards.forEach(c => c.classList.toggle('is-active', c.dataset.target === firstId));
+      jumpEls.forEach(j => j.classList.toggle('is-active', j.dataset.target === firstId));
     };
     _railObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) visible.add(e.target.id); else visible.delete(e.target.id);
       });
       mark();
-    }, { rootMargin: '-88px 0px -55% 0px' });
+    }, { rootMargin: '-140px 0px -55% 0px' });
     cards.forEach(c => {
       const sec = el(c.dataset.target);
       if (sec) _railObserver.observe(sec);

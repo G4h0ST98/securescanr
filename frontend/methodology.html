@@ -359,10 +359,17 @@
        lines past 110ch, which trades one readability problem for another. */
     .band-head {
       display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: clamp(26px, 4vw, 66px); align-items: end;
+      gap: clamp(26px, 4vw, 66px);
+      /* start, not end: bottom-aligning a two-line heading against a
+         seven-line deck pushed the heading down and left a hole under the
+         section label. Both columns now begin on the same line. */
+      align-items: start;
+      margin-top: 18px;
       margin-bottom: clamp(26px, 3.5vh, 44px);
     }
-    .band-head h2 { margin-bottom: 0; }
+    /* optical: the deck's first line sits on its line-box, the display heading
+       has far more leading above its caps — pull it up so the two look level */
+    .band-head h2 { margin-bottom: 0; margin-top: -.12em; }
     .band-deck p:last-child { margin-bottom: 0; }
     @media (max-width: 900px) {
       .band-head { grid-template-columns: 1fr; gap: 22px; align-items: start; }

@@ -457,11 +457,13 @@
 
     /* ══ The chapters — on the blueprint field, like index's dimensions ══ */
     #ledger {
-      background:
-        linear-gradient(rgba(0,229,176,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,229,176,.03) 1px, transparent 1px),
-        var(--ink-2);
-      background-size: 44px 44px, 44px 44px, auto;
+      /* Was a 44px blueprint graticule over --ink-2, which put the whole
+         reference band at a visibly different brightness from the rest of the
+         page — the seam where it started and stopped was the loudest edge on
+         the page, and it competed with the findings for attention. The band is
+         now the same ground as everything else; its hairlines and the chapter
+         headings mark it, which is enough. */
+      background: var(--ink);
       border-top: 1px solid var(--line-soft);
       border-bottom: 1px solid var(--line-soft);
     }

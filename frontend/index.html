@@ -451,8 +451,9 @@
         background .25s ease,
         color .25s ease,
         padding-left .35s var(--ease-out);
-      cursor: default;
+      cursor: pointer;
     }
+    .dim-row:focus-visible { outline: 1px solid var(--accent); outline-offset: -1px; }
     .dim-row:hover { background: var(--accent); color: var(--ink); padding-left: 18px; }
     .dim-row:hover .dim-no, .dim-row:hover .dim-desc { color: rgba(5,6,7,.65); opacity: 1; }
     .dim-row:hover .dim-arrow { opacity: 1; transform: translateX(0); color: var(--ink); }
@@ -901,7 +902,7 @@
     <div class="dim-list" id="dim-list">
       <!-- rows injected by JS from DIMENSIONS below; noscript fallback -->
       <noscript>
-        <div class="dim-row"><span class="dim-no">01–14</span><span class="dim-name">Headers · TLS · DNS · Cookies · Isolation · Page integrity</span><span class="dim-desc">Enable JavaScript to browse the full list, or just run the scan.</span><span></span></div>
+        <a class="dim-row" href="methodology.html#ledger"><span class="dim-no">01–14</span><span class="dim-name">Headers · TLS · DNS · Cookies · Isolation · Page integrity</span><span class="dim-desc">See how all fourteen are scored, or just run the scan.</span><span class="dim-arrow">→</span></a>
       </noscript>
     </div>
     <div class="dim-foot rv">
@@ -1200,28 +1201,35 @@
 
   /* ── 14 dimensions list ─────────────────────────────────────────────── */
   (function dimensions() {
+    /* Third field is the methodology chapter that documents how this check is
+       scored. The row renders as an <a>, so the hover arrow is a real
+       affordance — it used to fill teal and slide an arrow in while being an
+       inert <div>. Every anchor below exists in methodology.html and that page
+       already sets scroll-margin-top on .chapter. */
     var DIMENSIONS = [
-      ['Content-Security-Policy',   'Blocks XSS at the browser level before any injected script runs.'],
-      ['Strict-Transport-Security', 'Forces HTTPS on every connection — kills protocol downgrade attacks.'],
-      ['X-Frame-Options',           'Stops your pages being framed inside phishing overlays.'],
-      ['X-Content-Type-Options',    'Prevents MIME-sniffing that turns uploads into executable scripts.'],
-      ['Referrer-Policy',           'Controls how much of your URLs leak to third parties.'],
-      ['Permissions-Policy',        'Locks down camera, mic, geolocation and other powerful APIs.'],
-      ['CORS Policy',               'Flags wildcard origins that hand your API to any website.'],
-      ['Server Fingerprint',        'Exposed version strings give attackers a CVE shopping list.'],
-      ['TLS / SSL Certificate',     'Expiry, cipher strength, protocol version, self-signed detection.'],
-      ['SPF + DMARC + DKIM',        'Without these, anyone can send email that looks like it’s from you.'],
-      ['CAA + DNSSEC',              'Controls who can issue your certificates; signs your DNS answers.'],
-      ['Cookie Flags',              'Secure, HttpOnly, SameSite — checked on every cookie, by name.'],
-      ['Cross-Origin Isolation',    'COOP / COEP / CORP against cross-origin leaks and Spectre-class attacks.'],
-      ['Page Integrity',            'Mixed content, missing SRI on CDN scripts, base-tag hijacking risk.']
+      ['Content-Security-Policy',   'Blocks XSS at the browser level before any injected script runs.',        'm-headers'],
+      ['Strict-Transport-Security', 'Forces HTTPS on every connection — kills protocol downgrade attacks.',    'm-headers'],
+      ['X-Frame-Options',           'Stops your pages being framed inside phishing overlays.',                 'm-headers'],
+      ['X-Content-Type-Options',    'Prevents MIME-sniffing that turns uploads into executable scripts.',      'm-headers'],
+      ['Referrer-Policy',           'Controls how much of your URLs leak to third parties.',                   'm-headers'],
+      ['Permissions-Policy',        'Locks down camera, mic, geolocation and other powerful APIs.',            'm-headers'],
+      ['CORS Policy',               'Flags wildcard origins that hand your API to any website.',               'm-headers'],
+      ['Server Fingerprint',        'Exposed version strings give attackers a CVE shopping list.',             'm-headers'],
+      ['TLS / SSL Certificate',     'Expiry, cipher strength, protocol version, self-signed detection.',       'm-tls'],
+      ['SPF + DMARC + DKIM',        'Without these, anyone can send email that looks like it’s from you.',     'm-dns'],
+      ['CAA + DNSSEC',              'Controls who can issue your certificates; signs your DNS answers.',       'm-dns'],
+      ['Cookie Flags',              'Secure, HttpOnly, SameSite — checked on every cookie, by name.',          'm-cookies'],
+      ['Cross-Origin Isolation',    'COOP / COEP / CORP against cross-origin leaks and Spectre-class attacks.','m-cross-origin'],
+      ['Page Integrity',            'Mixed content, missing SRI on CDN scripts, base-tag hijacking risk.',     'm-page']
     ];
     var list = $('#dim-list');
     if (!list) return;
     var frag = document.createDocumentFragment();
     DIMENSIONS.forEach(function (d, i) {
-      var row = document.createElement('div');
+      var row = document.createElement('a');
       row.className = 'dim-row rv';
+      row.href = 'methodology.html#' + d[2];
+      row.setAttribute('aria-label', d[0] + ' — how it is scored');
       row.style.setProperty('--rv-d', (Math.min(i, 8) * 40) + 'ms');
       var no = String(i + 1); if (no.length < 2) no = '0' + no;
       row.innerHTML =

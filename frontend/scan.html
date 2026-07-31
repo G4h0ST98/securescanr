@@ -1244,6 +1244,38 @@
     .module-card:hover { transform: translateY(-2px); }
     .module-card .mc-dot { width: 6px; height: 6px; }
 
+    /* ── The readout prints in ───────────────────────────────────────────
+       Each card's rule draws left to right in sequence and its verdict rises
+       in just behind it, so the row populates the way an instrument does —
+       finite, in reading order 01 -> 06, using colour that is already there.
+       --d is set per card in card(); everything below hangs off it. */
+    .module-card { border-top-color: transparent !important; }
+    .module-card::before {
+      content: ''; position: absolute; top: -2px; left: 0; right: 0; height: 2px;
+      background: var(--rule, var(--muted-2));
+      /* resting state is the FINISHED state, with the animation filling
+         backwards — so if animation never runs, the rule is simply drawn */
+      transform: scaleX(1); transform-origin: left center;
+      animation: ruleDraw .55s var(--ease-out) var(--d, 0ms) backwards;
+    }
+    @keyframes ruleDraw { from { transform: scaleX(0); } }
+    .module-card.status-good   { --rule: var(--accent); }
+    .module-card.status-warn   { --rule: var(--amber); }
+    .module-card.status-danger { --rule: var(--red); }
+
+    /* the value arrives behind its own rule */
+    .module-card-stat {
+      animation: statIn .5s var(--ease-out) calc(var(--d, 0ms) + 240ms) backwards;
+    }
+    @keyframes statIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+    .module-card-sub {
+      animation: statIn .5s var(--ease-out) calc(var(--d, 0ms) + 330ms) backwards;
+    }
+
+    /* on hover the rule lights rather than moves — the draw already happened */
+    .module-card::before { transition: box-shadow .3s var(--ease-out); }
+    .module-card:hover::before { box-shadow: 0 0 12px var(--rule, transparent); }
+
     /* ── Responsive ──────────────────────────────────────────────────────── */
     @media (max-width: 1000px) {
       .hero-wrap { grid-template-columns: 1fr; gap: 36px; }
@@ -1958,8 +1990,9 @@
   function sectionNo(id) { return SECTION_NO[id] || '··'; }
 
   function card(icon, name, statusCls, statCls, stat, sub, anchor, idx) {
+    // --d drives the whole card's choreography: rule draw, then value, then sub
     return `<div class="module-card ${statusCls}" data-target="${anchor}" onclick="scrollToSection('${anchor}')"
-      style="animation:cardIn .4s ease-out ${idx * 100}ms both">
+      style="--d:${idx * 90}ms;animation:cardIn .45s var(--ease-out) ${idx * 90}ms both">
       <div class="mc-top"><span class="mc-no">${sectionNo(anchor)}</span><i class="mc-dot"></i></div>
       <div class="module-card-name">${name}</div>
       <div class="module-card-stat ${statCls}">${stat}</div>

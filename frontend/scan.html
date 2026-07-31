@@ -617,6 +617,7 @@
 
     /* Module cards */
     .module-grid {
+      position: relative;
       display: grid; grid-template-columns: repeat(6, 1fr);
       margin-top: 26px;
       border: 1px solid var(--line-soft);
@@ -1276,6 +1277,35 @@
     .module-card::before { transition: box-shadow .3s var(--ease-out); }
     .module-card:hover::before { box-shadow: 0 0 12px var(--rule, transparent); }
 
+    /* ── Light over the panel ────────────────────────────────────────────
+       One accent glow tracking the pointer across the whole row — a light
+       moving over an instrument, not six separate hover effects. Sits above
+       the cards but takes no pointer events, so clicks still land. */
+    .mg-fx {
+      position: absolute; inset: 0; z-index: 2;
+      pointer-events: none; overflow: hidden;
+    }
+    .mg-fx::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px),
+                  rgba(0,229,176,.13), rgba(0,229,176,.04) 45%, transparent 70%);
+      opacity: var(--fx-o, 0);
+      transition: opacity .4s var(--ease-out);
+    }
+    /* and one sweep after the rules have finished drawing — the same gesture
+       the hero scanline makes, reused rather than a new idea */
+    .mg-fx::after {
+      content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 150px;
+      background: linear-gradient(90deg, transparent, rgba(0,229,176,.12), transparent);
+      transform: translateX(-160px);
+      animation: rowSweep 1.15s var(--ease-out) 1.05s 1 forwards;
+    }
+    @keyframes rowSweep {
+      from { transform: translateX(-160px); }
+      to   { transform: translateX(calc(100% + 160px)); }
+    }
+    @media (prefers-reduced-motion: reduce) { .mg-fx { display: none; } }
+
     /* ── Responsive ──────────────────────────────────────────────────────── */
     @media (max-width: 1000px) {
       .hero-wrap { grid-template-columns: 1fr; gap: 36px; }
@@ -1865,6 +1895,7 @@
     container.appendChild(renderCrossOriginSection(data.cross_origin));
     container.appendChild(renderPageSection(data.page_analysis));
     wireRailIndex();
+    wireRowFX();
   }
 
   function renderFreeResults(data, isAutoScan) {
@@ -1887,6 +1918,7 @@
     container.appendChild(renderPageSection(data.page_analysis));
     _freeFullAccess = false;
     wireRailIndex();
+    wireRowFX();
   }
 
   // ── Grade hero ─────────────────────────────────────────────────────────────
@@ -2047,6 +2079,33 @@
   // Marks the module row matching the section currently under the reading line.
   // Rebuilt after every render because both card sets are re-emitted each scan.
   let _railObserver = null;
+  // The row's light layer. Re-created on every render because #module-cards
+  // has its innerHTML replaced; absolutely positioned, so it takes no grid cell.
+  function wireRowFX() {
+    const grid = el('module-cards');
+    if (!grid || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const fx = document.createElement('div');
+    fx.className = 'mg-fx';
+    grid.appendChild(fx);
+
+    let raf = 0, mx = 0, my = 0;
+    function paint() {
+      raf = 0;
+      fx.style.setProperty('--mx', mx + 'px');
+      fx.style.setProperty('--my', my + 'px');
+    }
+    grid.addEventListener('mousemove', function (e) {
+      const r = grid.getBoundingClientRect();
+      mx = e.clientX - r.left;
+      my = e.clientY - r.top;
+      fx.style.setProperty('--fx-o', '1');
+      if (!raf) raf = requestAnimationFrame(paint);
+    });
+    grid.addEventListener('mouseleave', function () {
+      fx.style.setProperty('--fx-o', '0');
+    });
+  }
+
   function wireRailIndex() {
     if (_railObserver) { _railObserver.disconnect(); _railObserver = null; }
     const cards = Array.from(document.querySelectorAll('#module-cards .module-card'));

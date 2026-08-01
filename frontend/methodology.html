@@ -56,6 +56,10 @@
       --warning: var(--amber);
       --success: var(--accent);
       --radius:  0px;
+
+      /* nav-inner is 22px padding + a 17px/1.55 logo line ≈ 70px tall. The
+         pinned schedule strip parks directly under it. */
+      --navh: 70px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -241,25 +245,35 @@
     [data-ticks]::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
     /* ══════════════════════════════════════════════════════════════════════
-       THE LEDGER — methodology's own composition.
-       This page is about numbers, so the numbers are the design: a hollow 100
-       in the hero, a budget bar sized by the real caps, a continuous grade
-       scale, then six numbered chapters on the blueprint field where every
-       finding is a row led by its deduction set large in tabular mono.
-       Vocabulary from DESIGN.md §2: oversized display type, hollow stroke that
-       fills on hover, `01 /` chapter numbering, reticle ticks, blueprint grid.
+       THE TARIFF — methodology's own composition.
+
+       The page has two readers: someone deciding whether to trust the grade
+       (a narrative read, once) and someone looking up what cost them points
+       (a reference lookup, forever). The old page mashed both into one scroll
+       of 41 near-identical rows with no way to find anything.
+
+       So: a short argument (01 THE RULES), one instrument (02 THE GRADE — a
+       real 0–100 slide rule you can move), then 03 THE SCHEDULE — every
+       deduction as a dense priced line under a live filter, the way a tariff
+       or price list is set. Magnitude is the bar; severity is its colour;
+       the legend is stated once instead of chipped onto all 41 rows.
        ══════════════════════════════════════════════════════════════════════ */
 
-    /* ── Hero ────────────────────────────────────────────────────────────── */
-    #hero {
-      max-width: 1240px; margin: 0 auto; width: 100%;
-      padding: 104px clamp(20px, 4vw, 56px) clamp(30px, 5vh, 56px);
-      position: relative;
+    .wrap { max-width: 1240px; margin: 0 auto; width: 100%; padding-inline: clamp(20px, 4vw, 56px); }
+
+    .sec-num {
+      display: block;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted-2);
     }
+    .sec-num b { color: var(--accent); font-weight: 400; }
+
+    /* ── Hero ────────────────────────────────────────────────────────────── */
+    #hero { padding-top: 108px; padding-bottom: clamp(34px, 5vh, 58px); position: relative; }
     .hero-kicker {
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 22px;
+      color: var(--accent); margin-bottom: 24px;
       display: flex; align-items: center; gap: 12px;
     }
     .hero-kicker::before { content: ''; width: 34px; height: 1px; background: var(--accent); }
@@ -282,79 +296,55 @@
     .hero-deck { font-size: 15px; color: var(--prose); line-height: 1.8; max-width: 42ch; padding-bottom: 6px; }
     .hero-deck b { color: var(--text); font-weight: 600; }
 
-    /* ── Section labels ──────────────────────────────────────────────────── */
-    .sec-num {
-      font-family: 'JetBrains Mono', monospace; font-size: 11px;
-      letter-spacing: 3px; text-transform: uppercase; color: var(--muted-2);
+    /* a hairline fact strip instead of the old budget bar, whose segment
+       widths were flex ratios clamped by a min-width — so the small modules
+       rendered wider than their real share, and Cookies showed "per cookie"
+       in a slot sized as if it were −20 */
+    .facts {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: clamp(34px, 5vh, 58px);
+      border-top: 1px solid var(--line);
     }
-    .sec-num b { color: var(--accent); font-weight: 400; }
-
-    /* ── The budget ──────────────────────────────────────────────────────── */
-    .budget {
-      max-width: 1240px; margin: 0 auto; width: 100%;
-      padding: 0 clamp(20px, 4vw, 56px) clamp(40px, 6vh, 70px);
+    .fact { padding: 18px 24px; border-right: 1px solid var(--line-soft); }
+    /* first-in-row flushes to the margin, last-in-row drops its rule — set by
+       row width, not by :first/:last-child, so wrapping stays aligned */
+    .fact:nth-child(4n + 1) { padding-left: 0; }
+    .fact:nth-child(4n)     { border-right: none; }
+    .fact-n {
+      font-size: clamp(24px, 2.6vw, 34px); font-weight: 700;
+      letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums;
     }
-    .budget-head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 16px; flex-wrap: wrap; padding-bottom: 14px;
-    }
-    .budget-head .hint {
+    .fact-l {
+      margin-top: 8px;
       font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
       letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
     }
-    .budget-bar {
-      display: flex; align-items: stretch;
-      border: 1px solid var(--line); background: var(--ink-2);
-      height: 88px;
-    }
-    .budget-seg {
-      border-right: 1px solid var(--line-soft);
-      padding: 13px 15px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      min-width: 106px; overflow: hidden;
-      transition: background .3s var(--ease-out);
-    }
-    .budget-seg:last-child { border-right: none; }
-    .budget-seg:hover { background: rgba(0,229,176,.08); }
-    .budget-seg-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--muted); white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
-    }
-    .budget-seg:hover .budget-seg-name { color: var(--text); }
-    .budget-seg-pts {
-      font-size: 21px; font-weight: 700; letter-spacing: -.04em;
-      font-variant-numeric: tabular-nums; line-height: 1;
-    }
-    .budget-seg-pts.sm { font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 500; letter-spacing: 0; }
-    .budget-seg-pts.crit { color: var(--red); }
-    .budget-seg-pts.warn { color: var(--amber); }
-    .budget-seg-pts.ok   { color: var(--accent); }
-    .budget-note {
-      margin-top: 13px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted-2);
-    }
 
-    /* ── Scope + tiers + grade scale ─────────────────────────────────────── */
+    /* ── Bands ───────────────────────────────────────────────────────────── */
     .band { border-top: 1px solid var(--line-soft); }
     .band-inner {
       max-width: 1240px; margin: 0 auto; width: 100%;
-      padding: clamp(40px, 6vh, 70px) clamp(20px, 4vw, 56px);
+      padding: clamp(44px, 6.5vh, 78px) clamp(20px, 4vw, 56px);
     }
-    .band h2 {
-      margin: 16px 0 20px;
+    /* .band-head h2, not `.band h2` — the latter outranks .chapter-title and
+       blows the module headings up past the section heading above them */
+    .band-head h2 {
       font-size: clamp(24px, 3.4vw, 44px); font-weight: 700;
       /* display type must set its own leading — inheriting body's 1.55 tore the
          serif tail onto a line of its own with a hole above it */
       line-height: 1.0;
       letter-spacing: -.035em; text-transform: uppercase; max-width: 26ch;
     }
-    .band h2 em {
+    .band-head h2 em {
       font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
       font-weight: 400; text-transform: none; letter-spacing: -.01em; color: var(--accent);
     }
-    .band p { font-size: 15px; color: var(--prose); line-height: 1.85; max-width: 72ch; margin-bottom: 16px; }
+    /* Scoped to .band-deck, NOT `.band p`. An unscoped `.band p` outranks every
+       single-class rule inside the band (.tier p, .chapter-note, .limit p) and
+       silently reimposes 15px/72ch on all of them. */
+    .band-deck p { font-size: 15px; color: var(--prose); line-height: 1.85; max-width: 72ch; }
+    .band-deck p + p { margin-top: 14px; }
+    .band-deck p strong { color: var(--text); font-weight: 600; }
     /* Heading and deck side by side. Widening the prose instead would have run
        lines past 110ch, which trades one readability problem for another. */
     .band-head {
@@ -365,124 +355,220 @@
          section label. Both columns now begin on the same line. */
       align-items: start;
       margin-top: 18px;
-      margin-bottom: clamp(26px, 3.5vh, 44px);
     }
     /* optical: the deck's first line sits on its line-box, the display heading
        has far more leading above its caps — pull it up so the two look level */
-    .band-head h2 { margin-bottom: 0; margin-top: -.12em; }
-    .band-deck p:last-child { margin-bottom: 0; }
+    .band-head h2 { margin-top: -.12em; }
     @media (max-width: 900px) {
-      .band-head { grid-template-columns: 1fr; gap: 22px; align-items: start; }
+      .band-head { grid-template-columns: 1fr; gap: 22px; }
     }
 
-    /* the scope note puts its label in a left gutter rather than stacking it,
-       so the box uses the full band width the way the finding rows do */
-    .scope-box { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 0 28px; max-width: none; }
-    .scope-box .scope-label { grid-column: 1; margin-bottom: 0; }
-    .scope-box .scope-body { grid-column: 2; max-width: 84ch; margin: 0; }
-    @media (max-width: 820px) {
-      .scope-box { grid-template-columns: 1fr; gap: 10px; }
-      .scope-box .scope-label, .scope-box .scope-body { grid-column: 1; }
-    }
-    .band p strong { color: var(--text); font-weight: 600; }
-
-    .scope-box {
-      padding: 20px 24px; margin: 26px 0 0;
-      background: rgba(255,176,32,.05); border-left: 2px solid var(--amber);
-      font-size: 15px; color: var(--prose); line-height: 1.85;
-      /* width comes from the grid above; the measure is capped on .scope-body */
-      max-width: none;
-    }
-    .scope-box strong { color: var(--text); }
-    .scope-box .scope-label {
-      display: block; margin-bottom: 9px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-      color: var(--amber);
-    }
-
-    /* the grade scale: one continuous 0–100 ruler, not six boxes */
-    .scale-wrap { margin-top: 30px; }
-    .scale {
-      display: grid;
-      /* direction:rtl lays the tracks right-to-left, so track 1 holds the FIRST
-         DOM child (A+) at the right edge. Track sizes therefore run in DOM
-         order — A+ 11 points wide … F 49 — or the scale comes out inverted. */
-      grid-template-columns: 11fr 10fr 10fr 10fr 10fr 49fr;
-      border: 1px solid var(--line); background: var(--ink-2);
-      direction: rtl;   /* F sits at 0 on the left, A+ at 100 on the right */
-    }
-    .scale-zone {
-      direction: ltr;
-      padding: 20px 16px 18px;
-      border-right: 1px solid var(--line-soft);
-      border-bottom: 3px solid;
-      display: flex; flex-direction: column; gap: 8px;
-      transition: background .25s;
-    }
-    .scale-zone:first-child { border-right: none; }
-    .scale-zone:hover { background: rgba(236,238,233,.03); }
-    .zone-letter { font-size: clamp(20px, 2.4vw, 32px); font-weight: 700; line-height: 1; letter-spacing: -.05em; }
-    .zone-range {
-      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
-      letter-spacing: 1.5px; color: var(--muted-2); font-variant-numeric: tabular-nums;
-    }
-    .z-ap, .z-a { border-bottom-color: var(--accent); }
-    .z-ap .zone-letter, .z-a .zone-letter { color: var(--accent); }
-    .z-b { border-bottom-color: var(--accent-dk); }
-    .z-b .zone-letter { color: var(--accent-dk); }
-    .z-c { border-bottom-color: var(--amber); }
-    .z-c .zone-letter { color: var(--amber); }
-    .z-d { border-bottom-color: var(--orange); }
-    .z-d .zone-letter { color: var(--orange); }
-    .z-f { border-bottom-color: var(--red); }
-    .z-f .zone-letter { color: var(--red); }
-    .scale-ends {
-      display: flex; justify-content: space-between; margin-top: 10px;
-      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
-      letter-spacing: 2px; color: var(--muted-2);
-    }
-
-    .tiers {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      margin-top: 30px;
-      border-top: 1px solid var(--line-soft); border-left: 1px solid var(--line-soft);
-    }
+    /* ── 01 · the three severities, as a ruled register ──────────────────── */
+    .tiers { margin-top: clamp(30px, 4.5vh, 48px); border-top: 1px solid var(--line-soft); }
     .tier {
-      border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
-      padding: 20px 22px 24px;
+      display: grid; grid-template-columns: 190px minmax(0, 1fr);
+      gap: 4px clamp(20px, 3vw, 40px); align-items: baseline;
+      padding: 18px 0; border-bottom: 1px solid var(--line-soft);
     }
     .tier-name {
+      display: flex; align-items: center; gap: 10px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 9.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-      margin-bottom: 11px;
+      font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
     }
+    .tier-name::before { content: ''; width: 22px; height: 3px; background: currentColor; }
     .tier-crit .tier-name { color: var(--red); }
     .tier-imp  .tier-name { color: var(--amber); }
     .tier-min  .tier-name { color: var(--accent); }
-    .tier p { font-size: 13.5px; color: var(--prose); line-height: 1.75; margin: 0; max-width: none; }
+    .tier p { font-size: 14.5px; color: var(--prose); line-height: 1.7; max-width: 74ch; }
+    @media (max-width: 640px) { .tier { grid-template-columns: 1fr; } }
 
-    /* ══ The chapters — on the blueprint field, like index's dimensions ══ */
-    #ledger {
-      /* Was a 44px blueprint graticule over --ink-2, which put the whole
-         reference band at a visibly different brightness from the rest of the
-         page — the seam where it started and stopped was the loudest edge on
-         the page, and it competed with the findings for attention. The band is
-         now the same ground as everything else; its hairlines and the chapter
-         headings mark it, which is enough. */
-      background: var(--ink);
+    /* ── 02 · THE GRADE — the instrument ─────────────────────────────────── */
+    .rule-wrap { margin-top: clamp(30px, 4.5vh, 48px); }
+    .rule-read {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 20px; flex-wrap: wrap; padding-bottom: 18px;
+    }
+    .rule-score {
+      display: flex; align-items: baseline; gap: 14px;
+    }
+    #rule-num {
+      font-size: clamp(46px, 7vw, 86px); font-weight: 700; line-height: .85;
+      letter-spacing: -.055em; font-variant-numeric: tabular-nums;
+      transition: color .2s linear;
+    }
+    #rule-grade {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+      letter-spacing: 3px; text-transform: uppercase;
+      padding: 7px 14px; border: 1px solid currentColor;
+      transition: color .2s linear;
+    }
+    .rule-hint {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+      text-align: right; line-height: 1.9; padding-bottom: 4px;
+    }
+
+    .rule {
+      position: relative; height: 108px; touch-action: none;
+      border: 1px solid var(--line); background: var(--ink-2);
+      display: flex; cursor: ew-resize; user-select: none;
+    }
+    .rule-zone {
+      position: relative; display: flex; align-items: flex-end;
+      padding: 0 0 12px 12px; overflow: hidden;
+      border-right: 1px solid var(--line-soft);
+      transition: background .25s var(--ease-out);
+    }
+    .rule-zone:last-child { border-right: none; }
+    .rule-zone::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 3px; background: currentColor;
+    }
+    .rule-zone .zl {
+      font-size: clamp(18px, 2.2vw, 30px); font-weight: 700;
+      line-height: 1; letter-spacing: -.05em; color: currentColor;
+      opacity: .5; transition: opacity .25s var(--ease-out);
+    }
+    .rule-zone.live { background: rgba(236,238,233,.035); }
+    .rule-zone.live .zl { opacity: 1; }
+    .z-ap, .z-a { color: var(--accent); }
+    .z-b { color: var(--accent-dk); }
+    .z-c { color: var(--amber); }
+    .z-d { color: var(--orange); }
+    .z-f { color: var(--red); }
+
+    /* tick lattice across the whole rule — every 10 pts, taller at 50 */
+    .rule-ticks { position: absolute; inset: 0; pointer-events: none; }
+    .rule-ticks i {
+      position: absolute; top: 0; width: 1px; height: 11px;
+      background: var(--line); transform: translateX(-.5px);
+    }
+    .rule-ticks i.mid { height: 20px; background: rgba(236,238,233,.2); }
+    .rule-ticks span {
+      position: absolute; top: 16px; transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace; font-size: 9px;
+      letter-spacing: 1px; color: var(--muted-2); font-variant-numeric: tabular-nums;
+    }
+
+    /* the needle */
+    #needle {
+      position: absolute; top: 0; bottom: 0; width: 1px;
+      background: var(--text); pointer-events: none; z-index: 3;
+      transform: translateX(-.5px);
+      transition: background .2s linear;
+    }
+    #needle::before {
+      content: ''; position: absolute; top: -5px; left: 50%;
+      width: 9px; height: 9px; background: var(--text);
+      transform: translateX(-50%) rotate(45deg);
+    }
+    #needle::after {
+      content: ''; position: absolute; left: -14px; right: -14px; top: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(236,238,233,.07), transparent);
+    }
+    /* the invisible native control does the dragging, keyboard and a11y work */
+    #rule-input {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: ew-resize; margin: 0; z-index: 4;
+      -webkit-appearance: none; appearance: none; background: none;
+    }
+    /* a default thumb is ~16px wide, and the browser insets the value track by
+       half of it at each end — so 0 and 100 would never reach the rule's edges.
+       A 1px thumb makes position and value line up exactly. */
+    #rule-input::-webkit-slider-thumb { -webkit-appearance: none; width: 1px; height: 100%; }
+    #rule-input::-moz-range-thumb { width: 1px; height: 100%; border: none; }
+    #rule-input:focus-visible { outline: none; }
+    #rule-input:focus-visible ~ #needle,
+    .rule:has(#rule-input:focus-visible) #needle { box-shadow: 0 0 0 1px rgba(0,229,176,.6); }
+    .rule-ends {
+      display: flex; justify-content: space-between; margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+    }
+
+    /* ── 03 · THE SCHEDULE ───────────────────────────────────────────────── */
+    #schedule { border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+    #schedule .band-inner { padding-bottom: clamp(50px, 8vh, 92px); }
+
+    /* the control strip — pinned so the filter stays reachable through 41 rows */
+    .ctl {
+      position: sticky; top: var(--navh); z-index: 60;
+      margin-top: clamp(28px, 4vh, 42px);
+      background: rgba(5,6,7,.93);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .ctl-top {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 12px 0;
+    }
+    .ctl-search { position: relative; flex: 1 1 260px; min-width: 0; display: flex; align-items: center; gap: 11px; }
+    /* drawn, not a glyph — ⌕ and 🔍 both render unpredictably per platform,
+       and this page has no other icon to be inconsistent with */
+    .ctl-search svg { flex: none; width: 13px; height: 13px; stroke: var(--muted-2); fill: none; stroke-width: 1.6; transition: stroke .2s; }
+    .ctl-search:focus-within svg { stroke: var(--accent); }
+    #q {
+      flex: 1; min-width: 0;
+      background: none; border: none; outline: none; color: var(--text);
+      font-family: 'JetBrains Mono', monospace; font-size: 12.5px; letter-spacing: .2px;
+      padding: 6px 0;
+    }
+    #q::placeholder { color: var(--muted-2); }
+    .ctl-sevs { display: flex; gap: 8px; }
+    .sevbtn {
+      background: none; border: 1px solid var(--line-soft);
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+      padding: 6px 11px; display: inline-flex; align-items: center; gap: 8px;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .sevbtn::before { content: ''; width: 8px; height: 8px; background: currentColor; opacity: .35; transition: opacity .2s; }
+    .sevbtn:hover { color: var(--prose); border-color: var(--line); }
+    .sevbtn[aria-pressed="true"] { border-color: currentColor; background: rgba(236,238,233,.04); }
+    .sevbtn[aria-pressed="true"]::before { opacity: 1; }
+    .sevbtn.s-critical[aria-pressed="true"]  { color: var(--red); }
+    .sevbtn.s-important[aria-pressed="true"] { color: var(--amber); }
+    .sevbtn.s-minor[aria-pressed="true"]     { color: var(--accent); }
+    #ctl-count {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+      white-space: nowrap; font-variant-numeric: tabular-nums;
+    }
+    #ctl-count b { color: var(--text); font-weight: 400; }
+    /* module jump chips — carry the real caps, so nothing has to fake a width */
+    .ctl-mods {
+      display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
       border-top: 1px solid var(--line-soft);
-      border-bottom: 1px solid var(--line-soft);
     }
-    #ledger .band-inner { padding-top: clamp(44px, 7vh, 78px); padding-bottom: clamp(50px, 8vh, 90px); }
-    .chapter { scroll-margin-top: 84px; }
-    .chapter + .chapter { margin-top: clamp(44px, 7vh, 76px); }
+    .ctl-mods::-webkit-scrollbar { display: none; }
+    .modchip {
+      flex: 1 0 auto; padding: 10px 18px 10px 0; white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted);
+      display: flex; align-items: baseline; gap: 9px;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .25s var(--ease-out);
+    }
+    .modchip + .modchip { padding-left: 18px; border-left: 1px solid var(--line-soft); }
+    .modchip em { font-style: normal; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+    .modchip:hover { color: var(--text); }
+    .modchip.here { color: var(--text); border-bottom-color: var(--accent); }
+    .modchip.here em { color: var(--accent); }
+
+    /* module chapters */
+    /* --anchor-offset is measured from the real nav + strip heights at runtime;
+       the 172px literal is only the pre-script fallback for desktop */
+    .chapter {
+      scroll-margin-top: var(--anchor-offset, 172px);
+      padding-top: clamp(38px, 5.5vh, 62px);
+    }
     .chapter-hdr {
-      display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
-      padding-bottom: 16px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: baseline; gap: 14px 18px; flex-wrap: wrap;
+      padding-bottom: 14px; border-bottom: 1px solid var(--line);
     }
+    .chapter-hdr .sec-num { display: inline; }
     .chapter-title {
-      font-size: clamp(20px, 2.6vw, 33px); font-weight: 700; line-height: 1.02;
+      font-size: clamp(19px, 2.3vw, 29px); font-weight: 700; line-height: 1.02;
       letter-spacing: -.035em; text-transform: uppercase; color: var(--text);
     }
     .chapter-cap {
@@ -493,93 +579,122 @@
       padding: 5px 11px; white-space: nowrap;
     }
     .chapter-note {
-      font-size: 14px; color: var(--prose); line-height: 1.75;
-      padding: 16px 0 4px; max-width: 96ch;
+      font-size: 14.5px; color: var(--prose); line-height: 1.8;
+      padding: 15px 0 8px; max-width: 92ch;
     }
-    .chapter-note strong { color: var(--text); }
+    .chapter-note strong { color: var(--text); font-weight: 600; }
+    .chapter-note code { font-size: 13px; color: var(--accent); }
 
-    /* every finding is a row led by its number */
-    .find {
+    /* ── the priced line ─────────────────────────────────────────────────────
+       Old row was `116px | 1fr | auto` with a severity chip in the auto track,
+       which stranded ~600px of nothing between the name and the chip on the
+       24 rows that carry no note. Severity now rides the bar's colour (legend
+       stated once, above), the bar's length carries magnitude, and the text
+       runs to the measure — no dead zone, and the column of bars gives the
+       schedule a readable profile. */
+    .rows { margin-top: 6px; }
+    .row {
       position: relative;
-      display: grid; grid-template-columns: 116px 1fr auto;
-      align-items: baseline; gap: 0 clamp(16px, 2.4vw, 30px);
-      padding: 16px 0;
+      display: grid; grid-template-columns: 52px 104px minmax(0, 1fr);
+      align-items: baseline; gap: 0 clamp(14px, 1.8vw, 26px);
+      padding: 13px 0;
       border-bottom: 1px solid var(--line-soft);
       transition: border-color .25s var(--ease-out);
     }
-    /* Hover used to wash the row with rgba(236,238,233,.02) and shove it 14px
-       right — a tint behind the text you are reading, plus the line moving
-       under your eye. The cue now lives in the margin and on the rule, so it
-       never touches the words: a short accent tick grows in the gutter and the
-       row's own hairline brightens. */
-    .find::before {
-      content: ''; position: absolute; left: -16px; top: 50%;
+    /* Hover cue lives in the margin and on the rule, never behind the words:
+       a short accent tick grows in the gutter, the row's hairline brightens. */
+    .row::before {
+      content: ''; position: absolute; left: -16px; top: 22px;
       width: 0; height: 1px; background: var(--accent);
       transition: width .3s var(--ease-out);
     }
-    .find:hover::before { width: 10px; }
-    .find:hover { border-bottom-color: var(--line); }
-    /* the deduction, set large — the page's running subject */
-    .find-pts {
-      font-size: clamp(21px, 2.2vw, 29px); font-weight: 700;
-      line-height: 1; letter-spacing: -.05em;
-      font-variant-numeric: tabular-nums;
-      transition: color .25s;
-    }
-    .find-pts small {
-      display: block; margin-top: 5px;
-      font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 400;
-      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-    }
-    .p-critical  { color: rgba(255,77,94,.92); }
-    .p-important { color: rgba(255,176,32,.92); }
-    .p-minor     { color: rgba(0,229,176,.88); }
-    .p-none      { color: var(--muted); }
-    .find:hover .p-critical  { color: var(--red); }
-    .find:hover .p-important { color: var(--amber); }
-    .find:hover .p-minor     { color: var(--accent); }
-    .find-body { min-width: 0; }
-    .find-name {
+    .row:hover::before { width: 10px; }
+    .row:hover { border-bottom-color: var(--line); }
+    .row-pts {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; color: var(--text); letter-spacing: -.2px; line-height: 1.5;
+      font-size: 15.5px; font-weight: 700; letter-spacing: -.5px;
+      font-variant-numeric: tabular-nums; text-align: right;
+      color: var(--sev-c, var(--muted));
     }
-    .find-note { margin-top: 6px; font-size: 13.5px; color: var(--muted); line-height: 1.7; }
-    .find-note code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--prose); }
-    .sev {
-      display: inline-block; align-self: baseline;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-      padding: 4px 9px; white-space: nowrap;
+    /* an empty block has no baseline, so it must not join the row's baseline
+       alignment — pin it to the row top and drop it onto the name's midline */
+    .row-bar {
+      align-self: start; margin-top: 8px;
+      display: block; height: 4px; background: rgba(236,238,233,.055);
     }
-    .sev-critical  { background: rgba(255,77,94,.14);  color: #ff7a86; }
-    .sev-important { background: rgba(255,176,32,.14); color: var(--amber); }
-    .sev-minor     { background: rgba(0,229,176,.12);  color: var(--accent); }
+    .row-bar i {
+      display: block; height: 100%; width: var(--w, 0%);
+      background: var(--sev-c, var(--muted-2));
+      opacity: .7; transition: opacity .25s var(--ease-out);
+    }
+    .row:hover .row-bar i { opacity: 1; }
+    .row-txt { min-width: 0; }
+    .row-name {
+      font-size: 15px; font-weight: 500; color: var(--text);
+      letter-spacing: -.1px; line-height: 1.5;
+    }
+    /* the note runs on from the name rather than sitting under it — 24 of the
+       41 rows carry no note at all, and stacking made those rows read as
+       half-empty next to the ones that do */
+    .row-note {
+      font-size: 13.5px; color: var(--muted); line-height: 1.5;
+    }
+    .row-name + .row-note::before {
+      content: ''; display: inline-block; width: 12px;
+    }
+    .row-note code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--prose); }
+    .sv-critical  { --sev-c: var(--red); }
+    .sv-important { --sev-c: var(--amber); }
+    .sv-minor     { --sev-c: var(--accent); }
+    .sv-none      { --sev-c: var(--muted-2); }
+    .row.gone { display: none; }
+    .chapter.gone { display: none; }
 
-    /* ── Closing ─────────────────────────────────────────────────────────── */
-    .closing {
-      max-width: 1240px; margin: 0 auto; width: 100%;
-      padding: clamp(56px, 9vh, 100px) clamp(20px, 4vw, 56px) clamp(70px, 11vh, 120px);
+    #no-hits {
+      padding: 40px 0 8px; font-size: 15px; color: var(--muted);
     }
+    #no-hits b { color: var(--text); font-weight: 500; }
+    #no-hits button {
+      background: none; border: none; color: var(--accent); padding: 0;
+      font: inherit; text-decoration: underline; text-underline-offset: 3px;
+    }
+
+    /* ── 04 · Scope & standards ──────────────────────────────────────────── */
     .closing-line {
       font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
-      font-size: clamp(24px, 3.6vw, 50px); line-height: 1.2; letter-spacing: -.015em;
-      color: var(--muted); max-width: 22ch;
+      font-size: clamp(26px, 3.8vw, 52px); line-height: 1.15; letter-spacing: -.015em;
+      color: var(--muted); max-width: 20ch; margin-top: 18px;
     }
     .closing-line b { color: var(--accent); font-weight: 400; }
-    .note-box {
-      margin-top: 30px; padding: 20px 24px;
-      background: rgba(0,229,176,.04); border-left: 2px solid rgba(0,229,176,.5);
-      font-size: 15px; color: var(--prose); line-height: 1.85; max-width: 78ch;
+    .limits {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0; margin-top: clamp(34px, 5vh, 54px);
+      border-top: 1px solid var(--line);
     }
-    .note-box strong { color: var(--text); font-weight: 600; }
+    .limit { padding: 22px 30px 24px 0; border-bottom: 1px solid var(--line-soft); }
+    .limit:nth-child(2n) { padding-left: 30px; border-left: 1px solid var(--line-soft); }
+    .limit h3 {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700;
+      letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 11px;
+    }
+    .limit-in h3  { color: var(--accent); }
+    .limit-out h3 { color: var(--amber); }
+    .limit p { font-size: 14.5px; color: var(--prose); line-height: 1.75; max-width: 52ch; }
+    .limit p strong { color: var(--text); font-weight: 600; }
+    @media (max-width: 760px) {
+      .limits { grid-template-columns: 1fr; }
+      .limit:nth-child(2n) { padding-left: 0; border-left: none; }
+    }
     .closing-cta {
-      display: inline-flex; align-items: center; gap: 10px; margin-top: 30px;
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: clamp(34px, 5vh, 52px);
       background: var(--accent); color: var(--ink);
       border-radius: 99px; padding: 15px 30px;
       font-size: 14px; font-weight: 700; letter-spacing: -.2px;
       transition: box-shadow .3s var(--ease-out);
     }
     .closing-cta:hover { box-shadow: 0 12px 40px rgba(0,229,176,.3); }
+    #closing .band-inner { padding-bottom: clamp(72px, 11vh, 118px); }
 
     /* ── Entrances (DESIGN.md §7) ────────────────────────────────────────── */
     .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
@@ -587,26 +702,61 @@
     @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
 
     /* ── Responsive ──────────────────────────────────────────────────────── */
+    /* The shared /mobile.css sets `#hero { min-height: 80vh }` under 768px for
+       index.html's full-viewport hero. This hero is a short masthead, so that
+       rule opens a screen-tall hole under the fact strip. Overridden here, and
+       That file is <link>ed AFTER this <style> block, so an equal-specificity
+       selector loses the cascade — these are deliberately one step heavier.
+       Its generic `section { padding: 40px 14px }` also lands on .chapter,
+       which would indent the finding rows inside the already-padded band. */
+    @media (max-width: 768px) {
+      body #hero { min-height: 0; padding: 96px clamp(20px, 4vw, 56px) 40px; }
+      #schedule .chapter { padding: clamp(34px, 5vh, 52px) 0 0; }
+    }
     @media (max-width: 1000px) {
       .hero-row { grid-template-columns: 1fr; align-items: start; }
       .hero-deck { padding-bottom: 0; }
-      .budget-bar { overflow-x: auto; scrollbar-width: none; }
-      .budget-bar::-webkit-scrollbar { display: none; }
-      .budget-seg { min-width: 132px; flex: 0 0 auto; }
-      .scale { grid-template-columns: repeat(3, 1fr); direction: ltr; }
-      .scale-zone { border-right: 1px solid var(--line-soft); }
-      .scale-zone:nth-child(3n) { border-right: none; }
-      .scale-ends { display: none; }
-      .tiers { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fact:nth-child(4n + 1) { padding-left: 24px; }
+      .fact:nth-child(4n)     { border-right: 1px solid var(--line-soft); }
+      .fact:nth-child(2n + 1) { padding-left: 0; }
+      .fact:nth-child(2n)     { border-right: none; }
+      .fact:nth-child(-n + 2) { border-bottom: 1px solid var(--line-soft); }
+      .rule { height: 96px; }
+      .rule-hint { display: none; }
     }
     @media (max-width: 700px) {
-      .find { grid-template-columns: 84px 1fr; gap: 0 16px; }
-      .find .sev { grid-column: 2; margin-top: 10px; }
-      .find:hover { padding-left: 0; }
-      .scale { grid-template-columns: repeat(2, 1fr); }
-      .scale-zone:nth-child(3n) { border-right: 1px solid var(--line-soft); }
-      .scale-zone:nth-child(2n) { border-right: none; }
+      /* explicit areas: the bar is a DOM sibling between pts and txt, so
+         auto-placement would push the text onto a third row */
+      .row { grid-template-columns: 46px minmax(0, 1fr); gap: 0 14px; }
+      .row-pts { grid-area: 1 / 1; }
+      .row-txt { grid-area: 1 / 2; }
+      .row-bar { grid-area: 2 / 1 / 3 / 3; margin-top: 11px; }
+      /* narrow measure: a run-on note becomes a wall, so let it drop */
+      .row-name { display: block; }
+      .row-note { display: block; margin-top: 5px; line-height: 1.6; }
+      .row-name + .row-note::before { display: none; }
+      .rule { height: 86px; }
+      .rule-zone { padding-left: 8px; }
+      .rule-ticks span { display: none; }
+      /* the strip is pinned, so its height is screen the reader never gets
+         back — the search takes one line and everything else shares the next */
+      .ctl-top { gap: 8px 10px; padding: 9px 0; }
+      .ctl-search { flex: 1 0 100%; }
+      /* content-sized, not grown — a grown severity group fills the line and
+         pushes the count onto a row of its own, costing 16px of pinned height */
+      .ctl-sevs { flex: 0 1 auto; gap: 6px; }
+      .sevbtn { padding: 5px 7px; letter-spacing: 1.4px; gap: 6px; }
+      .sevbtn::before { width: 7px; height: 7px; }
+      #ctl-count { flex: 0 1 auto; margin-left: auto; font-size: 9px; letter-spacing: 1.4px; }
+      .modchip { padding: 8px 13px 8px 0; }
+      .modchip + .modchip { padding-left: 13px; }
       .chapter-cap { margin-left: 0; }
+    }
+    /* the pinned strip is two rows tall; on a short viewport that is too much
+       screen to give up, so the module chips retire and the filter stays */
+    @media (max-height: 560px) {
+      .ctl-mods { display: none; }
     }
 
     /* ── Footer ──────────────────────────────────────────────────────────── */
@@ -635,8 +785,6 @@
 
     /* ── Utils ───────────────────────────────────────────────────────────── */
     .hidden { display: none !important; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .grain { animation: none; }
@@ -689,7 +837,6 @@
 </head>
 <body>
 
-<!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
 <div class="grain" aria-hidden="true"></div>
 
 <!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
@@ -749,490 +896,478 @@
   </div>
 </div>
 
+<main>
+
 <!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
-<section id="hero">
-  <p class="hero-kicker">Methodology · reproducible by hand</p>
+<section id="hero" class="wrap">
+  <p class="hero-kicker">Methodology · the full rubric</p>
   <div class="hero-row">
-    <h1>Every scan starts at <span class="hollow">100</span><span class="accent-dot">.</span></h1>
-    <p class="hero-deck">Then the findings spend it. Every number on this page is the exact deduction the scanner applies — <b>no weighting we won't show you</b>, no black box. Re-run the same URL tomorrow and the arithmetic is identical.</p>
+    <!-- index.html's hero already owns "Every site starts at 100" — repeating
+         the mechanic here spends this page's one headline on something the
+         reader has met. Methodology has to sell rigour and auditability
+         instead: how much is being tested, and that none of it is withheld. -->
+    <!-- 40, not 41. The scanner raises 41 findings, but cookies.py scores
+         SameSite at 0 ("informational, no score impact"), so only 40 of them
+         cost anything. Anyone counting the schedule would catch a 41 here, on
+         the one page whose whole argument is that nothing is fudged. -->
+    <h1><span class="hollow">40</span> ways to lose a point<span class="accent-dot">.</span></h1>
+    <p class="hero-deck">Forty-one findings, and we charge for forty — SameSite is reported free. That's the whole rubric: every check the scanner runs, the exact points it costs and the threshold that trips it. <b>No weighting we won't show you</b>, no black box. Run the same URL tomorrow and the arithmetic comes out identical.</p>
+  </div>
+
+  <div class="facts">
+    <!-- the 41 moved up into the headline, so the strip leads on the starting
+         score instead — the mechanic survives as a fact, not as the banner -->
+    <div class="fact">
+      <div class="fact-n">100</div>
+      <div class="fact-l">Starting score</div>
+    </div>
+    <div class="fact">
+      <div class="fact-n">14</div>
+      <div class="fact-l">Checks, in 6 modules</div>
+    </div>
+    <div class="fact">
+      <div class="fact-n">−30</div>
+      <div class="fact-l">Largest single hit</div>
+    </div>
+    <div class="fact">
+      <div class="fact-n">0</div>
+      <div class="fact-l">Hidden multipliers</div>
+    </div>
   </div>
 </section>
 
-<!-- ── 00 / The budget ──────────────────────────────────────────────────────── -->
-<div class="budget rv">
-  <div class="budget-head">
-    <span class="sec-num"><b>00</b> / The budget</span>
-    <span class="hint">Jump to a chapter ↓</span>
-  </div>
-  <div class="budget-bar" data-ticks>
-    <a class="budget-seg" href="#m-headers" style="flex: 81 1 0">
-      <span class="budget-seg-name">Headers</span>
-      <span class="budget-seg-pts crit">−81</span>
-    </a>
-    <a class="budget-seg" href="#m-tls" style="flex: 70 1 0">
-      <span class="budget-seg-name">TLS / SSL</span>
-      <span class="budget-seg-pts crit">−70</span>
-    </a>
-    <a class="budget-seg" href="#m-dns" style="flex: 15 1 0">
-      <span class="budget-seg-name">DNS</span>
-      <span class="budget-seg-pts warn">−15</span>
-    </a>
-    <a class="budget-seg" href="#m-cookies" style="flex: 20 1 0">
-      <span class="budget-seg-name">Cookies</span>
-      <span class="budget-seg-pts warn sm">per cookie</span>
-    </a>
-    <a class="budget-seg" href="#m-cross-origin" style="flex: 6 1 0">
-      <span class="budget-seg-name">Cross-orig</span>
-      <span class="budget-seg-pts ok">−6</span>
-    </a>
-    <a class="budget-seg" href="#m-page" style="flex: 6 1 0">
-      <span class="budget-seg-name">Page</span>
-      <span class="budget-seg-pts ok">−6</span>
-    </a>
-  </div>
-  <p class="budget-note">Segment widths are the real caps — they sum past 100 because the score floors at 0, never below</p>
-</div>
-
-<!-- ── The rules ────────────────────────────────────────────────────────────── -->
+<!-- ── 01 / The rules ───────────────────────────────────────────────────────── -->
 <div class="band">
   <div class="band-inner">
     <span class="sec-num rv"><b>01</b> / The rules</span>
     <div class="band-head">
       <h2 class="rv">Subtractive, and <em>capped at zero</em></h2>
-      <div class="band-deck">
-        <p class="rv">Every scan starts at <strong>100 points</strong>. Points are deducted for each missing, misconfigured, or weak security control. The final score maps to a letter grade. Scores are capped at a minimum of 0.</p>
-        <p class="rv">Each finding is assigned a severity — Critical, Important, or Minor — which determines how many points are lost. Critical findings have an outsized impact on the grade; Minor findings are noted but do not sink a score on their own.</p>
+      <div class="band-deck rv">
+        <p>Every scan starts at <strong>100 points</strong>. Points come off for each missing, misconfigured or weak control, and the total is floored at 0 — a site cannot go negative no matter how much it stacks up.</p>
+        <p>Each finding carries a severity, and severity is the whole of the weighting. There is no secondary multiplier, no per-industry curve and no adjustment for how popular the domain is.</p>
       </div>
-    </div>
-
-    <div class="scale-wrap rv">
-      <div class="scale">
-      <div class="scale-zone z-ap">
-        <span class="zone-letter">A+</span>
-        <span class="zone-range">90 – 100</span>
-      </div>
-      <div class="scale-zone z-a">
-        <span class="zone-letter">A</span>
-        <span class="zone-range">80 – 89</span>
-      </div>
-      <div class="scale-zone z-b">
-        <span class="zone-letter">B</span>
-        <span class="zone-range">70 – 79</span>
-      </div>
-      <div class="scale-zone z-c">
-        <span class="zone-letter">C</span>
-        <span class="zone-range">60 – 69</span>
-      </div>
-      <div class="scale-zone z-d">
-        <span class="zone-letter">D</span>
-        <span class="zone-range">50 – 59</span>
-      </div>
-      <div class="scale-zone z-f">
-        <span class="zone-letter">F</span>
-        <span class="zone-range">0 – 49</span>
-      </div>
-      </div>
-      <div class="scale-ends"><span>0 — Fail</span><span>100 — Clean</span></div>
     </div>
 
     <div class="tiers rv">
       <div class="tier tier-crit">
         <div class="tier-name">Critical</div>
-        <p>Actively exploitable — missing control enables a known attack class (XSS, MITM, session hijacking).</p>
+        <p>Actively exploitable — the missing control enables a known attack class outright: XSS, machine-in-the-middle, session hijacking.</p>
       </div>
       <div class="tier tier-imp">
         <div class="tier-name">Important</div>
-        <p>Weakens an existing defense — reduces protection depth or is exploitable in combination with other flaws.</p>
+        <p>Weakens an existing defence — reduces protection depth, or becomes exploitable in combination with another flaw.</p>
       </div>
       <div class="tier tier-min">
         <div class="tier-name">Minor</div>
-        <p>Best-practice gap — recommended by security standards but not directly exploitable on its own.</p>
+        <p>Best-practice gap — recommended by the standards bodies, but not directly exploitable on its own.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 02 / The grade ───────────────────────────────────────────────────────── -->
+<div class="band">
+  <div class="band-inner">
+    <span class="sec-num rv"><b>02</b> / The grade</span>
+    <div class="band-head">
+      <h2 class="rv">One scale, <em>no curve</em></h2>
+      <div class="band-deck rv">
+        <p>The letter is a direct read-off from the score — the same six bands for every site, every time. Note the shape of it: <strong>F occupies half the ruler</strong>. Fifty points of failure share one letter, while the top forty are split five ways, because the distance between a hardened site and a very good one is the part worth resolving.</p>
       </div>
     </div>
 
-    <div class="scope-box rv">
-      <span class="scope-label">Scope: web security hardening maturity</span>
-      <p class="scope-body">SecureScanr measures whether a site has deployed standard defensive HTTP controls — headers, TLS configuration, DNS email security, and cookie hygiene. It is <strong>not</strong> a penetration test, exploit validator, or vulnerability management tool. A high score means good baseline hardening; it does not guarantee the absence of application-layer vulnerabilities such as SQL injection, broken authentication, IDOR, or business logic flaws.</p>
+    <div class="rule-wrap rv">
+      <div class="rule-read">
+        <div class="rule-score">
+          <span id="rule-num">78</span>
+          <span id="rule-grade">Grade B</span>
+        </div>
+        <p class="rule-hint">Drag the ruler — or use the arrow keys — to read any score</p>
+      </div>
+
+      <div class="rule" id="rule" data-ticks>
+        <div class="rule-zone z-f"  data-lo="0"  data-hi="49"  style="flex:49"><span class="zl">F</span></div>
+        <div class="rule-zone z-d"  data-lo="50" data-hi="59"  style="flex:10"><span class="zl">D</span></div>
+        <div class="rule-zone z-c"  data-lo="60" data-hi="69"  style="flex:10"><span class="zl">C</span></div>
+        <div class="rule-zone z-b"  data-lo="70" data-hi="79"  style="flex:10"><span class="zl">B</span></div>
+        <div class="rule-zone z-a"  data-lo="80" data-hi="89"  style="flex:10"><span class="zl">A</span></div>
+        <div class="rule-zone z-ap" data-lo="90" data-hi="100" style="flex:11"><span class="zl">A+</span></div>
+        <div class="rule-ticks" id="rule-ticks" aria-hidden="true"></div>
+        <div id="needle" style="left:78%"></div>
+        <input type="range" id="rule-input" min="0" max="100" step="1" value="78"
+               aria-label="Score to grade reader">
+      </div>
+      <div class="rule-ends"><span>0 — Fail</span><span>100 — Clean</span></div>
     </div>
   </div>
 </div>
 
-<!-- ── Every deduction, by module ───────────────────────────────────────────── -->
-<div id="ledger">
+<!-- ── 03 / The schedule ────────────────────────────────────────────────────── -->
+<div class="band" id="schedule">
   <div class="band-inner">
-      <section class="chapter rv" id="m-headers">
+    <span class="sec-num rv"><b>03</b> / The schedule</span>
+    <div class="band-head">
+      <h2 class="rv">Every deduction, <em>priced</em></h2>
+      <div class="band-deck rv">
+        <p>All forty-one findings the scanner can raise, with the exact points each one costs — forty of them priced, one (SameSite) reported at zero. Bar length is the size of the hit; its colour is the severity. Caps shown per module are worst-case totals — most are mutually exclusive in practice, so a real scan never hits all of them at once.</p>
+      </div>
+    </div>
+
+    <!-- pinned control strip -->
+    <!-- no .rv here: the reveal's translateY offsets a sticky element's own
+         pinned position, and a control should be present, not arrive -->
+    <div class="ctl" id="ctl">
+      <div class="ctl-top">
+        <label class="ctl-search">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="M10.8 10.8 L15 15"/></svg>
+          <input id="q" type="search" placeholder="Filter findings — try “dmarc”, “cookie”, “expired”" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="ctl-sevs" role="group" aria-label="Filter by severity">
+          <button class="sevbtn s-critical"  data-sev="critical"  aria-pressed="false">Critical</button>
+          <button class="sevbtn s-important" data-sev="important" aria-pressed="false">Important</button>
+          <button class="sevbtn s-minor"     data-sev="minor"     aria-pressed="false">Minor</button>
+        </div>
+        <span id="ctl-count" aria-live="polite"><b>41</b> of 41 shown</span>
+      </div>
+      <nav class="ctl-mods" aria-label="Modules">
+        <a class="modchip" href="#m-headers">Headers <em>−81</em></a>
+        <a class="modchip" href="#m-tls">TLS <em>−70</em></a>
+        <a class="modchip" href="#m-dns">DNS <em>−15</em></a>
+        <a class="modchip" href="#m-cookies">Cookies <em>per&nbsp;cookie</em></a>
+        <a class="modchip" href="#m-cross-origin">Cross-origin <em>−6</em></a>
+        <a class="modchip" href="#m-page">Page <em>−6</em></a>
+      </nav>
+    </div>
+
+    <div id="sched-body">
+
+      <section class="chapter" id="m-headers">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>01</b> / Module</span>
+          <span class="sec-num"><b>03.1</b> / Module</span>
           <h2 class="chapter-title">HTTP Security Headers</h2>
           <span class="chapter-cap">MAX −81 PTS</span>
         </div>
-        <p class="chapter-note">When a header is <strong>present but misconfigured</strong> (weak value), its severity is downgraded one level and the deduction is halved vs. the missing case.</p>
-        <div class="find">
-          <div class="find-pts p-critical">−20<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Content-Security-Policy missing</div>
+        <p class="chapter-note">When a header is <strong>present but misconfigured</strong> — a weak value rather than an absent one — its severity drops one level and the deduction is roughly halved against the missing case.</p>
+        <div class="rows">
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−20</span>
+            <span class="row-bar"><i style="--w:67%"></i></span>
+            <span class="row-txt"><span class="row-name">Content-Security-Policy missing</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">CSP present but weakened</div>
-          <div class="find-note">unsafe-inline, unsafe-eval, or wildcard (*) in script-src</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">CSP present but weakened</span>
+              <span class="row-note">unsafe-inline, unsafe-eval, or a wildcard (*) in script-src</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-critical">−20<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Strict-Transport-Security missing</div>
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−20</span>
+            <span class="row-bar"><i style="--w:67%"></i></span>
+            <span class="row-txt"><span class="row-name">Strict-Transport-Security missing</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">HSTS max-age too short</div>
-          <div class="find-note">max-age below 6 months (15 768 000 s)</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">HSTS max-age too short</span>
+              <span class="row-note">max-age below six months (15 768 000 s)</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">X-Frame-Options missing</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">X-Frame-Options missing</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">X-Frame-Options invalid value</div>
-          <div class="find-note">Must be DENY or SAMEORIGIN; CSP frame-ancestors is an accepted equivalent</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">X-Frame-Options invalid value</span>
+              <span class="row-note">Must be DENY or SAMEORIGIN; a CSP <code>frame-ancestors</code> directive is accepted as equivalent</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">X-Content-Type-Options missing</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">X-Content-Type-Options missing</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">X-Content-Type-Options wrong value</div>
-          <div class="find-note">Must be exactly nosniff</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">X-Content-Type-Options wrong value</span>
+              <span class="row-note">Must be exactly <code>nosniff</code></span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Referrer-Policy missing</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">Referrer-Policy missing</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Referrer-Policy unsafe value</div>
-          <div class="find-note">Present but value not in the safe list — may expose URL parameters to third parties</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Referrer-Policy unsafe value</span>
+              <span class="row-note">Present, but not in the safe list — may leak URL parameters to third parties</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Permissions-Policy missing</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">Permissions-Policy missing</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">CORS wildcard (Access-Control-Allow-Origin: *)</div>
-          <div class="find-note">Allows any origin to read responses — risk to authenticated endpoints</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">CORS wildcard — Access-Control-Allow-Origin: *</span>
+              <span class="row-note">Lets any origin read responses; a real risk on authenticated endpoints</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Server header exposes version number</div>
-          <div class="find-note">e.g. nginx/1.24.0 — lets attackers target known CVEs</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">Server header exposes a version number</span>
+              <span class="row-note">e.g. <code>nginx/1.24.0</code> — hands attackers a CVE list to work from</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">X-Powered-By header present</div>
-          <div class="find-note">Discloses server-side technology stack</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">X-Powered-By header present</span>
+              <span class="row-note">Discloses the server-side technology stack</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
         </div>
       </section>
-      <section class="chapter rv" id="m-tls">
+
+      <section class="chapter" id="m-tls">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>02</b> / Module</span>
+          <span class="sec-num"><b>03.2</b> / Module</span>
           <h2 class="chapter-title">TLS / SSL Certificate</h2>
           <span class="chapter-cap">MAX −70 PTS</span>
         </div>
-        <p class="chapter-note">Expiry, self-signed, cipher, and protocol deductions are <strong>independent and cumulative</strong> (worst case: expired −30 + self-signed −20 + deprecated protocol −10 + weak cipher −10 = −70). Connection-error paths (SSLError, unreachable) are mutually exclusive with each other and with the certificate/cipher checks — only one applies per scan.</p>
-        <div class="find">
-          <div class="find-pts p-critical">−30<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Certificate expired</div>
+        <p class="chapter-note">Expiry, self-signed, cipher and protocol deductions are <strong>independent and cumulative</strong> — worst case, expired −30 plus self-signed −20 plus a deprecated protocol −10 plus a weak cipher −10 comes to −70. The two connection-failure paths are mutually exclusive with each other and with every certificate check: only one of them can apply per scan.</p>
+        <div class="rows">
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−30</span>
+            <span class="row-bar"><i style="--w:100%"></i></span>
+            <span class="row-txt"><span class="row-name">Certificate expired</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-critical">−20<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Expires within 14 days</div>
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−20</span>
+            <span class="row-bar"><i style="--w:67%"></i></span>
+            <span class="row-txt"><span class="row-name">Certificate expires within 14 days</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Expires within 30 days</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">Certificate expires within 30 days</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Expires within 60 days</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">Certificate expires within 60 days</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-critical">−20<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Self-signed certificate</div>
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−20</span>
+            <span class="row-bar"><i style="--w:67%"></i></span>
+            <span class="row-txt"><span class="row-name">Self-signed certificate</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Deprecated TLS protocol in use</div>
-          <div class="find-note">SSLv2, SSLv3, TLSv1, TLSv1.1 — stacks independently with cipher and expiry deductions</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">Deprecated TLS protocol in use</span>
+              <span class="row-note">SSLv2, SSLv3, TLSv1, TLSv1.1 — stacks with the cipher and expiry deductions</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−10<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Weak cipher suite in use</div>
-          <div class="find-note">RC4, DES, 3DES, NULL, EXPORT, ANON — stacks independently with protocol and expiry deductions</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−10</span>
+            <span class="row-bar"><i style="--w:33%"></i></span>
+            <span class="row-txt"><span class="row-name">Weak cipher suite in use</span>
+              <span class="row-note">RC4, DES, 3DES, NULL, EXPORT, ANON — stacks with the protocol and expiry deductions</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-critical">−15<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">TLS handshake or certificate verification failed</div>
-          <div class="find-note">SSLError or cert verification error — no other TLS deductions applied in this path</div>
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−15</span>
+            <span class="row-bar"><i style="--w:50%"></i></span>
+            <span class="row-txt"><span class="row-name">TLS handshake or certificate verification failed</span>
+              <span class="row-note">SSLError or a cert verification error — no other TLS deduction applies on this path</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-critical">−20<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">HTTPS not reachable on port 443</div>
-          <div class="find-note">Connection refused, timed out, or unreachable — no other TLS deductions applied in this path</div>
+          <div class="row sv-critical" data-sev="critical">
+            <span class="row-pts">−20</span>
+            <span class="row-bar"><i style="--w:67%"></i></span>
+            <span class="row-txt"><span class="row-name">HTTPS not reachable on port 443</span>
+              <span class="row-note">Connection refused, timed out or unreachable — no other TLS deduction applies on this path</span></span>
           </div>
-          <span class="sev sev-critical">Critical</span>
         </div>
       </section>
-      <section class="chapter rv" id="m-dns">
+
+      <section class="chapter" id="m-dns">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>03</b> / Module</span>
-          <h2 class="chapter-title">DNS Email Security &amp; Certificate Security</h2>
+          <span class="sec-num"><b>03.3</b> / Module</span>
+          <h2 class="chapter-title">DNS Email &amp; Certificate Security</h2>
           <span class="chapter-cap">MAX −15 PTS</span>
         </div>
-        <p class="chapter-note"><strong>Domain normalization:</strong> DNS records are always queried at the <strong>apex domain</strong>. If you scan <code style="font-size:12px;color:var(--accent)">www.example.com</code>, SecureScanr resolves DNS for <code style="font-size:12px;color:var(--accent)">example.com</code> — SPF, DMARC, DKIM, CAA, and DNSSEC records live at the apex, not on the <code style="font-size:12px;color:var(--accent)">www</code> subdomain. Subdomains are stripped automatically so the scan always reflects your domain's actual email security posture.</p>
-        <div class="find">
-          <div class="find-pts p-important">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">SPF record missing</div>
+        <p class="chapter-note"><strong>Domain normalisation:</strong> DNS records are always queried at the <strong>apex domain</strong>. Scan <code>www.example.com</code> and SecureScanr resolves <code>example.com</code> — SPF, DMARC, DKIM, CAA and DNSSEC records live at the apex, never on the <code>www</code> subdomain. Subdomains are stripped automatically so the result reflects the domain's actual email posture.</p>
+        <div class="rows">
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">SPF record missing</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">SPF record invalid or multiple records</div>
-          <div class="find-note">RFC 7208 permits exactly one SPF TXT record per domain</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">SPF record invalid, or more than one published</span>
+              <span class="row-note">RFC 7208 permits exactly one SPF TXT record per domain</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">SPF weak policy</div>
-          <div class="find-note">+all or ?all allow any sender to pass SPF</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">SPF weak policy</span>
+              <span class="row-note"><code>+all</code> or <code>?all</code> let any sender pass SPF</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">DMARC record missing</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">DMARC record missing</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">DMARC policy set to none</div>
-          <div class="find-note">p=none monitors but takes no enforcement action</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">DMARC policy set to none</span>
+              <span class="row-note"><code>p=none</code> monitors but takes no enforcement action</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">DMARC policy unknown or invalid</div>
-          <div class="find-note">Any p= value other than none / quarantine / reject — treated the same as a missing DMARC record</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">DMARC policy unknown or invalid</span>
+              <span class="row-note">Any <code>p=</code> value outside none / quarantine / reject is treated as a missing record</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">DKIM not detected</div>
-          <div class="find-note">Checked against 12 common selectors; custom selectors may not be found</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">DKIM not detected</span>
+              <span class="row-note">Checked against 12 common selectors; a custom selector may not be found</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">CAA records missing</div>
-          <div class="find-note">No Certification Authority Authorization records restrict certificate issuance</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">CAA records missing</span>
+              <span class="row-note">Nothing restricts which authorities may issue certificates for the domain</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−3<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">DNSSEC not enabled</div>
-          <div class="find-note">Checked via DS records at the domain registrar</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−3</span>
+            <span class="row-bar"><i style="--w:10%"></i></span>
+            <span class="row-txt"><span class="row-name">DNSSEC not enabled</span>
+              <span class="row-note">Checked via DS records at the registrar</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
         </div>
       </section>
-      <section class="chapter rv" id="m-cookies">
+
+      <section class="chapter" id="m-cookies">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>04</b> / Module</span>
+          <span class="sec-num"><b>03.4</b> / Module</span>
           <h2 class="chapter-title">Cookie Security</h2>
           <span class="chapter-cap">PER COOKIE · UNCAPPED</span>
         </div>
-        <p class="chapter-note">Deductions apply <strong>per insecure cookie</strong>. A page with many insecure cookies can accumulate significant point loss. SameSite issues are reported but do not currently affect the score.</p>
-        <div class="find">
-          <div class="find-pts p-important">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Secure flag missing</div>
+        <p class="chapter-note">These deductions apply <strong>per insecure cookie</strong>, which is why the module carries no cap — a page setting a dozen loose cookies can lose a great deal on this one module alone. SameSite is reported as a finding but does not currently affect the score.</p>
+        <div class="rows">
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">Secure flag missing</span>
+              <span class="row-note">Per cookie — the cookie can travel over plain HTTP</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-important">−5<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">HttpOnly flag missing</div>
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−5</span>
+            <span class="row-bar"><i style="--w:17%"></i></span>
+            <span class="row-txt"><span class="row-name">HttpOnly flag missing</span>
+              <span class="row-note">Per cookie — the cookie is readable from JavaScript</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-none">0<small>no cost</small></div>
-          <div class="find-body">
-            <div class="find-name">SameSite=None or SameSite missing</div>
-          <div class="find-note">Reported as a finding; no point deduction applied in current scoring</div>
+          <div class="row sv-none" data-sev="minor">
+            <span class="row-pts">0</span>
+            <span class="row-bar"><i style="--w:0%"></i></span>
+            <span class="row-txt"><span class="row-name">SameSite=None, or SameSite absent</span>
+              <span class="row-note">Reported as a finding; no point deduction under current scoring</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
         </div>
       </section>
-      <section class="chapter rv" id="m-cross-origin">
+
+      <section class="chapter" id="m-cross-origin">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>05</b> / Module</span>
+          <span class="sec-num"><b>03.5</b> / Module</span>
           <h2 class="chapter-title">Cross-Origin Isolation</h2>
           <span class="chapter-cap">MAX −6 PTS</span>
         </div>
-        <p class="chapter-note">These are modern, emerging headers not yet universally deployed. All three are scored as <strong>Minor</strong> — their absence is noted but does not materially impact the overall grade.</p>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Cross-Origin-Opener-Policy missing</div>
-          <div class="find-note">Weak value (unsafe-none): −1 pt</div>
+        <p class="chapter-note">Modern headers, not yet universally deployed. All three score as <strong>Minor</strong> — their absence is recorded but will not sink a grade on its own. A header that is present with a weak value costs half: −1 instead of −2.</p>
+        <div class="rows">
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Cross-Origin-Opener-Policy missing</span>
+              <span class="row-note">Weak value (<code>unsafe-none</code>): −1 pt</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Cross-Origin-Embedder-Policy missing</div>
-          <div class="find-note">Weak value (unsafe-none): −1 pt</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Cross-Origin-Embedder-Policy missing</span>
+              <span class="row-note">Weak value (<code>unsafe-none</code>): −1 pt</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Cross-Origin-Resource-Policy missing</div>
-          <div class="find-note">Weak value (cross-origin): −1 pt</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Cross-Origin-Resource-Policy missing</span>
+              <span class="row-note">Weak value (<code>cross-origin</code>): −1 pt</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
         </div>
       </section>
-      <section class="chapter rv" id="m-page">
+
+      <section class="chapter" id="m-page">
         <div class="chapter-hdr">
-          <span class="sec-num"><b>06</b> / Module</span>
-          <h2 class="chapter-title">Page Analysis</h2>
+          <span class="sec-num"><b>03.6</b> / Module</span>
+          <h2 class="chapter-title">Page Integrity</h2>
           <span class="chapter-cap">MAX −6 PTS</span>
         </div>
-        <p class="chapter-note">Checks performed by parsing the HTML body of the response. Each finding is <strong>binary</strong> — deducted once regardless of how many instances exist.</p>
-        <div class="find">
-          <div class="find-pts p-important">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Mixed content detected</div>
-          <div class="find-note">HTTP resources loaded on an HTTPS page (scripts, images, iframes)</div>
+        <p class="chapter-note">Performed by parsing the HTML body of the response. Each finding is <strong>binary</strong> — deducted once, however many instances the page contains.</p>
+        <div class="rows">
+          <div class="row sv-important" data-sev="important">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Mixed content detected</span>
+              <span class="row-note">HTTP resources loaded on an HTTPS page — scripts, images, iframes</span></span>
           </div>
-          <span class="sev sev-important">Important</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Subresource Integrity (SRI) missing</div>
-          <div class="find-note">External scripts or stylesheets loaded without an integrity= attribute</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Subresource Integrity (SRI) missing</span>
+              <span class="row-note">External scripts or stylesheets loaded without an <code>integrity=</code> attribute</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
-        </div>
-        <div class="find">
-          <div class="find-pts p-minor">−2<small>points</small></div>
-          <div class="find-body">
-            <div class="find-name">Base tag present</div>
-          <div class="find-note">&lt;base href&gt; can be hijacked to redirect relative links to a malicious domain</div>
+          <div class="row sv-minor" data-sev="minor">
+            <span class="row-pts">−2</span>
+            <span class="row-bar"><i style="--w:7%"></i></span>
+            <span class="row-txt"><span class="row-name">Base tag present</span>
+              <span class="row-note">&lt;base href&gt; can be hijacked to point relative links at a malicious domain</span></span>
           </div>
-          <span class="sev sev-minor">Minor</span>
         </div>
       </section>
+
+      <p id="no-hits" class="hidden">No finding matches <b id="no-hits-q"></b>. <button type="button" id="clear-filter">Clear the filter</button></p>
+
+    </div>
   </div>
 </div>
 
-<!-- ── Closing ──────────────────────────────────────────────────────────────── -->
-<div class="closing">
-  <span class="sec-num rv"><b>08</b> / Standards</span>
-  <p class="closing-line rv" style="margin-top:16px">Nothing here is a judgement call <b>you can't reproduce by hand.</b></p>
-  <div class="note-box rv">
-    Scores are based on industry standards including the <strong>OWASP Secure Headers Project</strong> and the <strong>Mozilla Web Security Guidelines</strong>. SecureScanr does not replace a full manual penetration test. A high score indicates good baseline hygiene, not the absence of vulnerabilities — application-layer issues such as SQL injection, broken authentication, and business logic flaws are outside the scope of this automated tool.
+<!-- ── 04 / Scope ───────────────────────────────────────────────────────────── -->
+<div class="band" id="closing">
+  <div class="band-inner">
+    <span class="sec-num rv"><b>04</b> / Scope</span>
+    <p class="closing-line rv">Nothing here is a judgement call <b>you can't reproduce by hand.</b></p>
+
+    <div class="limits rv">
+      <div class="limit limit-in">
+        <h3>What the grade measures</h3>
+        <p>Whether a site has deployed the standard defensive controls that are observable from outside it: HTTP security headers, TLS configuration, DNS email security, cookie hygiene and page integrity. Thresholds follow the <strong>OWASP Secure Headers Project</strong> and the <strong>Mozilla Web Security Guidelines</strong>.</p>
+      </div>
+      <div class="limit limit-out">
+        <h3>What it does not</h3>
+        <p>This is <strong>not a penetration test</strong>, an exploit validator or a vulnerability manager. A high score means good baseline hardening — it says nothing about application-layer flaws such as SQL injection, broken authentication, IDOR or business logic errors, none of which are visible to an automated external scan.</p>
+      </div>
+    </div>
+
+    <a href="scan.html" class="closing-cta rv">Run a scan and see the arithmetic →</a>
   </div>
-  <a href="scan.html" class="closing-cta rv">Run a scan and see the arithmetic →</a>
 </div>
+
+</main>
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
@@ -1310,6 +1445,154 @@
     var e = document.createElement('a'); e.href = a.getAttribute('href') || '';
     if (e.href === c) a.style.display = 'none';
   });
+})();
+</script>
+<script>
+/* ── 02 · the ruler ─────────────────────────────────────────────────────────
+   A native range input sits invisible over the scale, so dragging, touch,
+   arrow keys and screen readers all work without reimplementing any of it.
+   We only mirror its value onto the needle and the readout. */
+(function(){
+  var input  = document.getElementById('rule-input');
+  if (!input) return;
+  var needle = document.getElementById('needle'),
+      num    = document.getElementById('rule-num'),
+      badge  = document.getElementById('rule-grade'),
+      zones  = Array.prototype.slice.call(document.querySelectorAll('.rule-zone')),
+      ticks  = document.getElementById('rule-ticks');
+
+  /* tick lattice, every 10 points; the 50 mark is taller because it is the
+     F/D boundary and the midpoint of the scale */
+  var frag = document.createDocumentFragment();
+  for (var v = 0; v <= 100; v += 10) {
+    var i = document.createElement('i');
+    i.style.left = v + '%';
+    if (v === 50) i.className = 'mid';
+    frag.appendChild(i);
+    if (v % 20 === 0 && v !== 0 && v !== 100) {
+      var s = document.createElement('span');
+      s.style.left = v + '%'; s.textContent = v;
+      frag.appendChild(s);
+    }
+  }
+  ticks.appendChild(frag);
+
+  var BANDS = [
+    { lo: 90, letter: 'A+', css: 'var(--accent)'    },
+    { lo: 80, letter: 'A',  css: 'var(--accent)'    },
+    { lo: 70, letter: 'B',  css: 'var(--accent-dk)' },
+    { lo: 60, letter: 'C',  css: 'var(--amber)'     },
+    { lo: 50, letter: 'D',  css: 'var(--orange)'    },
+    { lo: 0,  letter: 'F',  css: 'var(--red)'       }
+  ];
+
+  function sync() {
+    var v = parseInt(input.value, 10) || 0, b = BANDS[BANDS.length - 1];
+    for (var k = 0; k < BANDS.length; k++) { if (v >= BANDS[k].lo) { b = BANDS[k]; break; } }
+    needle.style.left = v + '%';
+    num.textContent   = v;
+    num.style.color   = b.css;
+    badge.textContent = 'Grade ' + b.letter;
+    badge.style.color = b.css;
+    zones.forEach(function (z) {
+      z.classList.toggle('live', v >= +z.dataset.lo && v <= +z.dataset.hi);
+    });
+  }
+  input.addEventListener('input', sync);
+  sync();
+})();
+</script>
+<script>
+/* ── 03 · the schedule filter ───────────────────────────────────────────────
+   41 rows is past the point where scrolling is a way to find something. Text
+   match runs over the row's own text; severity toggles are additive (none
+   pressed means all shown). Chapters whose rows are all hidden collapse too,
+   so the page never leaves an orphan heading behind. */
+(function(){
+  var q     = document.getElementById('q');
+  if (!q) return;
+  var rows  = Array.prototype.slice.call(document.querySelectorAll('#sched-body .row')),
+      chaps = Array.prototype.slice.call(document.querySelectorAll('#sched-body .chapter')),
+      btns  = Array.prototype.slice.call(document.querySelectorAll('.sevbtn')),
+      count = document.getElementById('ctl-count'),
+      empty = document.getElementById('no-hits'),
+      emptyQ= document.getElementById('no-hits-q'),
+      clear = document.getElementById('clear-filter'),
+      total = rows.length,
+      sevs  = {};
+
+  rows.forEach(function (r) { r._t = r.textContent.toLowerCase().replace(/\s+/g, ' '); });
+
+  /* the worked-example placeholder is the better prompt, but it truncates
+     mid-word below ~560px, which reads as a rendering fault */
+  var compact = window.matchMedia('(max-width: 560px)').matches;
+  if (compact) q.placeholder = 'Filter ' + total + ' findings';
+
+  function apply() {
+    var term = q.value.trim().toLowerCase(),
+        on   = Object.keys(sevs).filter(function (k) { return sevs[k]; }),
+        shown = 0;
+
+    rows.forEach(function (r) {
+      var ok = (!term || r._t.indexOf(term) !== -1) &&
+               (!on.length || on.indexOf(r.dataset.sev) !== -1);
+      r.classList.toggle('gone', !ok);
+      if (ok) shown++;
+    });
+    chaps.forEach(function (c) {
+      c.classList.toggle('gone', !c.querySelector('.row:not(.gone)'));
+    });
+
+    count.innerHTML = compact ? '<b>' + shown + '</b> / ' + total
+                              : '<b>' + shown + '</b> of ' + total + ' shown';
+    empty.classList.toggle('hidden', shown !== 0);
+    if (!shown) emptyQ.textContent = term ? '“' + q.value.trim() + '”' : 'that severity';
+  }
+
+  apply();   /* settles the count into its compact form on small screens */
+  q.addEventListener('input', apply);
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var k = b.dataset.sev;
+      sevs[k] = !sevs[k];
+      b.setAttribute('aria-pressed', sevs[k] ? 'true' : 'false');
+      apply();
+    });
+  });
+  clear.addEventListener('click', function () {
+    q.value = '';
+    btns.forEach(function (b) { sevs[b.dataset.sev] = false; b.setAttribute('aria-pressed', 'false'); });
+    apply();
+    q.focus();
+  });
+
+  /* Jumping to a module has to clear the fixed nav AND the pinned strip, and
+     the strip is a different height at every breakpoint (three stacked rows on
+     a phone, two on a desktop). Measuring beats maintaining a table of guesses. */
+  var ctl = document.getElementById('ctl'),
+      nav = document.querySelector('body > header');
+  function offset() {
+    document.documentElement.style.setProperty(
+      '--anchor-offset',
+      Math.round(nav.offsetHeight + ctl.offsetHeight + 18) + 'px'
+    );
+  }
+  offset();
+  window.addEventListener('resize', offset, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(offset).observe(ctl);
+
+  /* mark the module chip you are currently reading */
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.modchip'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var id = '#' + en.target.id;
+        chips.forEach(function (c) { c.classList.toggle('here', c.getAttribute('href') === id); });
+      });
+    }, { rootMargin: '-140px 0px -62% 0px' });
+    chaps.forEach(function (c) { io.observe(c); });
+  }
 })();
 </script>
 <script>

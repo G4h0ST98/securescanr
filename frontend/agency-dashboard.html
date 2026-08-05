@@ -750,13 +750,13 @@
       `  --output report.pdf`;
 
     document.getElementById('code-dash').textContent =
-      `curl "https://api.securescanr.com/api/agency/dashboard?api_key=${key}"`;
+      `curl "https://api.securescanr.com/api/agency/dashboard" -H "X-API-Key: ${key}"`;
   }
 
   /* ── Data fetching ── */
   async function loadDashboard() {
     showState('state-loading');
-    const doFetch = () => fetch(`${API_BASE}/api/agency/dashboard?api_key=${encodeURIComponent(API_KEY)}`);
+    const doFetch = () => fetch(`${API_BASE}/api/agency/dashboard`, { headers: {'X-API-Key': API_KEY} });
     try {
       let res;
       try {
@@ -815,7 +815,7 @@
     ).join('');
 
     try {
-      const res  = await fetch(`${API_BASE}/api/agency/scan-now?api_key=${encodeURIComponent(API_KEY)}`, { method: 'POST' });
+      const res  = await fetch(`${API_BASE}/api/agency/scan-now`, { method: 'POST', headers: {'X-API-Key': API_KEY} });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Scan failed.');
 
@@ -925,9 +925,9 @@
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Saving…';
 
-    const doSave = () => fetch(`${API_BASE}/api/agency/update?api_key=${encodeURIComponent(API_KEY)}`, {
+    const doSave = () => fetch(`${API_BASE}/api/agency/update`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type':'application/json', 'X-API-Key': API_KEY},
       body: JSON.stringify({domains, schedule_type: scheduleType, schedule_day: scheduleDay, domain_pdf_prefs}),
     });
 

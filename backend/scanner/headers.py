@@ -1,6 +1,9 @@
+import logging
 import re
 import requests
 from urllib.parse import urlparse, urlunparse
+
+from scanner.net_guard import safe_get, SSRFBlocked
 
 REQUEST_TIMEOUT = 10
 USER_AGENT = (
@@ -440,12 +443,10 @@ def _check_security_txt(response_url: str) -> dict:
 
     for path in ("/.well-known/security.txt", "/security.txt"):
         try:
-            r = requests.get(
+            r = safe_get(
                 base + path,
                 timeout=5,
                 headers={"User-Agent": USER_AGENT},
-                allow_redirects=True,
-                verify=True,
             )
             if r.status_code == 200 and "Contact:" in r.text:
                 return {
@@ -549,19 +550,18 @@ def fetch_url(url: str) -> requests.Response:
         raise ValueError(f"Unsupported scheme '{parsed.scheme}'. Only http/https allowed.")
 
     try:
-        return requests.get(
-            url,
-            timeout=REQUEST_TIMEOUT,
-            headers={"User-Agent": USER_AGENT},
-            allow_redirects=True,
-            verify=True,
-        )
+        return safe_get(url, timeout=REQUEST_TIMEOUT)
+    except SSRFBlocked as exc:
+        # Do not leak whether/why the target is internal (SSRF port-scan oracle).
+        # Log the detail server-side; return a generic message to the caller.
+        logging.warning("Blocked SSRF-unsafe fetch of %s: %s", url, exc)
+        raise requests.RequestException("The target address is not allowed.") from exc
     except requests.exceptions.SSLError as exc:
-        raise requests.RequestException(f"TLS/SSL error connecting to {url}: {exc}") from exc
-    except requests.exceptions.ConnectionError as exc:
-        raise requests.RequestException(f"Could not connect to {url}: {exc}") from exc
-    except requests.exceptions.Timeout:
-        raise requests.RequestException(f"Request to {url} timed out after {REQUEST_TIMEOUT}s")
+        logging.warning("TLS error fetching %s: %s", url, exc)
+        raise requests.RequestException("Could not establish a secure TLS connection to the target.") from exc
+    except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as exc:
+        logging.warning("Fetch failed for %s: %s", url, exc)
+        raise requests.RequestException("Could not fetch the target URL.") from exc
 
 
 def scan_headers(url: str) -> dict:

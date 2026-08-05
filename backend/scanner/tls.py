@@ -2,6 +2,8 @@ import ssl
 import socket
 from datetime import datetime, timezone
 
+from scanner.net_guard import resolve_and_validate, SSRFBlocked
+
 CONNECT_TIMEOUT = 10
 
 WEAK_CIPHERS = {"RC4", "DES", "3DES", "NULL", "EXPORT", "ANON"}
@@ -43,8 +45,16 @@ def scan_tls(hostname: str, port: int = 443) -> dict:
     """
     ctx = ssl.create_default_context()
 
+    # SSRF guard: resolve+validate before connecting, then dial the validated IP
+    # directly (pins the address — no re-resolution) while keeping the hostname
+    # for SNI and certificate verification.
     try:
-        with socket.create_connection((hostname, port), timeout=CONNECT_TIMEOUT) as raw:
+        _family, ip = resolve_and_validate(hostname)
+    except SSRFBlocked:
+        return _error_result(False, f"HTTPS not reachable on port {port}", 20)
+
+    try:
+        with socket.create_connection((ip, port), timeout=CONNECT_TIMEOUT) as raw:
             with ctx.wrap_socket(raw, server_hostname=hostname) as tls:
                 cert = tls.getpeercert()
                 cipher_name, _, bits = tls.cipher()

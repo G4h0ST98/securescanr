@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import hmac
+import ipaddress
 import json
 import logging
 import os
@@ -989,7 +990,26 @@ def _normalize_scan_for_compliance(scan: dict) -> dict:
     }
 
 
+# ── Global concurrency caps (prevent scan-thread amplification / DoS) ──────────
+# A single heavy scan fans out to HTTP + DNS + TLS + secondary fetches. Neither
+# the per-IP rate limit (request count) nor the sync gunicorn workers bound the
+# number of *concurrent* scans across the process, so we cap it explicitly here.
+_MAX_CONCURRENT_SCANS = int(os.environ.get("MAX_CONCURRENT_SCANS", "8"))
+_SCAN_ACQUIRE_TIMEOUT = int(os.environ.get("SCAN_ACQUIRE_TIMEOUT", "20"))  # seconds
+_scan_semaphore = threading.BoundedSemaphore(_MAX_CONCURRENT_SCANS)
+
+
 def _run_scan_modules(url: str) -> dict:
+    # Bound concurrent heavy scans. Callers already handle RequestException.
+    if not _scan_semaphore.acquire(timeout=_SCAN_ACQUIRE_TIMEOUT):
+        raise req_lib.RequestException("Scanner is at capacity — please retry in a moment.")
+    try:
+        return _run_scan_modules_inner(url)
+    finally:
+        _scan_semaphore.release()
+
+
+def _run_scan_modules_inner(url: str) -> dict:
     hostname = urlparse(url).hostname or ""
     is_https = url.startswith("https://")
 
@@ -1073,14 +1093,67 @@ def _score_to_grade(score: int) -> str:
     return "F"
 
 
+# ── Trusted reverse proxies for client-IP determination ──────────────────────
+# X-Forwarded-For / CF-Connecting-IP are only trusted when the immediate socket
+# peer is one of these networks. If the request hits the origin directly (peer
+# not in this set — e.g. someone curling the *.up.railway.app origin), the
+# forwarded headers are ignored and the real socket IP is used, so they cannot
+# be spoofed to bypass rate-limiting or quota.
+#
+# Published Cloudflare ranges (https://www.cloudflare.com/ips/). Extra proxy
+# CIDRs (e.g. a Railway edge range) can be appended via the TRUSTED_PROXY_CIDRS
+# env var (comma-separated) without a code change.
+_CLOUDFLARE_CIDRS = [
+    "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
+    "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
+    "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
+    "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22",
+    "2400:cb00::/32", "2606:4700::/32", "2803:f800::/32", "2405:b500::/32",
+    "2405:8100::/32", "2a06:98c0::/29", "2c0f:f248::/32",
+]
+
+
+def _build_trusted_proxy_nets() -> list:
+    nets = []
+    extra = os.environ.get("TRUSTED_PROXY_CIDRS", "")
+    for cidr in _CLOUDFLARE_CIDRS + [c.strip() for c in extra.split(",") if c.strip()]:
+        try:
+            nets.append(ipaddress.ip_network(cidr))
+        except ValueError:
+            logging.warning("Ignoring invalid TRUSTED_PROXY_CIDRS entry: %s", cidr)
+    return nets
+
+
+_TRUSTED_PROXY_NETS = _build_trusted_proxy_nets()
+
+
+def _peer_is_trusted_proxy(peer: str) -> bool:
+    try:
+        ip = ipaddress.ip_address(peer)
+    except ValueError:
+        return False
+    return any(ip in net for net in _TRUSTED_PROXY_NETS)
+
+
 def _client_ip() -> str:
-    """Return the real client IP — use rightmost X-Forwarded-For entry (proxy-appended)
-    so clients cannot spoof it by injecting a fake leading IP."""
-    forwarded = request.headers.get("X-Forwarded-For", "")
-    if forwarded:
-        # Rightmost entry is appended by Railway's proxy and cannot be forged
-        return forwarded.split(",")[-1].strip()
-    return request.remote_addr or "unknown"
+    """Return the real client IP.
+
+    Forwarded headers are trusted ONLY when the immediate socket peer
+    (request.remote_addr) is a known trusted proxy (Cloudflare, or an operator-
+    configured CIDR). In that case the original client is Cloudflare's
+    CF-Connecting-IP (authoritative) or the leftmost X-Forwarded-For entry.
+    Otherwise the connection reached the origin directly and the forwarded
+    headers are attacker-controlled, so we use the real socket peer IP."""
+    peer = request.remote_addr or "unknown"
+    if _peer_is_trusted_proxy(peer):
+        cf = request.headers.get("CF-Connecting-IP", "").strip()
+        if cf:
+            return cf
+        forwarded = request.headers.get("X-Forwarded-For", "")
+        if forwarded:
+            # Leftmost entry is the original client as set by the trusted proxy.
+            return forwarded.split(",")[0].strip()
+    return peer
 
 
 def _quota_key() -> str:
@@ -1155,6 +1228,20 @@ def _verified_api_key() -> dict | None:
     if not api_key:
         return None
     return _resolve_key(api_key)
+
+
+def _request_api_key(query_param: str = "api_key") -> str:
+    """Resolve an API key from the X-API-Key header (preferred — keeps the key out
+    of URLs, logs and Referer), falling back to the legacy query param / JSON body
+    for backward compatibility with existing links and clients."""
+    key = request.headers.get("X-API-Key", "").strip()
+    if key:
+        return key
+    key = request.args.get(query_param, "").strip()
+    if key:
+        return key
+    body = request.get_json(silent=True) or {}
+    return str(body.get(query_param, body.get("api_key", ""))).strip()
 
 
 def _verify_razorpay_webhook(payload: bytes, signature: str) -> bool:
@@ -1370,9 +1457,24 @@ def _run_hof_scan() -> None:
         logging.info("HOF: background scan complete")
 
 
+# Bounded pool for best-effort HOF cache updates. Previously every scan spawned
+# an unbounded fire-and-forget daemon thread (each doing ~4 network fetches),
+# so a burst of scans could exhaust threads/sockets. The pool caps running
+# workers; the semaphore caps total accepted (running + queued) so excess
+# updates are dropped rather than piling up.
+_MAX_HOF_BG_TASKS = int(os.environ.get("MAX_HOF_BG_TASKS", "6"))
+_hof_bg_executor  = ThreadPoolExecutor(max_workers=3, thread_name_prefix="hof-bg")
+_hof_bg_slots     = threading.BoundedSemaphore(_MAX_HOF_BG_TASKS)
+
+
 def _update_hof_background(domain: str) -> None:
     """Non-blocking HOF cache update using www-vs-apex normalization.
-    Called from user-triggered scan routes so the HOF always reflects the best URL."""
+    Called from user-triggered scan routes so the HOF always reflects the best URL.
+    Best-effort: if the bounded background pool is saturated, the update is skipped."""
+    if not _hof_bg_slots.acquire(blocking=False):
+        logging.info("HOF update skipped for %s — background pool saturated", domain)
+        return
+
     def _worker():
         try:
             _, http_resp = _fetch_best_hof_url(domain)
@@ -1402,7 +1504,15 @@ def _update_hof_background(domain: str) -> None:
             logging.info("HOF update: %s → %s (%d)", domain, grade, score)
         except Exception as exc:
             logging.warning("HOF update failed for %s: %s", domain, exc)
-    threading.Thread(target=_worker, daemon=True).start()
+        finally:
+            _hof_bg_slots.release()
+
+    try:
+        _hof_bg_executor.submit(_worker)
+    except Exception as exc:
+        # Submission failed — release the slot we reserved so it isn't leaked.
+        _hof_bg_slots.release()
+        logging.warning("HOF update could not be scheduled for %s: %s", domain, exc)
 
 
 def _run_world_index_refresh() -> None:
@@ -1502,8 +1612,9 @@ def api_badge():
 
 @app.get("/api/get-payment-route")
 def api_get_payment_route():
-    forwarded = request.headers.get("X-Forwarded-For", "")
-    ip = forwarded.split(",")[0].strip() if forwarded else (request.remote_addr or "")
+    ip = _client_ip()
+    if ip == "unknown":
+        ip = ""
 
     provider = "razorpay"
     currency = "INR"
@@ -1544,7 +1655,8 @@ def api_subscribe_razorpay():
             "quantity":        1,
         })
     except Exception as exc:
-        return jsonify({"error": f"Could not create subscription: {exc}"}), 502
+        logging.error("Razorpay subscription create failed: %s", exc)
+        return jsonify({"error": "Could not create subscription. Please try again."}), 502
 
     return jsonify({
         "subscription_id": subscription["id"],
@@ -1832,7 +1944,7 @@ def api_agency_setup():
 
 @app.get("/api/agency/dashboard")
 def api_agency_dashboard():
-    api_key = request.args.get("api_key", "").strip()
+    api_key = _request_api_key()
     if not api_key:
         return jsonify({"error": "api_key parameter required."}), 401
 
@@ -1858,8 +1970,7 @@ def api_agency_dashboard():
 
 @app.post("/api/agency/scan-now")
 def api_agency_scan_now():
-    api_key = request.args.get("api_key", "") or (request.get_json(silent=True) or {}).get("api_key", "")
-    api_key = str(api_key).strip()
+    api_key = _request_api_key()
     if not api_key:
         return jsonify({"error": "api_key required."}), 401
 
@@ -1918,8 +2029,7 @@ def api_agency_scan_now():
 
 @app.post("/api/agency/update")
 def api_agency_update():
-    api_key = request.args.get("api_key", "") or (request.get_json(silent=True) or {}).get("api_key", "")
-    api_key = str(api_key).strip()
+    api_key = _request_api_key()
     if not api_key:
         return jsonify({"error": "api_key required."}), 401
 
@@ -1965,7 +2075,7 @@ def api_agency_update():
 def api_agency_run_scheduled():
     """Internal cron endpoint — runs scheduled scans for all agencies due today."""
     auth = request.headers.get("Authorization", "")
-    if not _CRON_SECRET or auth != f"Bearer {_CRON_SECRET}":
+    if not _CRON_SECRET or not hmac.compare_digest(auth, f"Bearer {_CRON_SECRET}"):
         return jsonify({"error": "Unauthorized."}), 401
 
     agencies = db.get_all_active_agencies()
@@ -2028,7 +2138,9 @@ def api_agency_run_scheduled():
 
 @app.get("/api/agency/pdf/<history_id>")
 def api_agency_pdf(history_id: str):
-    api_key = request.args.get("api_key", "").strip()
+    # Header preferred; query param kept as fallback because PDF downloads are
+    # plain <a> navigations that cannot set request headers.
+    api_key = _request_api_key()
     if not api_key:
         return jsonify({"error": "api_key parameter required."}), 401
 
@@ -2072,7 +2184,8 @@ def api_halloffame():
 
 @app.get("/api/usage")
 def api_usage():
-    key = request.args.get("key", "").strip()
+    # X-API-Key header preferred; legacy ?key= kept for backward compatibility.
+    key = request.headers.get("X-API-Key", "").strip() or request.args.get("key", "").strip()
     if not key:
         return jsonify({"valid": False}), 400
 
@@ -2181,7 +2294,8 @@ def api_verify_one_time():
         rzp_client = razorpay.Client(auth=(_RZP_KEY_ID, _RZP_KEY_SECRET))
         payment = rzp_client.payment.fetch(payment_id)
     except Exception as exc:
-        return jsonify({"error": f"Could not verify payment: {exc}"}), 502
+        logging.error("Razorpay payment.fetch failed for %s: %s", payment_id, exc)
+        return jsonify({"error": "Could not verify payment. Please try again."}), 502
 
     if payment.get("status") != "captured":
         return jsonify({"error": "Payment not completed. Please complete your payment first."}), 402
@@ -2209,7 +2323,8 @@ def api_compliance_report_pay():
             "notes": {"product": "compliance_report"},
         })
     except Exception as exc:
-        return jsonify({"error": f"Could not create order: {exc}"}), 502
+        logging.error("Razorpay order create failed: %s", exc)
+        return jsonify({"error": "Could not create order. Please try again."}), 502
 
     return jsonify({
         "order_id": order["id"],
@@ -2255,16 +2370,19 @@ def api_compliance_report_generate():
         if not hmac.compare_digest(expected, rzp_signature):
             return jsonify({"error": "Invalid payment signature."}), 400
 
-        # Prevent replay
-        pay_key = f"rzp_compliance_{rzp_payment_id}"
-        if db.compliance_payment_already_used(pay_key):
-            return jsonify({"error": "This payment has already been used."}), 409
         if not email or "@" not in email:
             return jsonify({"error": "Valid email required."}), 400
+        # Prevent replay — atomically reserve this payment BEFORE doing any work,
+        # relying on the UNIQUE(payment_id) constraint. Two concurrent requests
+        # for the same payment: only the first reserves; the rest get 409.
+        pay_key = f"rzp_compliance_{rzp_payment_id}"
+        if not db.reserve_compliance_payment(pay_key, email):
+            return jsonify({"error": "This payment has already been used."}), 409
 
     # ── Auth: LemonSqueezy compliance token ───────────────────────────────────
     elif compliance_token := str(body.get("compliance_token", "")).strip():
-        token_record = db.get_compliance_token(compliance_token)
+        # Atomic claim — only one concurrent request can redeem a given token.
+        token_record = db.claim_compliance_token(compliance_token)
         if not token_record:
             return jsonify({"error": "Invalid or expired compliance token."}), 403
         email = token_record["email"] or email
@@ -2279,7 +2397,12 @@ def api_compliance_report_generate():
     try:
         scan = _run_scan_modules(url)
     except Exception as exc:
-        return jsonify({"error": f"Scan failed: {exc}"}), 502
+        logging.warning("Compliance scan failed for %s: %s", url, exc)
+        if rzp_payment_id:
+            db.release_compliance_payment(f"rzp_compliance_{rzp_payment_id}")
+        elif compliance_token:
+            db.release_compliance_token(compliance_token)
+        return jsonify({"error": "Could not scan the target URL."}), 502
 
     # Normalise raw scanner output to short-key format compliance_pdf expects
     from urllib.parse import urlparse as _up
@@ -2296,6 +2419,10 @@ def api_compliance_report_generate():
         pdf_bytes = generate_compliance_pdf(scan_result)
     except Exception as exc:
         logging.error("Compliance PDF generation failed for %s: %s", domain, exc)
+        if rzp_payment_id:
+            db.release_compliance_payment(f"rzp_compliance_{rzp_payment_id}")
+        elif compliance_token:
+            db.release_compliance_token(compliance_token)
         return jsonify({"error": "Report generation failed. Please try again."}), 500
 
     # Totals for email
@@ -2305,11 +2432,7 @@ def api_compliance_report_generate():
     # ── Email report ──────────────────────────────────────────────────────────
     _send_compliance_report_email(email, domain, pdf_bytes, passed_total, failed_total)
 
-    # ── Mark payment used ─────────────────────────────────────────────────────
-    if rzp_payment_id:
-        db.create_compliance_token(f"rzp_compliance_{rzp_payment_id}", email)
-    elif compliance_token:
-        db.mark_compliance_token_used(compliance_token)
+    # Payment / token was atomically reserved at auth time — nothing to mark here.
 
     return jsonify({
         "success": True,
@@ -2339,7 +2462,8 @@ def api_scan():
     one_time_token = str(body.get("one_time_token", "")).strip()
     token_record   = None
     if one_time_token:
-        token_record = db.get_one_time_token(one_time_token)
+        # Atomic claim — only one concurrent request can redeem a given token.
+        token_record = db.claim_one_time_token(one_time_token)
         if not token_record:
             return jsonify({"error": "Invalid or expired one-time scan token."}), 403
 
@@ -2352,6 +2476,9 @@ def api_scan():
     try:
         scan = _run_scan_modules(url)
     except req_lib.RequestException as exc:
+        # Delivery failed — release the token so the buyer can retry.
+        if token_record:
+            db.release_one_time_token(one_time_token)
         return jsonify({"error": str(exc)}), 502
 
     response       = scan["response"]
@@ -2378,7 +2505,7 @@ def api_scan():
             "server_fingerprint": headers_result.get("server_fingerprint"),
             "page_analysis":      scan["page_result"],
         }
-        db.mark_one_time_token_used(one_time_token)
+        # Token was already atomically claimed above; nothing more to mark.
         return jsonify(result), 200
 
     issue_counts = {"critical": 0, "important": 0, "minor": 0}
@@ -2611,7 +2738,8 @@ def api_report_pdf():
     try:
         pdf_bytes = generate_pdf(scan_result, buyer_name)
     except Exception as exc:
-        return jsonify({"error": f"PDF generation failed: {exc}"}), 500
+        logging.error("PDF generation failed: %s", exc)
+        return jsonify({"error": "Report generation failed. Please try again."}), 500
 
     remaining_after = db.increment_usage(api_key, limit=scan_limit) if not _is_whitelisted() else 9999
 
@@ -2631,7 +2759,7 @@ def api_report_pdf():
 @app.post("/api/admin/seed-test-key")
 def api_admin_seed_test_key():
     secret = request.headers.get("X-Admin-Secret", "")
-    if not _ADMIN_SECRET or secret != _ADMIN_SECRET:
+    if not _ADMIN_SECRET or not hmac.compare_digest(secret, _ADMIN_SECRET):
         return jsonify({"error": "Forbidden."}), 403
 
     test_key   = uuid.uuid4().hex
@@ -2650,7 +2778,7 @@ def api_admin_seed_test_key():
 def api_admin_fix_agency_account():
     """One-shot repair: converts a wrongly-issued Pro key to an Agency account."""
     secret = request.headers.get("X-Admin-Secret", "")
-    if not _ADMIN_SECRET or secret != _ADMIN_SECRET:
+    if not _ADMIN_SECRET or not hmac.compare_digest(secret, _ADMIN_SECRET):
         return jsonify({"error": "Forbidden."}), 403
 
     body       = request.get_json(silent=True) or {}
@@ -2724,7 +2852,7 @@ def api_admin_fix_agency_account():
 @app.post("/api/admin/clear-hof-cache")
 def api_admin_clear_hof_cache():
     secret = request.headers.get("X-Admin-Secret", "")
-    if not _ADMIN_SECRET or secret != _ADMIN_SECRET:
+    if not _ADMIN_SECRET or not hmac.compare_digest(secret, _ADMIN_SECRET):
         return jsonify({"error": "Forbidden."}), 403
 
     global _hof_scanning
@@ -2966,6 +3094,10 @@ def api_get_share(share_id: str):
 
 
 if __name__ == "__main__":
-    port  = int(os.environ.get("PORT", 5000))
-    debug = os.environ.get("FLASK_ENV", "development") != "production"
-    app.run(host="0.0.0.0", port=port, debug=debug)
+    port = int(os.environ.get("PORT", 5000))
+    # Debug is OFF by default and must be explicitly opted into for LOCAL dev only
+    # (FLASK_DEBUG=1). It is never enabled in production: production runs under
+    # gunicorn (see Procfile), which imports `app` and never executes this block.
+    # The dev server also binds to loopback so it is not exposed on a network.
+    debug = os.environ.get("FLASK_DEBUG", "").lower() in ("1", "true", "yes")
+    app.run(host="127.0.0.1", port=port, debug=debug)

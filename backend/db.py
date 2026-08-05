@@ -499,6 +499,40 @@ def mark_one_time_token_used(token: str) -> None:
         con.execute("UPDATE one_time_scans SET used=1 WHERE token=?", (token,))
 
 
+def claim_one_time_token(token: str) -> dict | None:
+    """Atomically claim a valid, unused, unexpired token (single conditional UPDATE).
+    Returns the record if THIS caller won the claim, else None. Prevents two
+    concurrent requests from both redeeming the same token."""
+    now = datetime.now(timezone.utc).isoformat()
+    with _connect() as con:
+        cur = con.execute(
+            "UPDATE one_time_scans SET used=1 WHERE token=? AND used=0 AND expires_at > ?",
+            (token, now),
+        )
+        if cur.rowcount != 1:
+            return None
+        row = con.execute(
+            "SELECT token, payment_id, used, created_at, expires_at FROM one_time_scans WHERE token=?",
+            (token,),
+        ).fetchone()
+    if not row:
+        return None
+    return {
+        "token":      row[0],
+        "payment_id": row[1],
+        "used":       row[2],
+        "created_at": row[3],
+        "expires_at": row[4],
+    }
+
+
+def release_one_time_token(token: str) -> None:
+    """Un-claim a token (used=1 → 0) so the buyer can retry after a transient
+    failure that prevented delivery of the scan result."""
+    with _connect() as con:
+        con.execute("UPDATE one_time_scans SET used=0 WHERE token=?", (token,))
+
+
 # ── Compliance report tokens ─────────────────────────────────────────────────
 
 def compliance_payment_already_used(payment_id: str) -> bool:
@@ -556,6 +590,68 @@ def mark_compliance_token_used(token: str) -> None:
     """Mark a compliance token as consumed."""
     with _connect() as con:
         con.execute("UPDATE compliance_tokens SET used=1 WHERE token=?", (token,))
+
+
+def claim_compliance_token(token: str) -> dict | None:
+    """Atomically claim a valid, unused, unexpired compliance token. Returns the
+    record if THIS caller won the claim, else None."""
+    now = datetime.now(timezone.utc).isoformat()
+    with _connect() as con:
+        cur = con.execute(
+            "UPDATE compliance_tokens SET used=1 WHERE token=? AND used=0 AND expires_at > ?",
+            (token, now),
+        )
+        if cur.rowcount != 1:
+            return None
+        row = con.execute(
+            "SELECT token, payment_id, email, used, created_at, expires_at FROM compliance_tokens WHERE token=?",
+            (token,),
+        ).fetchone()
+    if not row:
+        return None
+    return {
+        "token":      row[0],
+        "payment_id": row[1],
+        "email":      row[2],
+        "used":       row[3],
+        "created_at": row[4],
+        "expires_at": row[5],
+    }
+
+
+def release_compliance_token(token: str) -> None:
+    """Un-claim a compliance token so the buyer can retry after a transient failure."""
+    with _connect() as con:
+        con.execute("UPDATE compliance_tokens SET used=0 WHERE token=?", (token,))
+
+
+def reserve_compliance_payment(payment_id: str, email: str = "") -> bool:
+    """Atomically reserve a Razorpay payment_id for a compliance report, relying on
+    the UNIQUE(payment_id) constraint. Returns True if newly reserved (caller may
+    proceed), False if this payment was already used (replay)."""
+    token      = uuid.uuid4().hex
+    now        = datetime.now(timezone.utc)
+    created_at = now.isoformat()
+    expires_at = (now + timedelta(hours=48)).isoformat()
+    try:
+        with _connect() as con:
+            con.execute(
+                """
+                INSERT INTO compliance_tokens (token, payment_id, email, used, created_at, expires_at)
+                VALUES (?, ?, ?, 1, ?, ?)
+                """,
+                (token, payment_id, email, created_at, expires_at),
+            )
+        return True
+    except sqlite3.IntegrityError:
+        return False
+
+
+def release_compliance_payment(payment_id: str) -> None:
+    """Remove a compliance payment reservation so the buyer can retry after a
+    transient failure that prevented report delivery."""
+    with _connect() as con:
+        con.execute("DELETE FROM compliance_tokens WHERE payment_id=?", (payment_id,))
 
 
 # ── Agency subscriptions ──────────────────────────────────────────────────────

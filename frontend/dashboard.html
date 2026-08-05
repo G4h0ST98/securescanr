@@ -946,7 +946,7 @@
     $('state-loading').hidden = false;
     $('state-error').hidden   = true;
     try {
-      const res  = await fetch(`${API_BASE}/api/usage?key=${encodeURIComponent(key)}`);
+      const res  = await fetch(`${API_BASE}/api/usage`, { headers: { 'X-API-Key': key } });
       const data = await res.json();
       $('state-loading').hidden = true;
       if (!data.valid) {
@@ -1057,7 +1057,7 @@
     _apiKey = key;
 
     try {
-      const res  = await fetch(`${API_BASE}/api/usage?key=${encodeURIComponent(key)}`);
+      const res  = await fetch(`${API_BASE}/api/usage`, { headers: { 'X-API-Key': key } });
       const data = await res.json();
       if (!data.valid) {
         showError('Invalid or expired key', 'This key was not found in our system. Check your welcome email or contact support.');

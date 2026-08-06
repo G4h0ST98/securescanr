@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/favicons/favicon-180x180.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/favicons/favicon-192x192.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SecureScanr service status — live health checks for the scanner API and all endpoints.">
+  <meta name="description" content="SecureScanr service status — live health checks for the scanner API, payment providers and the frontend, run from your own browser.">
   <meta property="og:title" content="Service Status | SecureScanr">
   <meta property="og:description" content="Live status for SecureScanr's scanner API and services.">
   <meta property="og:url" content="https://securescanr.com/status.html">
@@ -24,287 +24,551 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <link rel="canonical" href="https://securescanr.com/status.html">
-  <link rel="stylesheet" href="/mobile.css">
   <title>Service Status | SecureScanr</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
     :root {
-      --bg:      #0a0b0d;
-      --surface: #111318;
-      --border:  #1e2128;
-      --accent:  #00d4aa;
-      --danger:  #ff4757;
-      --warning: #ffa502;
-      --success: #2ed573;
-      --text:    #e8eaf0;
-      --muted:   #6b7280;
+      /* ── Design tokens (see DESIGN.md) ── */
+      --ink:       #050607;
+      --ink-2:     #0b0d10;
+      --accent:    #00e5b0;
+      --accent-dk: #00d4aa;
+      --red:       #ff4d5e;
+      --amber:     #ffb020;
+      --text:      #eceee9;
+      --muted:     #8a8f98;
+      --muted-2:   #565b64;
+      --prose:     #bcc2ca;
+      --line:      rgba(236,238,233,.14);
+      --line-soft: rgba(236,238,233,.07);
+      --ease-out:  cubic-bezier(.16, 1, .3, 1);
+
+      /* ── Legacy aliases — kept mapped so any inline var() emitted by JS
+            still resolves. Never remove. ── */
+      --bg:      var(--ink);
+      --surface: var(--ink-2);
+      --border:  var(--line-soft);
+      --danger:  var(--red);
+      --warning: var(--amber);
+      --success: var(--accent);
+      --radius:  0px;
+
+      --navh: 70px;
+
+      /* the live state colour — one variable drives the headline, the sweep,
+         the telemetry rule and the state dot, so the page can never disagree
+         with itself about how it is doing */
+      --state: var(--muted);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; font-size: clamp(15px, 1.1vw + 0.5rem, 18px); }
-    body { overflow-x: hidden; }
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      font-size: clamp(15px, 1.05vw + .5rem, 18px);
+      scrollbar-width: thin;
+      scrollbar-color: #1c1f24 var(--ink);
+    }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: #1c1f24; border-radius: 99px; border: 2px solid var(--ink); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-dk); }
     body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--bg);
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--ink);
       color: var(--text);
-      line-height: 1.6;
-      font-size: 15px;
-      min-height: 100vh;
+      line-height: 1.55;
+      /* `clip`, not `hidden`: overflow-x:hidden turns body into a scroll
+         container, which silently kills every position:sticky on the page. */
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      display: flex; flex-direction: column; min-height: 100vh;
     }
-    a { color: var(--accent); text-decoration: none; }
+    main { flex: 1; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    code, .mono { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; }
+    .serif { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; }
+    ::selection { background: var(--accent); color: var(--ink); }
 
-    /* ── Nav ─────────────────────────────────────────────────────────────── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(10,11,13,0.88);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+    /* ── Film grain ──────────────────────────────────────────────────────── */
+    .grain {
+      position: fixed; inset: -50%;
+      width: 200%; height: 200%;
+      pointer-events: none; z-index: 2000;
+      opacity: .05;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: grain-shift 900ms steps(4) infinite;
     }
+    @keyframes grain-shift {
+      0%   { transform: translate(0,0); }
+      25%  { transform: translate(-2%,3%); }
+      50%  { transform: translate(3%,-2%); }
+      75%  { transform: translate(-3%,-3%); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* ── Nav (shared component — identical on every page) ─────────────────
+       Scoped to `body > header`: page content may use <header> elements of
+       its own, and an unscoped rule fixed-positions every one of them. */
+    body > header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      mix-blend-mode: difference;
+    }
+    body > header::before {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(5,6,7,.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+      opacity: 0; transition: opacity .3s var(--ease-out);
+      pointer-events: none;
+    }
+    body > header.docked { mix-blend-mode: normal; }
+    body > header.docked::before { opacity: 1; }
     .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      padding: 0 24px; height: 60px;
-      display: flex; align-items: center;
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 22px clamp(20px, 4vw, 56px);
+      color: #fff;
+      position: relative; z-index: 1;
     }
-    .nav-logo { font-size: 18px; font-weight: 700; color: var(--muted); letter-spacing: -.2px; }
-    .logo-accent { color: var(--accent); }
-    .nav-links { display: flex; align-items: center; gap: 24px; margin-left: auto; }
-    .nav-links > a { font-size: 13px; color: var(--muted); transition: color .15s; }
-    .nav-links > a:hover { color: var(--text); }
-    .nav-cta {
-      background: var(--accent); color: #0a0b0d !important;
-      font-size: 12px; font-weight: 600;
-      padding: 6px 14px; border-radius: 6px; transition: opacity .15s !important;
+    .nav-logo { font-weight: 700; font-size: 17px; letter-spacing: -.3px; }
+    .nav-logo sup { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; opacity: .55; margin-left: 6px; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: clamp(18px, 2.6vw, 36px); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .nav-links a { position: relative; opacity: .72; transition: opacity .2s; }
+    .nav-links a:hover, .nav-links a[aria-current="page"] { opacity: 1; }
+    .nav-links a::after {
+      content: ''; position: absolute; left: 0; bottom: -4px;
+      width: 100%; height: 1px; background: #fff;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .35s var(--ease-out);
     }
-    .nav-cta:hover { opacity: .88; }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .nav-links a[aria-current="page"]::after { transform: scaleX(1); transform-origin: left; }
     .nav-dropdown { position: relative; }
     .nav-dropdown-btn {
-      font-size: 13px; color: var(--muted); background: none; border: none;
-      cursor: pointer; display: flex; align-items: center; gap: 4px;
-      padding: 0; font-family: inherit; transition: color .15s;
+      background: none; border: none; padding: 0; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase; color: inherit;
+      opacity: .72; transition: opacity .2s;
+      display: inline-flex; align-items: center; gap: 6px;
+      line-height: inherit;
     }
-    .nav-dropdown-btn:hover,
-    .nav-dropdown:hover .nav-dropdown-btn { color: var(--text); }
-    .nav-dropdown-btn::after { content: '▾'; font-size: 10px; margin-left: 2px; }
-    .nav-dropdown::after {
-      content: ''; position: absolute; bottom: -8px; left: 0;
-      width: 100%; height: 8px;
+    .nav-dropdown-btn::after {
+      content: '+'; font-size: 12px; opacity: .6;
+      transition: transform .3s var(--ease-out);
     }
+    .nav-dropdown:hover .nav-dropdown-btn,
+    .nav-dropdown:focus-within .nav-dropdown-btn { opacity: 1; }
+    .nav-dropdown-btn[data-open] { opacity: 1; }
+    .nav-dropdown:hover .nav-dropdown-btn::after,
+    .nav-dropdown:focus-within .nav-dropdown-btn::after { transform: rotate(45deg); }
+    .nav-dropdown::after { content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 18px; }
     .nav-dropdown-menu {
-      display: none; position: absolute; top: 100%; left: 50%;
-      transform: translateX(-50%);
-      background: rgba(15,20,25,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px; padding: 14px 6px 6px; min-width: 160px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5); z-index: 200;
+      position: absolute; top: calc(100% + 18px); left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      min-width: 200px; padding: 8px;
+      background: var(--ink-2); border: 1px solid var(--line);
+      box-shadow: 0 24px 64px rgba(0,0,0,.6);
+      opacity: 0; visibility: hidden;
+      transition: opacity .25s var(--ease-out), transform .25s var(--ease-out), visibility 0s .25s;
     }
     .nav-dropdown:hover .nav-dropdown-menu,
-    .nav-dropdown .nav-dropdown-menu:hover { display: block; }
+    .nav-dropdown:focus-within .nav-dropdown-menu {
+      opacity: 1; visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      transition-delay: 0s;
+    }
     .nav-dropdown-menu a {
-      display: block; padding: 8px 12px; font-size: 13px;
-      color: var(--muted); border-radius: 6px; text-decoration: none;
-      transition: background .12s, color .12s;
+      display: block; padding: 10px 12px;
+      font-size: 10.5px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); opacity: 1; white-space: nowrap;
+      transition: background .18s, color .18s;
     }
-    .nav-dropdown-menu a:hover { background: rgba(255,255,255,.05); color: var(--text); }
+    .nav-dropdown-menu a::after { display: none; }
+    .nav-dropdown-menu a:hover { background: var(--accent); color: var(--ink); }
     .nav-dropdown-menu a.active-link { color: var(--text); }
-    .nav-hamburger {
-      display: none; background: none; border: none;
-      color: var(--muted); font-size: 22px; cursor: pointer; margin-left: auto;
+    .nav-cta { color: var(--accent); opacity: 1; }
+    .nav-cta::after { background: var(--accent); }
+    .nav-burger {
+      display: none; background: none; border: none; cursor: pointer;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      letter-spacing: 2px; color: #fff; text-transform: uppercase;
     }
-    .nav-mobile {
-      display: none; flex-direction: column;
-      border-top: 1px solid var(--border); padding: 12px 24px 16px;
-    }
-    .nav-mobile a { font-size: 14px; color: var(--muted); padding: 9px 0; border-bottom: 1px solid var(--border); }
-    .nav-mobile a:last-child { border-bottom: none; }
-    .nav-mobile.open { display: flex; }
-    @media (max-width: 700px) {
+    @media (max-width: 760px) {
       .nav-links { display: none; }
-      .nav-hamburger { display: block; }
+      .nav-burger { display: block; }
+    }
+    #nav-mobile {
+      position: fixed; inset: 0; z-index: 1500;
+      background: var(--ink);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 88px clamp(24px, 8vw, 80px) 40px;
+      overflow-y: auto;
+      visibility: hidden; opacity: 0;
+      transition: opacity .35s ease, visibility 0s .35s;
+    }
+    #nav-mobile.open { visibility: visible; opacity: 1; transition: opacity .35s ease; }
+    #nav-mobile .menu-scroll { width: 100%; margin: auto 0; }
+    #nav-mobile a {
+      font-size: clamp(22px, 5.4vw, 34px); font-weight: 600; letter-spacing: -.6px;
+      padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+      color: var(--text); display: flex; justify-content: space-between; align-items: baseline;
+    }
+    #nav-mobile a .mono { font-size: 11px; color: var(--muted); letter-spacing: 2px; }
+    #nav-mobile a.menu-sub {
+      font-size: clamp(15px, 3.6vw, 20px); font-weight: 500;
+      color: var(--muted); padding: 8px 0;
+    }
+    #nav-mobile a.menu-sub:hover { color: var(--text); }
+    #nav-mobile .menu-group {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 400;
+      letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2);
+      margin: 24px 0 6px;
+    }
+    #menu-close {
+      position: absolute; top: 24px; right: 24px;
+      background: none; border: 1px solid var(--line); border-radius: 99px;
+      color: var(--text); font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 2px; padding: 8px 16px; cursor: pointer;
     }
 
-    /* ── Page Header ─────────────────────────────────────────────────────── */
-    .page-header {
-      padding: 72px 24px 48px;
-      text-align: center;
-      background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(0,212,170,.1) 0%, transparent 70%);
+    /* ── Reticle corner ticks ────────────────────────────────────────────── */
+    [data-ticks] { position: relative; }
+    [data-ticks]::before, [data-ticks]::after {
+      content: ''; position: absolute; width: 16px; height: 16px;
+      pointer-events: none; z-index: 1;
+      border: 1px solid rgba(0,229,176,.55);
     }
-    .page-eyebrow {
-      font-size: 11px; font-weight: 700; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    [data-ticks]::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    [data-ticks]::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       THE WATCH — status.html's own composition.
+
+       A status page has exactly one job: answer "is it up?" before the reader
+       has finished arriving. So the verdict is the page — set as a single
+       mega line that starts HOLLOW while the checks are in flight and FILLS
+       when they land. The fill is the answer arriving, not decoration.
+
+       The set piece is the sweep. These checks are not a static snapshot
+       fetched from a status provider: this browser measures ten endpoints
+       itself, every sixty seconds. So the page shows that happening — a
+       countdown rule under the nav, a sweep during the run, and a strip of
+       latency bars per service that GROWS while the tab stays open. Nothing
+       on this page is claimed uptime history; it is only what this browser
+       has measured this session, and section 04 says so plainly.
+
+       Everything below the masthead is one continuous ruled register, edge to
+       edge — no cards, no rounded panels. A status board is printed standings,
+       not a dashboard of tiles.
+       ══════════════════════════════════════════════════════════════════════ */
+
+    .wrap { max-width: 1180px; margin: 0 auto; width: 100%; padding-inline: clamp(20px, 4vw, 56px); }
+
+    .sec-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--muted-2);
     }
-    .page-title {
-      font-size: clamp(28px, 4vw, 44px); font-weight: 700;
-      letter-spacing: -.8px; color: var(--text); line-height: 1.1;
+    .sec-num b { color: var(--accent); font-weight: 400; }
+
+    /* ── The cycle rule — pinned under the nav ───────────────────────────── */
+    #cycle {
+      position: fixed; top: var(--navh); left: 0; right: 0; z-index: 900;
+      height: 1px; background: var(--line-soft); pointer-events: none;
     }
-    .page-sub {
-      margin-top: 12px; font-size: 15px; color: var(--muted);
-      max-width: 480px; margin-inline: auto;
+    #cycle-bar {
+      height: 100%; width: 0; background: var(--state);
+      opacity: .55; transform-origin: left;
+    }
+    /* during a run the rule stops counting down and sweeps instead */
+    #cycle.running #cycle-bar {
+      width: 100% !important; transition: none !important;
+      opacity: 0; background: none;
+    }
+    #cycle.running::after {
+      content: ''; position: absolute; inset: 0; width: 28%;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: sweep 1.1s var(--ease-out) infinite;
+    }
+    @keyframes sweep {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(400%); }
     }
 
-    /* ── Overall status banner ───────────────────────────────────────────── */
-    .overall-banner {
-      max-width: 760px; margin: 0 auto 40px;
-      padding: 0 24px;
+    /* ── Masthead — the verdict ──────────────────────────────────────────── */
+    /* padding-BLOCK, never the `padding` shorthand: these elements also carry
+       .wrap, and a shorthand declared later would silently reset its
+       padding-inline to 0 and slam the page against the left edge on mobile. */
+    .masthead { padding-block: 128px clamp(34px, 5vh, 56px); }
+    .mh-kicker {
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--state);
+      display: flex; align-items: center; gap: 12px; margin-bottom: 26px;
+      transition: color .5s var(--ease-out);
     }
-    .banner-card {
-      border-radius: 12px; padding: 20px 24px;
-      display: flex; align-items: center; gap: 16px;
+    .mh-kicker::before {
+      content: ''; width: 7px; height: 7px; border-radius: 99px; flex: none;
+      background: var(--state);
+      box-shadow: 0 0 0 0 currentColor; animation: state-pulse 2.6s infinite;
     }
-    .banner-card.ok   { background: rgba(46,213,115,.08); border: 1px solid rgba(46,213,115,.25); }
-    .banner-card.warn { background: rgba(255,165,2,.08);  border: 1px solid rgba(255,165,2,.3);  }
-    .banner-card.err  { background: rgba(255,71,87,.08);  border: 1px solid rgba(255,71,87,.3);  }
-    .banner-dot {
-      width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    @keyframes state-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.22); }
+      70%  { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
     }
-    .banner-dot.ok   { background: var(--success); box-shadow: 0 0 8px rgba(46,213,115,.6); }
-    .banner-dot.warn { background: var(--warning); box-shadow: 0 0 8px rgba(255,165,2,.6); }
-    .banner-dot.err  { background: var(--danger);  box-shadow: 0 0 8px rgba(255,71,87,.6); }
-    .banner-title { font-size: 17px; font-weight: 700; }
-    .banner-sub   { font-size: 13px; color: var(--muted); margin-top: 2px; }
-
-    /* ── Services list ───────────────────────────────────────────────────── */
-    .services-wrap {
-      max-width: 760px; margin: 0 auto;
-      padding: 0 24px 80px;
+    .mh-row {
+      display: grid; grid-template-columns: minmax(0, 1fr) 268px;
+      gap: clamp(28px, 5vw, 72px); align-items: end;
     }
-    .services-group-title {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1.5px; color: var(--muted);
-      margin-bottom: 12px;
+    #verdict {
+      font-size: clamp(38px, 7.4vw, 104px); font-weight: 700;
+      line-height: .92; letter-spacing: -.045em; text-transform: uppercase;
+      color: var(--state);
+      transition: color .6s var(--ease-out), -webkit-text-stroke-color .6s var(--ease-out);
     }
-    .service-list {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 32px;
+    /* hollow while in flight — the answer has not landed yet */
+    #verdict.pending {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--muted-2);
     }
-    .service-row {
-      display: flex; align-items: center;
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      gap: 12px;
-    }
-    .service-row:last-child { border-bottom: none; }
-    .service-name {
-      flex: 1; font-size: 14px; font-weight: 500; color: var(--text);
-    }
-    .service-path {
-      font-family: 'Space Mono', monospace; font-size: 12px;
-      color: var(--muted); margin-top: 2px;
-    }
-    .status-dot {
-      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-      background: var(--border);
-    }
-    .status-dot.ok   { background: var(--success); }
-    .status-dot.warn { background: var(--warning); }
-    .status-dot.err  { background: var(--danger);  }
-    .status-dot.spin { background: var(--muted); animation: pulse 1.2s ease-in-out infinite; }
-    .status-label {
-      font-size: 12px; color: var(--muted); min-width: 90px; text-align: right;
-    }
-    .status-label.ok   { color: var(--success); }
-    .status-label.warn { color: var(--warning); }
-    .status-label.err  { color: var(--danger);  }
-    .latency {
-      font-family: 'Space Mono', monospace; font-size: 11px;
-      color: var(--muted); min-width: 58px; text-align: right;
+    #verdict .dot { color: var(--state); }
+    .mh-sub {
+      margin-top: 20px; font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic; font-size: clamp(18px, 2.1vw, 26px);
+      color: var(--prose); line-height: 1.35; max-width: 30ch;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: .4; }
-      50%       { opacity: 1;  }
+    /* telemetry block — the instrument readout */
+    .telem { border-top: 1px solid var(--line); }
+    .telem div {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 14px;
+      padding: 11px 0; border-bottom: 1px solid var(--line-soft);
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+    }
+    .telem b {
+      font-weight: 400; color: var(--text); letter-spacing: 1px;
+      font-variant-numeric: tabular-nums;
+    }
+    #btn-run {
+      width: 100%; margin-top: 16px;
+      background: none; border: 1px solid var(--line); color: var(--muted);
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase; padding: 12px 16px;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    #btn-run:hover:not(:disabled) { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+    #btn-run:disabled { opacity: .45; cursor: default; }
+
+    @media (max-width: 860px) {
+      .mh-row { grid-template-columns: 1fr; align-items: start; }
+      /* stacked, the masthead is already tall — don't also carry desktop's
+         breathing room into the first chapter */
+      .masthead { padding-block: 112px 34px; }
+      .mh-sub { max-width: 40ch; }
+      .chapter-inner { padding-block: 34px 20px; }
     }
 
-    /* ── Mobile ──────────────────────────────────────────────────────────── */
-    @media (max-width: 768px) {
-      .overall-banner {
-        padding: 0 16px;
-        margin-bottom: 24px;
+    /* ── The register ────────────────────────────────────────────────────── */
+    /* padding:0 is deliberate — mobile.css gives every <section> 56px/16px at
+       ≤768px, which would double up on .chapter-inner and .wrap */
+    .chapter { border-top: 1px solid var(--line); padding: 0; }
+    .chapter-inner { padding-block: clamp(30px, 4.4vh, 46px) clamp(18px, 2.6vh, 26px); }
+    .chapter-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 18px; flex-wrap: wrap; margin-bottom: 22px;
+    }
+    .chapter-head h2 {
+      margin-top: 9px; font-size: clamp(19px, 2.2vw, 26px); font-weight: 700;
+      letter-spacing: -.03em; text-transform: uppercase; line-height: 1.1;
+    }
+    .chapter-note {
+      font-size: 13.5px; color: var(--muted); max-width: 42ch; text-align: right;
+    }
+
+    .svc {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) 132px 78px 122px;
+      grid-template-areas: "i name spark lat state";
+      align-items: center; gap: 0 16px;
+      padding: 15px 0;
+      border-top: 1px solid var(--line-soft);
+      position: relative;
+    }
+    .svc:last-child { border-bottom: 1px solid var(--line-soft); }
+    /* the accent rule bleeds to the page edges on hover — the row is being
+       read, not selected; no fill (that gesture belongs to index.html) */
+    .svc::after {
+      content: ''; position: absolute; left: -100vw; right: -100vw; bottom: -1px;
+      height: 1px; background: var(--accent);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform .45s var(--ease-out);
+    }
+    .svc:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    .svc-i {
+      grid-area: i;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+      letter-spacing: 1.5px; color: var(--muted-2); font-variant-numeric: tabular-nums;
+    }
+    .svc-id { grid-area: name; min-width: 0; }
+    .svc-name { font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
+    .svc-path {
+      margin-top: 2px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--muted-2); letter-spacing: .2px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* the strip of measured checks — grows while the tab stays open */
+    .spark {
+      grid-area: spark;
+      display: flex; align-items: flex-end; gap: 3px;
+      height: 26px; padding-bottom: 1px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    /* an unfilled slot is a baseline tick, not a bar — the strip should read
+       as empty until this browser has actually measured something */
+    .spark i {
+      flex: 1 1 0; min-width: 0; height: 1px;
+      background: var(--line-soft); display: block;
+      transition: height .35s var(--ease-out), background .35s;
+    }
+    .spark i.ok   { background: var(--accent); }
+    .spark i.warn { background: var(--amber); }
+    .spark i.err  { background: var(--red); }
+    .spark i.opaque { background: var(--muted-2); }
+
+    .svc-lat {
+      grid-area: lat; text-align: right;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--muted); font-variant-numeric: tabular-nums;
+    }
+    .svc-state {
+      grid-area: state; text-align: right;
+      display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    }
+    .svc-state::before {
+      content: ''; width: 6px; height: 6px; border-radius: 99px; flex: none;
+      background: currentColor;
+    }
+    .svc-state.ok   { color: var(--accent); }
+    .svc-state.warn { color: var(--amber); }
+    .svc-state.err  { color: var(--red); }
+    .svc-state.pending { color: var(--muted-2); }
+    .svc-state.pending::before { animation: blink 1.2s ease-in-out infinite; }
+    @keyframes blink { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+
+    @media (max-width: 780px) {
+      .svc {
+        grid-template-columns: 30px minmax(0, 1fr) auto;
+        grid-template-areas:
+          "i name state"
+          ". spark lat";
+        row-gap: 12px; padding: 16px 0;
       }
-      .banner-card {
-        padding: 16px;
-        gap: 12px;
-      }
-      .banner-title { font-size: 15px; }
-      .banner-sub   { font-size: 12px; }
-
-      .services-wrap {
-        padding: 0 16px 48px;
-      }
-      .services-group-title {
-        font-size: 10px;
-        letter-spacing: 1px;
-      }
-      .service-list {
-        border-radius: 10px;
-        margin-bottom: 24px;
-      }
-      .service-row {
-        padding: 12px 16px;
-        gap: 10px;
-      }
-      /* Hide latency column on mobile — too narrow to be useful */
-      .latency { display: none; }
-      .service-name  { font-size: 13px; }
-      .service-path  { font-size: 11px; }
-      .status-label  { font-size: 12px; min-width: 78px; }
-
-      .checked-note { margin-bottom: 24px; }
+      .spark { height: 20px; }
+      .svc-lat { text-align: right; padding-left: 12px; }
+      .chapter-note { text-align: left; }
     }
 
-    @media (max-width: 480px) {
-      .banner-card {
-        padding: 14px 12px;
-        gap: 10px;
-      }
-      .banner-title { font-size: 14px; }
-      .banner-dot   { width: 12px; height: 12px; }
-
-      .services-wrap { padding: 0 14px 40px; }
-      .service-row   { padding: 11px 14px; }
-      .status-label  { font-size: 11px; min-width: 70px; }
+    /* ── 04 · Scope ──────────────────────────────────────────────────────── */
+    .scope-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--line-soft);
+    }
+    .scope-cell {
+      padding: 22px 26px 24px 0; border-bottom: 1px solid var(--line-soft);
+      border-right: 1px solid var(--line-soft);
+    }
+    .scope-cell:nth-child(2n) { border-right: none; padding-left: 26px; }
+    .scope-cell h3 {
+      font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted-2);
+      font-weight: 400; margin-bottom: 10px;
+    }
+    .scope-cell p { font-size: 15px; color: var(--prose); line-height: 1.75; max-width: 52ch; }
+    .scope-cell p + p { margin-top: 10px; }
+    .scope-cell a { color: var(--accent); }
+    .scope-cell a:hover { text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 720px) {
+      .scope-grid { grid-template-columns: 1fr; }
+      .scope-cell { border-right: none; padding-right: 0; }
+      .scope-cell:nth-child(2n) { padding-left: 0; }
     }
 
-    /* ── Checked-at note ─────────────────────────────────────────────────── */
-    .checked-note {
-      text-align: center; font-size: 12px; color: var(--muted);
-      margin-top: -16px; margin-bottom: 40px;
+    .closing {
+      padding-block: clamp(46px, 7vh, 84px) clamp(52px, 8vh, 96px);
+      border-top: 1px solid var(--line);
     }
+    .closing p {
+      font-family: 'Instrument Serif', Georgia, serif; font-style: italic;
+      font-size: clamp(22px, 3.4vw, 40px); line-height: 1.25;
+      color: var(--text); max-width: 22ch;
+    }
+    .closing p em { color: var(--accent); font-style: italic; }
+    .closing-links { display: flex; gap: 0; flex-wrap: wrap; margin-top: 30px; }
+    .closing-links a {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+      padding: 11px 18px; border: 1px solid var(--line-soft);
+      transition: color .2s, background .2s, border-color .2s;
+    }
+    .closing-links a + a { margin-left: -1px; }
+    .closing-links a:hover { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+
+    /* ── Entrances ───────────────────────────────────────────────────────── */
+    .rv { opacity: 0; transform: translateY(22px); transition: opacity .6s var(--ease-out), transform .6s var(--ease-out); }
+    .rv.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; transform: none; } }
 
     /* ── Footer ──────────────────────────────────────────────────────────── */
-    footer {
-      background: #111318;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 24px 24px 0;
-      font-size: 13px; color: var(--muted);
+    footer { border-top: 1px solid var(--line-soft); padding: 44px clamp(20px, 4vw, 56px) 30px; margin-top: auto; }
+    .foot-grid {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px;
+      padding-bottom: 34px;
     }
-    .footer-bottom {
-      max-width: 1100px; margin: 0 auto;
-      padding: 12px 0 16px;
-      border-top: 1px solid var(--border);
-      display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: center; gap: 8px 16px;
-      font-size: 12px; color: var(--muted);
+    .foot-logo { font-weight: 700; font-size: 17px; }
+    .foot-logo span { color: var(--accent); }
+    .foot-tag { margin-top: 8px; font-size: 12.5px; color: var(--muted-2); max-width: 26ch; }
+    .foot-col h4 { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted-2); margin-bottom: 14px; font-weight: 400; }
+    .foot-col a { display: block; font-size: 13.5px; color: var(--muted); padding: 4px 0; transition: color .2s; }
+    .foot-col a:hover { color: var(--text); }
+    .foot-bottom {
+      max-width: 1240px; margin: 0 auto;
+      border-top: 1px solid var(--line-soft); padding-top: 20px;
+      display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 1.5px;
+      color: var(--muted-2); text-transform: uppercase;
     }
-    .footer-sep { opacity: 0.4; }
-    .footer-bottom a { color: var(--muted); }
-    .footer-bottom a:hover { color: var(--text); }
+    .foot-bottom a { color: var(--muted-2); }
+    .foot-bottom a:hover { color: var(--text); }
+    @media (max-width: 820px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .grain, .mh-kicker::before, #cycle.running::after, .svc-state.pending::before { animation: none; }
+      #cycle-bar { transition: none !important; }
+      * { transition-duration: .01ms !important; }
+    }
   </style>
+  <link rel="stylesheet" href="/mobile.css">
   <script src="/config.js"></script>
 </head>
 <body>
+<div class="grain" aria-hidden="true"></div>
 
 <!-- ── Nav ──────────────────────────────────────────────────────────────────── -->
-<nav>
+<header>
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo"><span class="logo-text">Web<span class="logo-accent">Audit</span></span></a>
-    <div class="nav-links">
+    <a href="index.html" class="nav-logo">Secure<span style="opacity:.6">Scanr</span><sup>EST. 2026</sup></a>
+    <nav class="nav-links" aria-label="Primary">
       <a href="scan.html">Scan</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">Tools</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true">Tools</button>
         <div class="nav-dropdown-menu">
           <a href="versus.html">Versus</a>
           <a href="generators.html">Generators</a>
@@ -317,112 +581,224 @@
       <a href="plans.html">Plans</a>
       <a href="world-security-index.html">World Index</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-btn">More</button>
+        <button class="nav-dropdown-btn" aria-haspopup="true">More</button>
         <div class="nav-dropdown-menu">
           <a href="methodology.html">Methodology</a>
           <a href="about.html">About</a>
-          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
+          <a href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
           <a href="compliance-report.html">Compliance Report</a>
           <a href="status.html">Status</a>
         </div>
       </div>
-      <a href="plans.html" class="nav-cta">Get API access →</a>
+      <a href="plans.html" class="nav-cta">API Access →</a>
+    </nav>
+    <button class="nav-burger" onclick="toggleNav()" aria-label="Open menu">Menu +</button>
+  </div>
+</header>
+
+<div id="nav-mobile" role="dialog" aria-label="Menu">
+  <button id="menu-close" onclick="toggleNav()">Close ×</button>
+  <div class="menu-scroll">
+    <a href="scan.html">Scan <span class="mono">01</span></a>
+    <a href="plans.html">Plans <span class="mono">02</span></a>
+    <a href="world-security-index.html">World Index <span class="mono">03</span></a>
+    <h4 class="menu-group">Tools</h4>
+    <a class="menu-sub" href="versus.html">Versus</a>
+    <a class="menu-sub" href="generators.html">Generators</a>
+    <a class="menu-sub" href="security-txt.html">Security.txt</a>
+    <a class="menu-sub" href="api-docs.html">API Docs</a>
+    <a class="menu-sub" href="learn.html">Learn</a>
+    <a class="menu-sub" href="badge.html">Badge</a>
+    <h4 class="menu-group">More</h4>
+    <a class="menu-sub" href="methodology.html">Methodology</a>
+    <a class="menu-sub" href="about.html">About</a>
+    <a class="menu-sub" href="learn/securityheaders-alternative.html">SecurityHeaders Alt</a>
+    <a class="menu-sub" href="compliance-report.html">Compliance Report</a>
+    <a class="menu-sub" href="status.html">Status</a>
+  </div>
+</div>
+
+<!-- the check cycle, made visible: counts down to the next sweep, then sweeps -->
+<div id="cycle" aria-hidden="true"><div id="cycle-bar"></div></div>
+
+<main>
+
+  <!-- ── Masthead — the verdict ───────────────────────────────────────────── -->
+  <section class="masthead wrap">
+    <p class="mh-kicker" id="mh-kicker">System status · Live</p>
+    <div class="mh-row">
+      <div>
+        <h1 id="verdict" class="pending">Checking<span class="dot">…</span></h1>
+        <p class="mh-sub serif" id="mh-sub">Ten endpoints, measured from your own browser, every sixty seconds.</p>
+      </div>
+      <div>
+        <div class="telem">
+          <div><span>Last check</span><b id="t-last">—</b></div>
+          <div><span>Next sweep</span><b id="t-next">—</b></div>
+          <div><span>Reachable</span><b id="t-reach">—</b></div>
+        </div>
+        <button id="btn-run" onclick="runChecks(true)">Run check now</button>
+      </div>
     </div>
-    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
-  </div>
-  <div class="nav-mobile" id="nav-mobile">
-    <a href="scan.html">Scan</a>
-    <a href="versus.html">Versus</a>
-    <a href="generators.html">Generators</a>
-    <a href="security-txt.html">Security.txt</a>
-    <a href="api-docs.html">API Docs</a>
-    <a href="learn.html">Learn</a>
-    <a href="badge.html">Badge</a>
-    <a href="plans.html">Plans</a>
-    <a href="world-security-index.html">World Index</a>
-    <a href="methodology.html">Methodology</a>
-    <a href="about.html">About</a>
-    <a href="learn/securityheaders-alternative.html">SecurityHeaders Alternative</a>
-    <a href="compliance-report.html">Compliance Report</a>
-    <a href="status.html">Status</a>
-    <a href="plans.html">Get API access →</a>
-  </div>
-</nav>
+  </section>
 
-<!-- ── Page Header ───────────────────────────────────────────────────────────── -->
-<div class="page-header">
-  <p class="page-eyebrow">System Status</p>
-  <h1 class="page-title" id="overall-title">Checking…</h1>
-  <p class="page-sub">Live health checks for all SecureScanr services. Updates every 60 seconds.</p>
-</div>
-
-<!-- ── Overall banner ────────────────────────────────────────────────────────── -->
-<div class="overall-banner">
-  <div class="banner-card ok" id="overall-banner">
-    <div class="banner-dot spin" id="overall-dot"></div>
-    <div>
-      <div class="banner-title" id="overall-banner-title">Checking services…</div>
-      <div class="banner-sub" id="overall-banner-sub">Running health checks</div>
+  <!-- ── 01 · Core ────────────────────────────────────────────────────────── -->
+  <section class="chapter rv">
+    <div class="chapter-inner wrap">
+      <div class="chapter-head">
+        <div>
+          <span class="sec-num"><b>01</b> / Core</span>
+          <h2>The scan engine</h2>
+        </div>
+        <p class="chapter-note">Everything a scan depends on. If these are green, a scan will run.</p>
+      </div>
+      <div id="list-core"></div>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- ── Services ──────────────────────────────────────────────────────────────── -->
-<div class="services-wrap">
+  <!-- ── 02 · Payment &amp; delivery ──────────────────────────────────────── -->
+  <section class="chapter rv">
+    <div class="chapter-inner wrap">
+      <div class="chapter-head">
+        <div>
+          <span class="sec-num"><b>02</b> / Payment &amp; delivery</span>
+          <h2>Third parties</h2>
+        </div>
+        <p class="chapter-note">Checkout and email run on other people's servers. Shown here, but never counted in the verdict above.</p>
+      </div>
+      <div id="list-payment"></div>
+    </div>
+  </section>
 
-  <p class="services-group-title">Core API</p>
-  <div class="service-list" id="list-core"></div>
+  <!-- ── 03 · Frontend ────────────────────────────────────────────────────── -->
+  <section class="chapter rv">
+    <div class="chapter-inner wrap">
+      <div class="chapter-head">
+        <div>
+          <span class="sec-num"><b>03</b> / Frontend</span>
+          <h2>The site itself</h2>
+        </div>
+        <p class="chapter-note">Pages served from Cloudflare, plus the API hostname they call.</p>
+      </div>
+      <div id="list-frontend"></div>
+    </div>
+  </section>
 
-  <p class="services-group-title">Payment &amp; Delivery</p>
-  <div class="service-list" id="list-payment"></div>
+  <!-- ── 04 · Scope ───────────────────────────────────────────────────────── -->
+  <section class="chapter rv">
+    <div class="chapter-inner wrap">
+      <div class="chapter-head">
+        <div>
+          <span class="sec-num"><b>04</b> / Scope</span>
+          <h2>What this page can and cannot see</h2>
+        </div>
+        <p class="chapter-note">A status page that overstates itself is worse than none.</p>
+      </div>
+      <div class="scope-grid">
+        <div class="scope-cell">
+          <h3>Where the checks run</h3>
+          <p>Every request on this page is made by <strong>your browser</strong>, from your network — not by a monitoring service somewhere else. A red row can mean our service is down, or that something between you and it is. Refresh from another network before assuming the worst.</p>
+        </div>
+        <div class="scope-cell">
+          <h3>No history is stored</h3>
+          <p>The bar strips beside each service are only the checks this tab has run since you opened it. Nothing is recorded and there is no uptime percentage here, because we do not keep one. Leave the tab open and the strip fills in.</p>
+        </div>
+        <div class="scope-cell">
+          <h3>Third parties are opaque</h3>
+          <p>Browsers will not let this page read a response from Razorpay, LemonSqueezy or Resend. We can only see whether the connection was refused. Those three therefore show reachability, sometimes without a latency figure, and never change the verdict at the top.</p>
+        </div>
+        <div class="scope-cell">
+          <h3>The scan row is a proxy</h3>
+          <p>The Free Scan row checks <code class="mono">/health</code> rather than firing a real scan every minute — a live scan would take seconds and burn quota on every refresh. Degraded means slower than that service's own threshold, not an error.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <p class="services-group-title">Frontend (Cloudflare Pages)</p>
-  <div class="service-list" id="list-frontend"></div>
+  <!-- ── Closing ──────────────────────────────────────────────────────────── -->
+  <section class="closing wrap rv">
+    <p>Something broken that this page still calls <em>green?</em></p>
+    <div class="closing-links">
+      <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
+      <a href="scan.html">Run a scan</a>
+      <a href="api-docs.html">API reference</a>
+    </div>
+  </section>
 
-</div>
-
-<p class="checked-note" id="checked-note"></p>
+</main>
 
 <!-- ── Footer ────────────────────────────────────────────────────────────────── -->
 <footer>
-  <div class="footer-bottom">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo">Secure<span>Scanr</span></div>
+      <p class="foot-tag">Free website security scanner. Fourteen dimensions, one grade, every fix included.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Product</h4>
+      <a href="scan.html">Scan</a>
+      <a href="versus.html">Versus</a>
+      <a href="generators.html">Generators</a>
+      <a href="security-txt.html">Security.txt</a>
+      <a href="badge.html">Badge</a>
+    </div>
+    <div class="foot-col">
+      <h4>Resources</h4>
+      <a href="methodology.html">Methodology</a>
+      <a href="learn.html">Learning Center</a>
+      <a href="api-docs.html">API Docs</a>
+      <a href="world-security-index.html">World Index</a>
+      <a href="halloffame.html">Hall of Fame</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="plans.html">Plans</a>
+      <a href="compliance-report.html">Compliance</a>
+      <a href="status.html">Status</a>
+      <a href="mailto:hello@securescanr.com">Contact</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
     <span>© 2026 SecureScanr</span>
-    <span class="footer-sep">·</span>
-    <a href="mailto:hello@securescanr.com">hello@securescanr.com</a>
-    <span class="footer-sep">·</span>
-    <a href="methodology.html">Methodology</a>
-    <span class="footer-sep">·</span>
-    <a href="privacy.html">Privacy</a>
-    <span class="footer-sep">·</span>
-    <a href="terms.html">Terms</a>
-    <span class="footer-sep">·</span>
-    <a href="refund.html">Refund</a>
+    <span><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a> · <a href="refund.html">Refund</a></span>
   </div>
 </footer>
 
 <script>
 function toggleNav() { document.getElementById('nav-mobile').classList.toggle('open'); }
 
-
+/* ── The service map. Unchanged from the previous page — same endpoints,
+      same methods, same per-service degraded thresholds. ───────────────── */
 const SERVICES = {
   core: [
-    { name: 'Scanner API',   path: '/health',                    method: 'GET',  label: 'Health check',   degradedMs: 2000 },
-    { name: 'Free Scan',     path: '/health',                    method: 'GET',  label: 'Scan engine operational', degradedMs: 2000 },
-    { name: 'Payment Route', path: '/api/get-payment-route',     method: 'GET',  label: 'IP routing',     degradedMs: 2000 },
-    { name: 'Badge API',     path: '/api/badge?url=securescanr.com', method: 'GET',  label: 'GET /api/badge', degradedMs: 5000 },
+    { name: 'Scanner API',   path: '/health',                    method: 'GET',  label: 'GET /health',              degradedMs: 2000 },
+    { name: 'Free Scan',     path: '/health',                    method: 'GET',  label: 'Scan engine operational',  degradedMs: 2000 },
+    { name: 'Payment Route', path: '/api/get-payment-route',     method: 'GET',  label: 'GET /api/get-payment-route', degradedMs: 2000 },
+    { name: 'Badge API',     path: '/api/badge?url=securescanr.com', method: 'GET', label: 'GET /api/badge',        degradedMs: 5000 },
   ],
   payment: [
-    { name: 'Razorpay Checkout', url: 'https://api.razorpay.com',     method: 'GET', label: 'Razorpay (India)',    thirdParty: true },
-    { name: 'LemonSqueezy',      url: 'https://api.lemonsqueezy.com', method: 'GET', label: 'LemonSqueezy (intl)', thirdParty: true },
-    { name: 'Resend Email',      url: 'https://api.resend.com',       method: 'GET', label: 'Email delivery',      thirdParty: true },
+    { name: 'Razorpay Checkout', url: 'https://api.razorpay.com',     method: 'GET', label: 'Razorpay · India',        thirdParty: true },
+    { name: 'LemonSqueezy',      url: 'https://api.lemonsqueezy.com', method: 'GET', label: 'LemonSqueezy · international', thirdParty: true },
+    { name: 'Resend Email',      url: 'https://api.resend.com',       method: 'GET', label: 'Email delivery',          thirdParty: true },
   ],
   frontend: [
-    { name: 'Main Site',  url: 'https://securescanr.com',            method: 'HEAD', label: 'securescanr.com',    degradedMs: 3000 },
-    { name: 'Scanner UI', url: 'https://securescanr.com/scan.html',  method: 'HEAD', label: '/scan.html',     degradedMs: 3000 },
+    { name: 'Main Site',  url: 'https://securescanr.com',            method: 'HEAD', label: 'securescanr.com',     degradedMs: 3000 },
+    { name: 'Scanner UI', url: 'https://securescanr.com/scan.html',  method: 'HEAD', label: '/scan.html',          degradedMs: 3000 },
     { name: 'API CDN',    url: 'https://api.securescanr.com/health', method: 'GET',  label: 'api.securescanr.com', degradedMs: 2000 },
   ],
 };
 
+const GROUPS  = ['core', 'payment', 'frontend'];
+const LIST_ID = { core: 'list-core', payment: 'list-payment', frontend: 'list-frontend' };
+const SLOTS   = 18;          /* how many past checks the strip holds */
+const CYCLE   = 60000;       /* refresh interval, unchanged */
+const RM      = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const $ = (id) => document.getElementById(id);
+const slug = (name) => name.replace(/[^a-z0-9]+/gi, '_');
+
+/* ── The check itself — behaviour preserved verbatim ───────────────────── */
 async function checkService(svc) {
   const start = Date.now();
   const endpoint = svc.url || (API_BASE + svc.path);
@@ -454,117 +830,242 @@ async function checkService(svc) {
   }
 }
 
-function makeRow(svc) {
+/* ── Rows ──────────────────────────────────────────────────────────────── */
+function makeRow(svc, n) {
+  const id  = slug(svc.name);
   const row = document.createElement('div');
-  row.className = 'service-row';
-  row.innerHTML = `
-    <div class="status-dot spin" id="dot-${svc.name.replace(/\s+/g,'_')}"></div>
-    <div style="flex:1">
-      <div class="service-name">${svc.name}</div>
-      <div class="service-path">${svc.label}</div>
-    </div>
-    <div class="latency" id="lat-${svc.name.replace(/\s+/g,'_')}">—</div>
-    <div class="status-label" id="lbl-${svc.name.replace(/\s+/g,'_')}">Checking</div>
-  `;
+  row.className = 'svc';
+  let bars = '';
+  for (let i = 0; i < SLOTS; i++) bars += '<i></i>';
+  row.innerHTML =
+    '<span class="svc-i">' + String(n).padStart(2, '0') + '</span>' +
+    '<div class="svc-id">' +
+      '<div class="svc-name">' + svc.name + '</div>' +
+      '<div class="svc-path">' + svc.label + '</div>' +
+    '</div>' +
+    '<div class="spark" id="spark-' + id + '" aria-hidden="true">' + bars + '</div>' +
+    '<span class="svc-lat" id="lat-' + id + '">—</span>' +
+    '<span class="svc-state pending" id="lbl-' + id + '">Checking</span>';
   return row;
 }
 
-function updateRow(svc, result) {
-  const id = svc.name.replace(/\s+/g,'_');
-  const dot = document.getElementById('dot-' + id);
-  const lbl = document.getElementById('lbl-' + id);
-  const lat = document.getElementById('lat-' + id);
-  if (!dot) return;
-  if (result.ok) {
-    dot.className = 'status-dot ok';
-    lbl.className = 'status-label ok';
-    lbl.textContent = 'Operational';
-  } else if (result.warn) {
-    dot.className = 'status-dot warn';
-    lbl.className = 'status-label warn';
-    lbl.textContent = 'Degraded';
-  } else {
-    dot.className = 'status-dot err';
-    lbl.className = 'status-label err';
-    lbl.textContent = 'Unavailable';
+/* One bar per completed check, appended on the right. Height is a log scale
+   so 40 ms and 1800 ms are visibly different without the fast ones vanishing. */
+function pushBar(id, cls, ms) {
+  const strip = $('spark-' + id);
+  if (!strip) return;
+  const first = strip.firstElementChild;
+  if (first) strip.removeChild(first);
+  const bar = document.createElement('i');
+  bar.className = cls;
+  const track = 25;
+  let h = 3;
+  if (typeof ms === 'number' && ms > 0) {
+    const p = Math.min(1, Math.log10(ms + 1) / Math.log10(3000));
+    h = Math.max(3, Math.round(p * track));
   }
-  // For third-party services that resolved via the assumption path, show a note
-  // instead of a meaningless sub-millisecond latency from an instant CORS block.
+  strip.appendChild(bar);
+  /* Commit the 1px start style with a forced reflow, then set the real height,
+     so the bar grows into place. Deliberately NOT requestAnimationFrame: a
+     throttled or backgrounded frame loop would leave the bar stuck at 1px and
+     the strip would silently lose measurements it actually took. */
+  void bar.offsetHeight;
+  bar.style.height = h + 'px';
+}
+
+function updateRow(svc, result) {
+  const id  = slug(svc.name);
+  const lbl = $('lbl-' + id);
+  const lat = $('lat-' + id);
+  if (!lbl) return;
+
+  let cls, word;
+  if (result.ok)        { cls = 'ok';   word = 'Operational'; }
+  else if (result.warn) { cls = 'warn'; word = 'Degraded';    }
+  else                  { cls = 'err';  word = 'Unavailable'; }
+
+  lbl.className   = 'svc-state ' + cls;
+  lbl.textContent = word;
+
+  // Third parties resolved through the assumption path have no meaningful
+  // latency — an instant CORS block is not a measurement.
   if (result.assumed) {
     lat.textContent = '—';
-    lat.title = 'Status assumed operational — browser cannot directly check third-party APIs';
+    lat.title = 'Assumed operational — browsers cannot directly measure third-party APIs';
+    pushBar(id, 'opaque', null);
   } else {
     lat.textContent = result.ms + ' ms';
+    lat.removeAttribute('title');
+    pushBar(id, cls, result.ms);
   }
 }
 
-async function runChecks() {
-  const groups = ['core', 'payment', 'frontend'];
-  const listIds = { core: 'list-core', payment: 'list-payment', frontend: 'list-frontend' };
+/* ── The cycle rule ────────────────────────────────────────────────────── */
+let _nextAt = 0, _timer = null;
 
-  // Build rows
-  for (const g of groups) {
-    const list = document.getElementById(listIds[g]);
-    list.innerHTML = '';
-    for (const svc of SERVICES[g]) {
-      list.appendChild(makeRow(svc));
+function armCountdown() {
+  _nextAt = Date.now() + CYCLE;
+  const bar = $('cycle-bar');
+  const cyc = $('cycle');
+  cyc.classList.remove('running');
+  if (RM) { bar.style.width = '0%'; return; }
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  void bar.offsetWidth;                       /* reflow, so the reset sticks */
+  bar.style.transition = 'width ' + CYCLE + 'ms linear';
+  bar.style.width = '100%';
+}
+
+function tick() {
+  const left = Math.max(0, _nextAt - Date.now());
+  const s = Math.ceil(left / 1000);
+  $('t-next').textContent = _nextAt
+    ? String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0')
+    : '—';
+}
+
+/* ── The verdict ───────────────────────────────────────────────────────── */
+function setVerdict(state, reachable, total) {
+  const root = document.documentElement;
+  const v = $('verdict'), k = $('mh-kicker'), sub = $('mh-sub');
+  const MAP = {
+    ok:   { colour: 'var(--accent)', head: 'All systems operational',
+            kick:  'System status · Operational',
+            sub:   'Every endpoint we own answered, inside its own latency budget.' },
+    warn: { colour: 'var(--amber)',  head: 'Partial degradation',
+            kick:  'System status · Degraded',
+            sub:   'Something answered slowly or unexpectedly. Scans may take longer than usual.' },
+    err:  { colour: 'var(--red)',    head: 'Service disruption',
+            kick:  'System status · Disruption',
+            sub:   'At least one service we own did not answer at all. We are looking into it.' },
+  };
+  const m = MAP[state];
+  root.style.setProperty('--state', m.colour);
+  v.classList.remove('pending');
+  v.innerHTML = m.head + '<span class="dot">.</span>';
+  k.textContent = m.kick;
+  sub.textContent = m.sub;
+  document.title = (state === 'ok' ? 'Operational' : state === 'warn' ? 'Degraded' : 'Disruption') + ' | SecureScanr Status';
+  $('t-reach').textContent = reachable + ' / ' + total;
+}
+
+/* ── The sweep ─────────────────────────────────────────────────────────── */
+let _running = false;
+
+async function runChecks(manual) {
+  if (_running) return;
+  _running = true;
+
+  const btn = $('btn-run');
+  btn.disabled = true;
+  btn.textContent = 'Checking…';
+  $('cycle').classList.add('running');
+  clearTimeout(_timer);
+
+  // Build rows once; later sweeps update the same rows so the strips survive.
+  if (!$('list-core').children.length) {
+    for (const g of GROUPS) {
+      const list = $(LIST_ID[g]);
+      let n = 1;
+      for (const svc of SERVICES[g]) list.appendChild(makeRow(svc, n++));
+    }
+  } else {
+    for (const g of GROUPS) {
+      for (const svc of SERVICES[g]) {
+        const lbl = $('lbl-' + slug(svc.name));
+        if (lbl) { lbl.className = 'svc-state pending'; lbl.textContent = 'Checking'; }
+      }
     }
   }
 
-  // Run checks concurrently.
-  // Banner state is driven only by SecureScanr-owned services (core + frontend).
-  // Payment providers are shown in the table but never cause "Service disruption".
-  let ownedOk = true, ownedErr = false;
+  // Run every check concurrently.
+  // Verdict state is driven only by SecureScanr-owned services (core + frontend).
+  // Payment providers appear in the register but never cause "Service disruption".
+  let ownedOk = true, ownedErr = false, reachable = 0, total = 0;
   const promises = [];
-  for (const g of groups) {
+  for (const g of GROUPS) {
     for (const svc of SERVICES[g]) {
-      promises.push(checkService(svc).then(r => {
+      total++;
+      promises.push(checkService(svc).then((r) => {
         updateRow(svc, r);
-        if (!svc.thirdParty) {
-          if (!r.ok) { ownedOk = false; if (!r.warn) ownedErr = true; }
-        }
+        if (r.ok) reachable++;
+        if (!svc.thirdParty && !r.ok) { ownedOk = false; if (!r.warn) ownedErr = true; }
       }));
     }
   }
   await Promise.all(promises);
 
-  // Update overall banner
-  const banner = document.getElementById('overall-banner');
-  const dot = document.getElementById('overall-dot');
-  const title = document.getElementById('overall-title');
-  const bTitle = document.getElementById('overall-banner-title');
-  const bSub = document.getElementById('overall-banner-sub');
-
-  if (ownedOk) {
-    banner.className = 'banner-card ok';
-    dot.className = 'banner-dot ok';
-    title.textContent = 'All systems operational';
-    bTitle.textContent = 'All systems operational';
-    bSub.textContent = 'Scanner, payments, and frontend are all running normally.';
-  } else if (ownedErr) {
-    banner.className = 'banner-card err';
-    dot.className = 'banner-dot err';
-    title.textContent = 'Service disruption';
-    bTitle.textContent = 'Service disruption detected';
-    bSub.textContent = 'One or more SecureScanr services are unavailable. We\'re looking into it.';
-  } else {
-    banner.className = 'banner-card warn';
-    dot.className = 'banner-dot warn';
-    title.textContent = 'Partial degradation';
-    bTitle.textContent = 'Partial degradation';
-    bSub.textContent = 'Some SecureScanr services are responding slowly or returning unexpected results.';
-  }
+  setVerdict(ownedOk ? 'ok' : ownedErr ? 'err' : 'warn', reachable, total);
 
   const now = new Date();
-  document.getElementById('checked-note').textContent =
-    'Last checked: ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  $('t-last').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  btn.disabled = false;
+  btn.textContent = 'Run check now';
+  _running = false;
+
+  armCountdown();
+  _timer = setTimeout(runChecks, CYCLE);
 }
 
-runChecks();
-setInterval(runChecks, 60000);
+/* ── Entrances ─────────────────────────────────────────────────────────── */
+(function reveal() {
+  const els = document.querySelectorAll('.rv');
+  if (RM || !('IntersectionObserver' in window)) {
+    els.forEach((e) => e.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, { threshold: .1, rootMargin: '0px 0px -5% 0px' });
+  els.forEach((e) => io.observe(e));
+})();
 
-// active-page hide
-(function(){var c=window.location.href.replace(/[?#].*$/,"");document.querySelectorAll('.nav-dropdown-menu a,#nav-mobile a').forEach(function(a){var e=document.createElement('a');e.href=a.getAttribute('href')||"";if(e.href===c)a.style.display='none';});})();
+setInterval(tick, 1000);
+runChecks();
+
+/* Pause the loop while the tab is hidden — a backgrounded status page has no
+   reader, and browsers throttle its timers into a misleading countdown anyway. */
+document.addEventListener('visibilitychange', function () {
+  if (document.hidden) { clearTimeout(_timer); }
+  else if (!_running)  { runChecks(); }
+});
+</script>
+<script>
+(function(){
+  /* dock the nav once scrolled, so content never blends through it.
+     An open dropdown forces the same state — otherwise the difference blend
+     smears the panel into whatever is behind the header. */
+  var hdr = document.querySelector('body > header'), ticking = false, menuOpen = false;
+  function dock() { hdr.classList.toggle('docked', menuOpen || window.scrollY > 40); }
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () { dock(); ticking = false; });
+  }, { passive: true });
+  Array.prototype.slice.call(document.querySelectorAll('.nav-dropdown')).forEach(function (d) {
+    ['mouseenter', 'focusin'].forEach(function (ev) {
+      d.addEventListener(ev, function () { menuOpen = true; dock(); });
+    });
+    ['mouseleave', 'focusout'].forEach(function (ev) {
+      d.addEventListener(ev, function () { menuOpen = false; dock(); });
+    });
+  });
+  dock();
+
+  /* close the fullscreen menu when a link is tapped */
+  Array.prototype.slice.call(document.querySelectorAll('#nav-mobile a')).forEach(function(a){
+    a.addEventListener('click', function(){ document.getElementById('nav-mobile').classList.remove('open'); });
+  });
+  /* hide the link to the page you are already on */
+  var c = window.location.href.replace(/[?#].*$/, "");
+  document.querySelectorAll('.nav-dropdown-menu a, #nav-mobile a').forEach(function(a){
+    var e = document.createElement('a'); e.href = a.getAttribute('href') || '';
+    if (e.href === c) a.style.display = 'none';
+  });
+})();
 </script>
 </body>
 </html>
